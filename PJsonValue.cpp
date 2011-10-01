@@ -204,6 +204,7 @@ PJsonValue::parseArray(std::string json) throw (PJsonException)
 
 		char sep = array[valstart - 1];
 		if (sep != ',' && valstart < array.length()) {
+			this->deleteArray(a);
 			throw PJsonException("Array invalid.");
 		}
 	}

@@ -47,6 +47,19 @@ class PJsonValue
 		void parseObject(std::string) throw (PJsonException);
 		void parseArray(std::string) throw (PJsonException);
 
+		static void deleteObject(JsonObject obj)
+		{
+			for (JsonObject::iterator it = obj.begin(); it != obj.end(); it++) {
+				delete it->second;
+			}
+		}
+		static void deleteArray(JsonArray arr)
+		{
+			for (JsonArray::iterator it = arr.begin(); it != arr.end(); it++) {
+				delete *it;
+			}
+		}
+
 	public:
 		PJsonValue(std::string json) throw (PJsonException)
 		{
@@ -58,21 +71,11 @@ class PJsonValue
 		{
 			switch (this->type) {
 			case JVOBJECT:
-			{
-				JsonObject o = this->asMap();
-				for (JsonObject::iterator it = o.begin(); it != o.end(); it++) {
-					delete it->second;
-				}
+				this->deleteObject(this->asMap());
 				break;
-			}
 			case JVARRAY:
-			{
-				JsonArray a = this->asArray();
-				for (JsonArray::iterator it = a.begin(); it != a.end(); it++) {
-					delete *it;
-				}
+				this->deleteArray(this->asArray());
 				break;
-			}
 			default:
 				break;
 			}
