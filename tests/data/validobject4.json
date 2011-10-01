@@ -1,0 +1,8 @@
+{
+	"key1" : 123,
+	"key2" : 12e6,
+	"key3" : true,
+	"key4" : false,
+	"key5" : "string",
+	"key6" : "false"
+}
