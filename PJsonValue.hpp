@@ -25,9 +25,8 @@ enum JsonTypes {
 	JVARRAY,
 	JVNUMBER,
 	JVSTRING,
-	JVFALSE,
-	JVNULL,
-	JVTRUE,
+	JVBOOL,
+	JVNULL
 };
 
 class PJsonValue

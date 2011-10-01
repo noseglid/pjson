@@ -11,9 +11,9 @@ JsonValueType(char firstchar)
 		case '{': return JVOBJECT;
 		case '[': return JVARRAY;
 		case '"': return JVSTRING;
-		case 'f': return JVFALSE;
 		case 'n': return JVNULL;
-		case 't': return JVTRUE;
+		case 't':
+		case 'f': return JVBOOL;
 		default: return JVNUMBER;
 	}
 }
@@ -119,8 +119,7 @@ PJsonValue::parse(std::string json) throw (PJsonException)
 		case JVSTRING:
 			this->parseString(json);
 			break;
-		case JVTRUE:
-		case JVFALSE:
+		case JVBOOL:
 			this->parseBool(json);
 			break;
 		case JVNULL:
@@ -152,13 +151,12 @@ PJsonValue::parseBool(std::string json) throw (PJsonException)
 {
 	if ("true" == json) {
 		this->value = true;
-		this->type  = JVTRUE;
 	} else if ("false" == json) {
 		this->value = false;
-		this->type  = JVFALSE;
 	} else {
 		throw PJsonException("Boolean value invalid.");
 	}
+	this->type = JVBOOL;
 }
 
 void
