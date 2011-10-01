@@ -77,11 +77,12 @@ PJsonValue::extract(std::string str,
 {
 	if (pos >= str.length()) return string();
 
+	bool instring = false;
 	char sdelim = str[pos], edelim;
 	switch (sdelim) {
 		case '{': edelim = '}'; break;
 		case '[': edelim = ']'; break;
-		case '"': edelim = '"'; break;
+		case '"': edelim = '"'; instring = true; break;
 		default: return this->extractLiteral(str, pos);
 	}
 
@@ -93,9 +94,12 @@ PJsonValue::extract(std::string str,
 	do {
 		previous = current;
 		current = ss.get();
+		if ('"' == current && previous != '\\') instring = !instring;
+		if (instring) continue;
+
 		depth += (current == sdelim && sdelim   != edelim);
 		depth -= (current == edelim && previous != '\\');
-	} while (++cpos <= str.length() && 0 != depth);
+	} while (++cpos < str.length() && 0 != depth);
 
 	if (edelim != str[cpos - 1]) throw PJsonException("Not enclosed.");
 

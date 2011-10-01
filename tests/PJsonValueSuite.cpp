@@ -133,11 +133,14 @@ PJsonValueSuite::validObject()
 
 		string j5 = readfile("data/validobject5.json");
 		PJsonValue p5(j5);
-
 		TEST_ASSERT(p5.asMap()["d1key1"]->asMap()["d2key1"]->asString() == "d2val1");
 		TEST_ASSERT(p5.asMap()["d1key1"]->asMap()["d2key2"]->asInt()    == 23);
 		TEST_ASSERT(p5.asMap()["d1key2"]->asString() == "d1val2");
 		TEST_ASSERT(p5.asMap()["d1key3"]->asFloat()  == 52.4e6);
+
+		string j6 = readfile("data/validobject6.json");
+		PJsonValue p6(j6);
+		TEST_ASSERT(p6.asMap()["enclosing in key }"]->asString() == "opening and enclosing in value { }");
 	} catch (PJsonException e) {
 		TEST_ASSERT_MSG(false, e.what());
 	} catch (exception stde) {
@@ -240,6 +243,10 @@ PJsonValueSuite::validArray()
 		TEST_ASSERT(p2.asArray()[4]->asMap()["key1"]->asString() == "val1");
 		TEST_ASSERT(p2.asArray()[5]->asBool()   == true);
 		TEST_ASSERT(p2.asArray()[6]->asInt()    == 22);
+
+		string json3 = readfile("data/validarray3.json");
+		PJsonValue p3(json3);
+		TEST_ASSERT(p3.asArray()[0]->asString() == "enclosing ] in value");
 	} catch (PJsonException e) {
 		TEST_ASSERT_MSG(false, e.what());
 	} catch (exception stde) {
