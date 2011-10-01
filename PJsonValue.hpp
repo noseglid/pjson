@@ -16,7 +16,6 @@ typedef std::vector<PJsonValue*> JsonArray;
 typedef boost::variant<std::string,
                        float,
                        bool,
-                       JsonNull,
                        JsonObject,
                        JsonArray> JsonValue;
 
@@ -118,7 +117,7 @@ class PJsonValue
 
 		bool isNull()
 		{
-			return NULL == this->get<JsonNull>();
+			return JVNULL == this->type;
 		};
 };
 

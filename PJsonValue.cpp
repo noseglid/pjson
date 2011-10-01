@@ -166,9 +166,7 @@ PJsonValue::parseNull(std::string json) throw (PJsonException)
 		throw PJsonException("Null value invalid.");
 	}
 
-	JsonNull null;
-	this->value = null;
-	this->type  = JVNULL;
+	this->type = JVNULL;
 }
 
 void
