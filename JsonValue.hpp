@@ -10,14 +10,11 @@
 namespace Json {
 	class Value;
 
+	typedef std::string JsonString;
+	typedef double JsonNumber;
+	typedef bool JsonBool;
 	typedef std::map<std::string, Value*> JsonObject;
 	typedef std::vector<Value*> JsonArray;
-
-	typedef boost::variant<std::string,
-	                       double,
-	                       bool,
-	                       JsonObject,
-	                       JsonArray> val;
 
 	enum Types {
 		JVOBJECT,
@@ -31,7 +28,11 @@ namespace Json {
 	class Value
 	{
 		private:
-			val value;
+			boost::variant<JsonString,
+	                       JsonNumber,
+	                       JsonBool,
+	                       JsonObject,
+	                       JsonArray> value;
 			Types type;
 
 			std::string strip(std::string);
@@ -51,13 +52,14 @@ namespace Json {
 				for (JsonObject::iterator it = obj.begin(); it != obj.end(); it++) {
 					delete it->second;
 				}
-			}
+			};
+
 			static void deleteArray(JsonArray arr)
 			{
 				for (JsonArray::iterator it = arr.begin(); it != arr.end(); it++) {
 					delete *it;
 				}
-			}
+			};
 
 		public:
 			Value(std::string json) throw (Json::Exception)
@@ -78,39 +80,39 @@ namespace Json {
 				default:
 					break;
 				}
-			}
+			};
 
 			template <class T>
 			T get() {
 				return boost::get<T>(this->value);
-			}
+			};
 
 			JsonArray asArray()
 			{
 				return this->get<JsonArray>();
-			}
+			};
 
 			JsonObject asObject()
 			{
 				return this->get<JsonObject>();
-			}
+			};
 
 			int asInt()
 			{
 				return this->get<double>();
-			}
+			};
 
-			double asDouble()
+			JsonNumber asNumber()
 			{
 				return this->get<double>();
-			}
+			};
 
-			bool asBool()
+			JsonBool asBool()
 			{
 				return this->get<bool>();
-			}
+			};
 
-			std::string asString()
+			JsonString asString()
 			{
 				return this->get<std::string>();
 			};
