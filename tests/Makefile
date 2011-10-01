@@ -5,7 +5,7 @@ LDFLAGS=-L.. -lcpptest -lpjson
 
 LIB      = pjson
 SOURCES  = main.cpp
-SOURCES += PJsonValueSuite.cpp
+SOURCES += JsonValueSuite.cpp
 OBJECTS  = $(SOURCES:.cpp=.o)
 BIN      = test-pjson
 

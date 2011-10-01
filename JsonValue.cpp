@@ -1,27 +1,27 @@
-#include "PJsonValue.hpp"
+#include "JsonValue.hpp"
 #include <boost/lexical_cast.hpp>
 #include <string>
 #include <iostream>
 #include <sstream>
 
-static enum JsonTypes
-JsonValueType(char firstchar)
+static enum Json::Types
+ValueType(char firstchar)
 {
 	switch(firstchar) {
-		case '{': return JVOBJECT;
-		case '[': return JVARRAY;
-		case '"': return JVSTRING;
-		case 'n': return JVNULL;
+		case '{': return Json::JVOBJECT;
+		case '[': return Json::JVARRAY;
+		case '"': return Json::JVSTRING;
+		case 'n': return Json::JVNULL;
 		case 't':
-		case 'f': return JVBOOL;
-		default: return JVNUMBER;
+		case 'f': return Json::JVBOOL;
+		default:  return Json::JVNUMBER;
 	}
 }
 
 std::string
-PJsonValue::strip(std::string json)
+Json::Value::strip(std::string json)
 {
-	string ret;
+	std::string ret;
 	bool insignificant = true;
 	for (unsigned int i = 0; i < json.length(); ++i) {
 		if ('"' == json[i]) insignificant = !insignificant;
@@ -31,9 +31,9 @@ PJsonValue::strip(std::string json)
 }
 
 std::string
-PJsonValue::unescape(std::string str)
+Json::Value::unescape(std::string str)
 {
-	string ret;
+	std::string ret;
 	for (unsigned int i = 0; i < str.length(); ++i) {
 		if ('\\' != str[i]) ret += str[i];
 	}
@@ -41,7 +41,7 @@ PJsonValue::unescape(std::string str)
 }
 
 std::string
-PJsonValue::extractLiteral(std::string str, size_t pos = 0) throw (PJsonException)
+Json::Value::extractLiteral(std::string str, size_t pos = 0) throw (Json::Exception)
 {
 	size_t end = pos;
 	while(end < str.length()) {
@@ -49,7 +49,7 @@ PJsonValue::extractLiteral(std::string str, size_t pos = 0) throw (PJsonExceptio
 		end++;
 	}
 
-	if (end == pos) throw PJsonException("Literal did not start with alphanumeric.");
+	if (end == pos) throw Json::Exception("Literal did not start with alphanumeric.");
 
 	return str.substr(pos, end - pos);
 }
@@ -67,15 +67,15 @@ PJsonValue::extractLiteral(std::string str, size_t pos = 0) throw (PJsonExceptio
  * @param str             The string which contains the literal string
  * @param pos             The position to start at.
  * @param keep_delimiters Keeps the delimiters in the returned string (e.g. { or ")
- * @throws PJsonException
+ * @throws Json::Exception
  * @return The extracted string.
  */
 std::string
-PJsonValue::extract(std::string str,
+Json::Value::extract(std::string str,
                     size_t pos = 0,
-                    bool keep_delimiters = false) throw (PJsonException)
+                    bool keep_delimiters = false) throw (Json::Exception)
 {
-	if (pos >= str.length()) return string();
+	if (pos >= str.length()) return std::string();
 
 	bool instring = false;
 	char sdelim = str[pos], edelim;
@@ -101,16 +101,16 @@ PJsonValue::extract(std::string str,
 		depth -= (current == edelim && previous != '\\');
 	} while (++cpos < str.length() && 0 != depth);
 
-	if (edelim != str[cpos - 1]) throw PJsonException("Not enclosed.");
+	if (edelim != str[cpos - 1]) throw Json::Exception("Not enclosed.");
 
 	return str.substr(pos + !keep_delimiters,
 	                  cpos - pos - 2*(!keep_delimiters));
 }
 
 void
-PJsonValue::parse(std::string json) throw (PJsonException)
+Json::Value::parse(std::string json) throw (Json::Exception)
 {
-	switch (JsonValueType(json[0])) {
+	switch (ValueType(json[0])) {
 		case JVOBJECT:
 			this->parseObject(json);
 			break;
@@ -133,48 +133,48 @@ PJsonValue::parse(std::string json) throw (PJsonException)
 }
 
 void
-PJsonValue::parseString(std::string json) throw (PJsonException)
+Json::Value::parseString(std::string json) throw (Json::Exception)
 {
 	this->value = this->unescape(this->extract(json));
 	this->type  = JVSTRING;
 }
 
 void
-PJsonValue::parseNumber(std::string json) throw (PJsonException)
+Json::Value::parseNumber(std::string json) throw (Json::Exception)
 {
 	try {
 		this->value = boost::lexical_cast<float>(json);
-	} catch (bad_cast) {
-		throw PJsonException("Number value invalid.");
+	} catch (std::bad_cast) {
+		throw Json::Exception("Number value invalid.");
 	}
 	this->type  = JVNUMBER;
 }
 
 void
-PJsonValue::parseBool(std::string json) throw (PJsonException)
+Json::Value::parseBool(std::string json) throw (Json::Exception)
 {
 	if ("true" == json) {
 		this->value = true;
 	} else if ("false" == json) {
 		this->value = false;
 	} else {
-		throw PJsonException("Boolean value invalid.");
+		throw Json::Exception("Boolean value invalid.");
 	}
 	this->type = JVBOOL;
 }
 
 void
-PJsonValue::parseNull(std::string json) throw (PJsonException)
+Json::Value::parseNull(std::string json) throw (Json::Exception)
 {
 	if ("null" != json) {
-		throw PJsonException("Null value invalid.");
+		throw Json::Exception("Null value invalid.");
 	}
 
 	this->type = JVNULL;
 }
 
 void
-PJsonValue::parseObject(std::string json) throw (PJsonException)
+Json::Value::parseObject(std::string json) throw (Json::Exception)
 {
 	std::string object = this->extract(json);
 
@@ -182,9 +182,9 @@ PJsonValue::parseObject(std::string json) throw (PJsonException)
 	unsigned int keystart = 0;
 	while(keystart < object.length()) {
 		/* Magic number haven... */
-		string key   = this->extract(object, keystart);
-		string value = this->extract(object, keystart + key.length() + 3, true);
-		m[this->unescape(key)] = new PJsonValue(value);
+		std::string key   = this->extract(object, keystart);
+		std::string value = this->extract(object, keystart + key.length() + 3, true);
+		m[this->unescape(key)] = new Value(value);
 		keystart += key.length() + value.length() + 4;
 	}
 
@@ -193,21 +193,21 @@ PJsonValue::parseObject(std::string json) throw (PJsonException)
 }
 
 void
-PJsonValue::parseArray(std::string json) throw (PJsonException)
+Json::Value::parseArray(std::string json) throw (Json::Exception)
 {
 	std::string array = this->extract(json);
 
 	JsonArray a;
 	unsigned int valstart = 0;
 	while (valstart < array.length()) {
-		string value = this->extract(array, valstart, true);
-		a.push_back(new PJsonValue(value));
+		std::string value = this->extract(array, valstart, true);
+		a.push_back(new Value(value));
 		valstart += value.length() + 1;
 
 		char sep = array[valstart - 1];
 		if (sep != ',' && valstart < array.length()) {
 			this->deleteArray(a);
-			throw PJsonException("Array invalid.");
+			throw Json::Exception("Array invalid.");
 		}
 	}
 

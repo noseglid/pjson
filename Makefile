@@ -4,7 +4,7 @@ CFLAGS=-c -Wall -O0 -g3 -I/usr/local/boost/
 LDFLAGS=
 
 LIB      = libpjson
-SOURCES  = PJsonValue.cpp
+SOURCES  = JsonValue.cpp
 OBJECTS  = $(SOURCES:.cpp=.o)
 
 default: $(LIB)
