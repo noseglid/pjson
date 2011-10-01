@@ -1,12 +1,8 @@
 #include "PJsonValue.hpp"
-
 #include <boost/lexical_cast.hpp>
-
 #include <string>
 #include <iostream>
 #include <sstream>
-
-using namespace std;
 
 static enum JsonTypes
 JsonValueType(char firstchar)
@@ -22,8 +18,8 @@ JsonValueType(char firstchar)
 	}
 }
 
-string
-PJsonValue::strip(string json)
+std::string
+PJsonValue::strip(std::string json)
 {
 	string ret;
 	bool insignificant = true;
@@ -34,8 +30,8 @@ PJsonValue::strip(string json)
 	return ret;
 }
 
-string
-PJsonValue::unescape(string str)
+std::string
+PJsonValue::unescape(std::string str)
 {
 	string ret;
 	for (unsigned int i = 0; i < str.length(); ++i) {
@@ -44,8 +40,8 @@ PJsonValue::unescape(string str)
 	return ret;
 }
 
-string
-PJsonValue::extractLiteral(string str, size_t pos = 0) throw (PJsonException)
+std::string
+PJsonValue::extractLiteral(std::string str, size_t pos = 0) throw (PJsonException)
 {
 	size_t end = pos;
 	while(end < str.length()) {
@@ -74,8 +70,10 @@ PJsonValue::extractLiteral(string str, size_t pos = 0) throw (PJsonException)
  * @throws PJsonException
  * @return The extracted string.
  */
-string
-PJsonValue::extract(string str, size_t pos = 0, bool keep_delimiters = false) throw (PJsonException)
+std::string
+PJsonValue::extract(std::string str,
+                    size_t pos = 0,
+                    bool keep_delimiters = false) throw (PJsonException)
 {
 	if (pos >= str.length()) return string();
 
@@ -90,7 +88,7 @@ PJsonValue::extract(string str, size_t pos = 0, bool keep_delimiters = false) th
 	size_t depth = 1;
 	size_t cpos  = pos + 1;
 	char current = NULL, previous = NULL;
-	stringstream ss(str);
+	std::stringstream ss(str);
 	ss.seekg(cpos);
 	do {
 		previous = current;
@@ -106,7 +104,7 @@ PJsonValue::extract(string str, size_t pos = 0, bool keep_delimiters = false) th
 }
 
 void
-PJsonValue::parse(string json) throw (PJsonException)
+PJsonValue::parse(std::string json) throw (PJsonException)
 {
 	switch (JsonValueType(json[0])) {
 		case JVOBJECT:
@@ -132,14 +130,14 @@ PJsonValue::parse(string json) throw (PJsonException)
 }
 
 void
-PJsonValue::parseString(string json) throw (PJsonException)
+PJsonValue::parseString(std::string json) throw (PJsonException)
 {
 	this->value = this->unescape(this->extract(json));
 	this->type  = JVSTRING;
 }
 
 void
-PJsonValue::parseNumber(string json) throw (PJsonException)
+PJsonValue::parseNumber(std::string json) throw (PJsonException)
 {
 	try {
 		this->value = boost::lexical_cast<float>(json);
@@ -150,7 +148,7 @@ PJsonValue::parseNumber(string json) throw (PJsonException)
 }
 
 void
-PJsonValue::parseBool(string json) throw (PJsonException)
+PJsonValue::parseBool(std::string json) throw (PJsonException)
 {
 	if ("true" == json) {
 		this->value = true;
@@ -164,7 +162,7 @@ PJsonValue::parseBool(string json) throw (PJsonException)
 }
 
 void
-PJsonValue::parseNull(string json) throw (PJsonException)
+PJsonValue::parseNull(std::string json) throw (PJsonException)
 {
 	if ("null" != json) {
 		throw PJsonException("Null value invalid.");
@@ -176,9 +174,9 @@ PJsonValue::parseNull(string json) throw (PJsonException)
 }
 
 void
-PJsonValue::parseObject(string json) throw (PJsonException)
+PJsonValue::parseObject(std::string json) throw (PJsonException)
 {
-	string object = this->extract(json);
+	std::string object = this->extract(json);
 
 	JsonObject m;
 	unsigned int keystart = 0;
@@ -195,9 +193,9 @@ PJsonValue::parseObject(string json) throw (PJsonException)
 }
 
 void
-PJsonValue::parseArray(string json) throw (PJsonException)
+PJsonValue::parseArray(std::string json) throw (PJsonException)
 {
-	string array = this->extract(json);
+	std::string array = this->extract(json);
 
 	JsonArray a;
 	unsigned int valstart = 0;

@@ -2,22 +2,18 @@
 #define _PJSONVALUE_H_
 
 #include "PJsonException.hpp"
-
 #include "boost/variant.hpp"
-
 #include <string>
 #include <map>
 #include <vector>
 
-using namespace std;
-
 class PJsonValue;
 
 typedef void* JsonNull;
-typedef map<string, PJsonValue*> JsonObject;
-typedef vector<PJsonValue*> JsonArray;
+typedef std::map<std::string, PJsonValue*> JsonObject;
+typedef std::vector<PJsonValue*> JsonArray;
 
-typedef boost::variant<string,
+typedef boost::variant<std::string,
                        float,
                        bool,
                        JsonNull,
@@ -40,20 +36,20 @@ class PJsonValue
 		JsonValue value;
 		JsonTypes type;
 
-		string strip(string);
-		string unescape(string);
-		string extract(string, size_t, bool) throw (PJsonException);
-		string extractLiteral(string, size_t) throw (PJsonException);
-		void parse(string) throw (PJsonException);
-		void parseString(string) throw (PJsonException);
-		void parseNumber(string) throw (PJsonException);
-		void parseBool(string) throw (PJsonException);
-		void parseNull(string) throw (PJsonException);
-		void parseObject(string) throw (PJsonException);
-		void parseArray(string) throw (PJsonException);
+		std::string strip(std::string);
+		std::string unescape(std::string);
+		std::string extract(std::string, size_t, bool) throw (PJsonException);
+		std::string extractLiteral(std::string, size_t) throw (PJsonException);
+		void parse(std::string) throw (PJsonException);
+		void parseString(std::string) throw (PJsonException);
+		void parseNumber(std::string) throw (PJsonException);
+		void parseBool(std::string) throw (PJsonException);
+		void parseNull(std::string) throw (PJsonException);
+		void parseObject(std::string) throw (PJsonException);
+		void parseArray(std::string) throw (PJsonException);
 
 	public:
-		PJsonValue(string json) throw (PJsonException)
+		PJsonValue(std::string json) throw (PJsonException)
 		{
 			json = this->strip(json);
 			this->parse(json);
@@ -113,14 +109,9 @@ class PJsonValue
 			return this->get<bool>();
 		}
 
-		string asString()
+		std::string asString()
 		{
-			return this->get<string>();
-		};
-
-		const char *asCString()
-		{
-			return this->get<string>().c_str();
+			return this->get<std::string>();
 		};
 
 		bool isNull()
