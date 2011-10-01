@@ -77,11 +77,11 @@ JsonValueSuite::validNumber()
 
 		string json2 = readfile("data/validnumber2.json");
 		Json::Value p2(json2);
-		TEST_ASSERT_DELTA(float(85.5), p2.asFloat(), 0.0001);
+		TEST_ASSERT_DELTA(float(85.5), p2.asDouble(), 0.0001);
 
 		string json3 = readfile("data/validnumber3.json");
 		Json::Value p3(json3);
-		TEST_ASSERT_DELTA(float(-0.0674), p3.asFloat(), 0.0001);
+		TEST_ASSERT_DELTA(float(-0.0674), p3.asDouble(), 0.0001);
 	} catch (exception e) {
 		cout << e.what() << endl;
 		TEST_ASSERT(false);
@@ -125,7 +125,7 @@ JsonValueSuite::validObject()
 		string j4 = readfile("data/validobject4.json");
 		Json::Value p4(j4);
 		TEST_ASSERT(p4.asObject()["key1"]->asInt()    == 123);
-		TEST_ASSERT(p4.asObject()["key2"]->asFloat()  == 12e6);
+		TEST_ASSERT(p4.asObject()["key2"]->asDouble()  == 12e6);
 		TEST_ASSERT(p4.asObject()["key3"]->asBool()   == true);
 		TEST_ASSERT(p4.asObject()["key4"]->asBool()   == false);
 		TEST_ASSERT(p4.asObject()["key5"]->asString() == "string");
@@ -136,7 +136,7 @@ JsonValueSuite::validObject()
 		TEST_ASSERT(p5.asObject()["d1key1"]->asObject()["d2key1"]->asString() == "d2val1");
 		TEST_ASSERT(p5.asObject()["d1key1"]->asObject()["d2key2"]->asInt()    == 23);
 		TEST_ASSERT(p5.asObject()["d1key2"]->asString() == "d1val2");
-		TEST_ASSERT(p5.asObject()["d1key3"]->asFloat()  == 52.4e6);
+		TEST_ASSERT(p5.asObject()["d1key3"]->asDouble()  == 52.4e6);
 
 		string j6 = readfile("data/validobject6.json");
 		Json::Value p6(j6);
@@ -232,7 +232,7 @@ JsonValueSuite::validArray()
 		Json::Value p2(json2);
 		TEST_ASSERT(p2.asArray()[0]->asString() == "multivalue");
 		TEST_ASSERT(p2.asArray()[1]->isNull()   == true);
-		TEST_ASSERT(p2.asArray()[2]->asFloat()  == 12e9);
+		TEST_ASSERT(p2.asArray()[2]->asDouble()  == 12e9);
 		TEST_ASSERT(p2.asArray()[3]->asBool()   == false);
 		TEST_ASSERT(p2.asArray()[4]->asObject()["key1"]->asString() == "val1");
 		TEST_ASSERT(p2.asArray()[5]->asBool()   == true);

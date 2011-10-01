@@ -14,7 +14,7 @@ namespace Json {
 	typedef std::vector<Value*> JsonArray;
 
 	typedef boost::variant<std::string,
-	                       float,
+	                       double,
 	                       bool,
 	                       JsonObject,
 	                       JsonArray> val;
@@ -97,12 +97,12 @@ namespace Json {
 
 			int asInt()
 			{
-				return this->get<float>();
+				return this->get<double>();
 			}
 
-			float asFloat()
+			double asDouble()
 			{
-				return this->get<float>();
+				return this->get<double>();
 			}
 
 			bool asBool()
