@@ -72,8 +72,8 @@ Json::Value::extractLiteral(std::string str, size_t pos = 0) throw (Json::Except
  */
 std::string
 Json::Value::extract(std::string str,
-                    size_t pos = 0,
-                    bool keep_delimiters = false) throw (Json::Exception)
+                     size_t pos = 0,
+                     bool keep_delimiters = false) throw (Json::Exception)
 {
 	if (pos >= str.length()) return std::string();
 
@@ -93,7 +93,7 @@ Json::Value::extract(std::string str,
 	ss.seekg(cpos);
 	do {
 		previous = current;
-		current = ss.get();
+		current  = ss.get();
 		if ('"' == current && previous != '\\') instring = !instring;
 		if (instring) continue;
 
