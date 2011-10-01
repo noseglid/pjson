@@ -70,7 +70,7 @@ namespace Json {
 			{
 				switch (this->type) {
 				case JVOBJECT:
-					this->deleteObject(this->asMap());
+					this->deleteObject(this->asObject());
 					break;
 				case JVARRAY:
 					this->deleteArray(this->asArray());
@@ -90,7 +90,7 @@ namespace Json {
 				return this->get<JsonArray>();
 			}
 
-			JsonObject asMap()
+			JsonObject asObject()
 			{
 				return this->get<JsonObject>();
 			}

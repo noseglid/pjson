@@ -109,38 +109,38 @@ JsonValueSuite::validObject()
 	try {
 		string j1 = readfile("data/validobject1.json");
 		Json::Value p1(j1);
-		TEST_ASSERT(p1.asMap()["key1"]->asString() == "val1");
+		TEST_ASSERT(p1.asObject()["key1"]->asString() == "val1");
 
 		string j2 = readfile("data/validobject2.json");
 		Json::Value p2(j2);
-		TEST_ASSERT(p2.asMap()["key with \"quotes\""]->asString() ==
+		TEST_ASSERT(p2.asObject()["key with \"quotes\""]->asString() ==
 		                       "value 2 with ws and \"quotes\"");
 
 		string j3 = readfile("data/validobject3.json");
 		Json::Value p3(j3);
-		TEST_ASSERT(p3.asMap()["key1"]->asString() == "val1");
-		TEST_ASSERT(p3.asMap()["key2"]->asString() == "val2");
-		TEST_ASSERT(p3.asMap()["key3"]->asString() == "val3");
+		TEST_ASSERT(p3.asObject()["key1"]->asString() == "val1");
+		TEST_ASSERT(p3.asObject()["key2"]->asString() == "val2");
+		TEST_ASSERT(p3.asObject()["key3"]->asString() == "val3");
 
 		string j4 = readfile("data/validobject4.json");
 		Json::Value p4(j4);
-		TEST_ASSERT(p4.asMap()["key1"]->asInt()    == 123);
-		TEST_ASSERT(p4.asMap()["key2"]->asFloat()  == 12e6);
-		TEST_ASSERT(p4.asMap()["key3"]->asBool()   == true);
-		TEST_ASSERT(p4.asMap()["key4"]->asBool()   == false);
-		TEST_ASSERT(p4.asMap()["key5"]->asString() == "string");
-		TEST_ASSERT(p4.asMap()["key6"]->asString() == "false");
+		TEST_ASSERT(p4.asObject()["key1"]->asInt()    == 123);
+		TEST_ASSERT(p4.asObject()["key2"]->asFloat()  == 12e6);
+		TEST_ASSERT(p4.asObject()["key3"]->asBool()   == true);
+		TEST_ASSERT(p4.asObject()["key4"]->asBool()   == false);
+		TEST_ASSERT(p4.asObject()["key5"]->asString() == "string");
+		TEST_ASSERT(p4.asObject()["key6"]->asString() == "false");
 
 		string j5 = readfile("data/validobject5.json");
 		Json::Value p5(j5);
-		TEST_ASSERT(p5.asMap()["d1key1"]->asMap()["d2key1"]->asString() == "d2val1");
-		TEST_ASSERT(p5.asMap()["d1key1"]->asMap()["d2key2"]->asInt()    == 23);
-		TEST_ASSERT(p5.asMap()["d1key2"]->asString() == "d1val2");
-		TEST_ASSERT(p5.asMap()["d1key3"]->asFloat()  == 52.4e6);
+		TEST_ASSERT(p5.asObject()["d1key1"]->asObject()["d2key1"]->asString() == "d2val1");
+		TEST_ASSERT(p5.asObject()["d1key1"]->asObject()["d2key2"]->asInt()    == 23);
+		TEST_ASSERT(p5.asObject()["d1key2"]->asString() == "d1val2");
+		TEST_ASSERT(p5.asObject()["d1key3"]->asFloat()  == 52.4e6);
 
 		string j6 = readfile("data/validobject6.json");
 		Json::Value p6(j6);
-		TEST_ASSERT(p6.asMap()["enclosing in key }"]->asString() == "opening and enclosing in value { }");
+		TEST_ASSERT(p6.asObject()["enclosing in key }"]->asString() == "opening and enclosing in value { }");
 	} catch (Json::Exception e) {
 		TEST_ASSERT_MSG(false, e.what());
 	} catch (exception stde) {
@@ -234,7 +234,7 @@ JsonValueSuite::validArray()
 		TEST_ASSERT(p2.asArray()[1]->isNull()   == true);
 		TEST_ASSERT(p2.asArray()[2]->asFloat()  == 12e9);
 		TEST_ASSERT(p2.asArray()[3]->asBool()   == false);
-		TEST_ASSERT(p2.asArray()[4]->asMap()["key1"]->asString() == "val1");
+		TEST_ASSERT(p2.asArray()[4]->asObject()["key1"]->asString() == "val1");
 		TEST_ASSERT(p2.asArray()[5]->asBool()   == true);
 		TEST_ASSERT(p2.asArray()[6]->asInt()    == 22);
 
