@@ -1,0 +1,20 @@
+= PJSON Readme
+Alexander Olsson <noseglid@gmail.com>
+0.1, 2011-10-01
+
+== libpjson
+pjson is a slim, and easy to use json interpreter for use in the c++ language.
+The library and API is in place, but build process documentation and
+other administrative tasks is still at hand.
+
+Use with care so far.
+
+== Dependencies
+The boost library (headers only) is required to run libpjson
+
+== Why?
+There are several json interpreters out there, why would I go about
+creating my own one? Several reasons:
+
+* As an initial project, I did it to learn the basics of c++ and the boost library.
+* The existing json interpreters had flaws I decided I could not accept. Among others where loads of valgrind warings, memory leaks and difficult to learn API.
