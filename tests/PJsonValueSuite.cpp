@@ -11,9 +11,6 @@ using namespace std;
 static string
 readfile(const char *file)
 {
-	int length;
-	char *buffer;
-
 	ifstream is;
 	is.open(file, ios::binary);
 
@@ -24,16 +21,18 @@ readfile(const char *file)
 
 	// get length of file:
 	is.seekg(0, ios::end);
-	length = is.tellg();
+	int length = is.tellg();
 	is.seekg(0, ios::beg);
 
 	// allocate memory:
-	buffer = new char[length];
+	char buffer[length];
 
 	// read data as a block:
 	is.read(buffer, length);
 	is.close();
-	return string(buffer, length);
+	string ret = string(buffer, length);
+
+	return ret;
 }
 
 void
