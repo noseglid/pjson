@@ -256,6 +256,9 @@ PJsonValueSuite::invalidArray()
 
 		string json2 = readfile("data/invalidarray2.json");
 		TEST_THROWS(PJsonValue p2(json2), PJsonException);
+
+		string json3 = readfile("data/invalidarray3.json");
+		TEST_THROWS(PJsonValue p3(json3), PJsonException);
 	} catch (PJsonException e) {
 		TEST_ASSERT_MSG(false, e.what());
 	} catch (exception stde) {

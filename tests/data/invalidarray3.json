@@ -1,0 +1,2 @@
+["value1", 12, {"val" => "key"}, "my very long string",
+ "You will notice this array will not be enclosed with ",
