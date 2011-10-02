@@ -7,11 +7,16 @@ LIB      = libpjson
 SOURCES  = JsonValue.cpp
 OBJECTS  = $(SOURCES:.cpp=.o)
 
+.PHONY: default all install doc test clean
+
 default: $(LIB)
 
-all: $(LIB) test
+all: $(LIB) doc test
 
 install:
+
+doc:
+	make -C doc doc
 
 test: $(LIB)
 	make -C tests test
@@ -19,6 +24,7 @@ test: $(LIB)
 clean:
 	rm -f $(LIB).a $(LIB).so $(OBJECTS)
 	make -C tests clean
+	make -C doc clean
 
 $(LIB): $(OBJECTS)
 	$(CC) $(LDFLAGS) -shared $(OBJECTS) -o $(LIB).so

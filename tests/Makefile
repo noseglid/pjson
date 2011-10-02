@@ -9,6 +9,8 @@ SOURCES += JsonValueSuite.cpp
 OBJECTS  = $(SOURCES:.cpp=.o)
 BIN      = test-pjson
 
+.PHONY: all test clean
+
 all: test
 
 test: $(BIN)

@@ -54,22 +54,6 @@ Json::Value::extractLiteral(std::string str, size_t pos = 0) throw (Json::Except
 	return str.substr(pos, end - pos);
 }
 
-/**
- * Extracts the string which starts at position pos. It finds which
- * delimiter is used at this position ('{', '[' or '"') and returns
- * the full string enclosed by these characters. If no closing token
- * is found an exception is thrown.
- *
- * If neither of the starting tokens described above is in 'str' at
- * position 'pos', a literal will be assumed and all characters to the
- * first white-space character (as described in RFC4627) will be returned.
- *
- * @param str             The string which contains the literal string
- * @param pos             The position to start at.
- * @param keep_delimiters Keeps the delimiters in the returned string (e.g. { or ")
- * @throws Json::Exception
- * @return The extracted string.
- */
 std::string
 Json::Value::extract(std::string str,
                      size_t pos = 0,
