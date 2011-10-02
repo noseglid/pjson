@@ -20,7 +20,7 @@ int main(void)
 	 * We can fetch the object and store it in a local variable
 	 * For easier access if we need to use it multiple times.
 	 */
-	Json::JsonObject obj = jv.asObject();
+	Json::Object obj = jv.asObject();
 
 	return 0;
 }
