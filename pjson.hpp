@@ -47,5 +47,11 @@
  * @include object.out
  */
 
+/**
+ * @example basic.cpp
+ * @example array.cpp
+ * @example object.cpp
+ */
+
 #include "JsonValue.hpp"
 #include "JsonException.hpp"
