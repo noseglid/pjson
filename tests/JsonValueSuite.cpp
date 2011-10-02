@@ -95,6 +95,10 @@ JsonValueSuite::validNumber()
 	string json3 = readfile("data/validnumber3.json");
 	Json::Value p3(json3);
 	TEST_ASSERT(float(-0.0674), p3.asNumber());
+
+	string json4 = readfile("data/validnumber4.json");
+	Json::Value p4(json4);
+	TEST_ASSERT(int(1317566566) == p4.asInt());
 }
 
 void
