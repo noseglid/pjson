@@ -21,6 +21,7 @@ class JsonValueSuite: public Test::Suite
 			TEST_ADD(JsonValueSuite::invalidNull)
 			TEST_ADD(JsonValueSuite::validArray)
 			TEST_ADD(JsonValueSuite::invalidArray)
+			TEST_ADD(JsonValueSuite::getType)
 		};
 
 	private:
@@ -36,6 +37,7 @@ class JsonValueSuite: public Test::Suite
 		void invalidNull();
 		void validArray();
 		void invalidArray();
+		void getType();
 };
 
 #endif
