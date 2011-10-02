@@ -241,6 +241,16 @@ JsonValueSuite::validArray()
 		string json3 = readfile("data/validarray3.json");
 		Json::Value p3(json3);
 		TEST_ASSERT(p3.asArray()[0]->asString() == "enclosing ] in value");
+
+		string json4 = readfile("data/validarray4.json");
+		Json::Value p4(json4);
+		TEST_ASSERT(p4.asArray()[0]->asInt() == 1);
+		TEST_ASSERT(p4.asArray()[1]->asInt() == 2);
+		TEST_ASSERT(p4.asArray()[2]->asInt() == 3);
+		TEST_ASSERT(p4.asArray()[3]->asInt() == 4);
+		TEST_ASSERT(p4.asArray()[4]->asInt() == 5);
+		TEST_ASSERT(p4.asArray()[5]->asInt() == 12e4);
+		TEST_ASSERT(p4.asArray()[6]->asString() == "string");
 	} catch (Json::Exception e) {
 		TEST_ASSERT_MSG(false, e.what());
 	} catch (exception stde) {
