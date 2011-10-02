@@ -38,32 +38,30 @@ namespace Json {
 	/**
 	 * A representation of a JSON string.
 	 */
-	typedef std::string JsonString;
+	typedef std::string String;
 
 	/**
 	 * A representation of a JSON number.
 	 */
-	typedef double JsonNumber;
+	typedef double Number;
 
 	/**
 	 * A representation of a JSON boolean; true or false.
 	 */
-	typedef bool JsonBool;
+	typedef bool Bool;
 
 	/**
 	 * A representation of a JSON object; key, value pairs.
 	 */
-	typedef std::map<std::string, Value*> JsonObject;
+	typedef std::map<std::string, Value*> Object;
 
 	/**
 	 * A representation of a JSON array; consecutive values.
 	 */
-	typedef std::vector<Value*> JsonArray;
+	typedef std::vector<Value*> Array;
 
 	/// The main class representing a JSON value.
 	/**
-	 * Representation of one JSON value.
-	 *
 	 * Each value can be either a string, number, true, false, null
 	 * or one of the structure types object or array.
 	 *
@@ -139,7 +137,7 @@ namespace Json {
 
 			/**
 			 * Get the type of this value,(e.g. JVARRAY or JVNUMBER). This can
-			 * be used to determine which 'as<T>()' function you can use to
+			 * be used to determine which 'asT()' function you can use to
 			 * retrieve the value.
 			 *
 			 * @returns The type as defined by Json::Types
@@ -153,7 +151,7 @@ namespace Json {
 
 			/**
 			 * Fetches the value, casted to class T. Unless needed for specific
-			 * reasons (such as dynamic types), use the 'as<T>()' functions instead.
+			 * reasons (such as dynamic types), use the 'asT()' functions instead.
 			 *
 			 * @throws std::bad_cast If the value cant be casted to T.
 			 * @returns The current value.
@@ -164,31 +162,33 @@ namespace Json {
 			};
 
 			/**
-			 * Get the value as a JsonArray.
+			 * Get the value as an Array.
 			 *
 			 * @return The value as an array.
-			 * @see JsonArray
+			 * @see Json::Array
 			 * @see get()
 			 */
-			JsonArray asArray()
+			Json::Array asArray()
 			{
-				return this->get<JsonArray>();
+				return this->get<Json::Array>();
 			};
 
 			/**
 			 * Get the value as a JsonObject.
 			 *
 			 * @return The value as an object.
-			 * @see JsonObject
+			 * @see Json::Object
 			 * @see get()
 			 */
-			JsonObject asObject()
+			Json::Object asObject()
 			{
-				return this->get<JsonObject>();
+				return this->get<Json::Object>();
 			};
 
 			/**
 			 * Get the value as an integer.
+			 *
+			 * @note If the value was stored as a double, several significant digits may have been truncated.
 			 *
 			 * @return The JSON number as an integer.
 			 * @see get()
@@ -202,10 +202,10 @@ namespace Json {
 			 * Get the value as a number.
 			 *
 			 * @return The value as a number.
-			 * @see JsonNumber
+			 * @see Json::Number
 			 * @see get()
 			 */
-			JsonNumber asNumber()
+			Json::Number asNumber()
 			{
 				return this->get<double>();
 			};
@@ -214,10 +214,10 @@ namespace Json {
 			 * Get the value as a boolean.
 			 *
 			 * @return The value as a boolean.
-			 * @see JsonBool
+			 * @see Json::Bool
 			 * @see get()
 			 */
-			JsonBool asBool()
+			Json::Bool asBool()
 			{
 				return this->get<bool>();
 			};
@@ -226,12 +226,12 @@ namespace Json {
 			 * Get the value as a string.
 			 *
 			 * @return The value as a string.
-			 * @see JsonString
+			 * @see Json::String
 			 * @see get()
 			 */
-			JsonString asString()
+			Json::String asString()
 			{
-				return this->get<std::string>();
+				return this->get<Json::String>();
 			};
 
 			/**
@@ -246,12 +246,12 @@ namespace Json {
 			};
 
 		private:
-			boost::variant<JsonString,
-	                       JsonNumber,
-	                       JsonBool,
-	                       JsonObject,
-	                       JsonArray> value;
-			Types type;
+			boost::variant<Json::String,
+	                       Json::Number,
+	                       Json::Bool,
+	                       Json::Object,
+	                       Json::Array> value;
+			Json::Types type;
 
 			/**
 			 * Strips the string, removing any insignificant characters
@@ -308,16 +308,16 @@ namespace Json {
 			void parseObject(std::string) throw (Json::Exception);
 			void parseArray(std::string) throw (Json::Exception);
 
-			static void deleteObject(JsonObject obj)
+			static void deleteObject(Json::Object obj)
 			{
-				for (JsonObject::iterator it = obj.begin(); it != obj.end(); it++) {
+				for (Json::Object::iterator it = obj.begin(); it != obj.end(); it++) {
 					delete it->second;
 				}
 			};
 
-			static void deleteArray(JsonArray arr)
+			static void deleteArray(Json::Array arr)
 			{
-				for (JsonArray::iterator it = arr.begin(); it != arr.end(); it++) {
+				for (Json::Array::iterator it = arr.begin(); it != arr.end(); it++) {
 					delete *it;
 				}
 			};

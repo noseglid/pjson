@@ -21,7 +21,7 @@
  * [ "value1", "value2", 12 ]
  * @endcode
  * These are represented in the pjson library by std::vector<Json::Value*>.
- * Take a look at Json::JsonArray.
+ * Take a look at Json::Array.
  *
  * These can be used just as you would us a normal array
  * @include array.cpp
@@ -41,7 +41,7 @@
  * strings, literals, arrays etc. Even other objects)
  *
  * An object is represented in the pjson library by
- * std::map<Json::JsonString, Json::Value*>. Take a look at Json::JsonObject.
+ * std::map<Json::String, Json::Value*>. Take a look at Json::Object.
  * All normal STL functions for this structures apply
  * @include object.cpp
  * @include object.out

@@ -162,7 +162,7 @@ Json::Value::parseObject(std::string json) throw (Json::Exception)
 {
 	std::string object = this->extract(json);
 
-	JsonObject m;
+	Json::Object m;
 	unsigned int keystart = 0;
 	while(keystart < object.length()) {
 		/* Magic number haven... */
@@ -181,7 +181,7 @@ Json::Value::parseArray(std::string json) throw (Json::Exception)
 {
 	std::string array = this->extract(json);
 
-	JsonArray a;
+	Json::Array a;
 	unsigned int valstart = 0;
 	while (valstart < array.length()) {
 		std::string value = this->extract(array, valstart, true);
