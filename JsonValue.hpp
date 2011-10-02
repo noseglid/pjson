@@ -138,8 +138,22 @@ namespace Json {
 			};
 
 			/**
+			 * Get the type of this value,(e.g. JVARRAY or JVNUMBER). This can
+			 * be used to determine which 'as<T>()' function you can use to
+			 * retrieve the value.
+			 *
+			 * @returns The type as defined by Json::Types
+			 * @see Json::Types
+			 */
+			Json::Types
+			getType()
+			{
+				return this->type;
+			}
+
+			/**
 			 * Fetches the value, casted to class T. Unless needed for specific
-			 * reasons (such as dynamic types), use the 'asX()' functions instead.
+			 * reasons (such as dynamic types), use the 'as<T>()' functions instead.
 			 *
 			 * @throws std::bad_cast If the value cant be casted to T.
 			 * @returns The current value.

@@ -274,3 +274,46 @@ JsonValueSuite::invalidArray()
 		TEST_ASSERT_MSG(false, "Unexpected exception.");
 	}
 }
+
+void
+JsonValueSuite::getType()
+{
+	try {
+		string json1 = "\"string\"";
+		Json::Value p1(json1);
+		TEST_ASSERT(Json::JVSTRING == p1.getType());
+
+		string json2 = "10";
+		Json::Value p2(json2);
+		TEST_ASSERT(Json::JVNUMBER == p2.getType());
+
+		string json3 = "10";
+		Json::Value p3(json3);
+		TEST_ASSERT(Json::JVNUMBER == p3.getType());
+
+		string json4 = "false";
+		Json::Value p4(json4);
+		TEST_ASSERT(Json::JVBOOL == p4.getType());
+
+		string json5 = "true";
+		Json::Value p5(json5);
+		TEST_ASSERT(Json::JVBOOL == p5.getType());
+
+		string json6 = "null";
+		Json::Value p6(json6);
+		TEST_ASSERT(Json::JVNULL == p6.getType());
+
+		string json7 = "[1, 1, 2, 3, 5, 8, 13]";
+		Json::Value p7(json7);
+		TEST_ASSERT(Json::JVARRAY == p7.getType());
+
+		string json8 = "{\"a\" : 1, \"b\" : 2}";
+		Json::Value p8(json8);
+		TEST_ASSERT(Json::JVOBJECT == p8.getType());
+
+		TEST_ASSERT(Json::JVNUMBER == p7.asArray()[2]->getType());
+		TEST_ASSERT(Json::JVNUMBER == p8.asObject()["a"]->getType());
+	} catch (exception stde) {
+		TEST_ASSERT_MSG(false, "Unexpected exception.");
+	}
+}
