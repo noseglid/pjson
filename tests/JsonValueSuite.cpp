@@ -282,3 +282,26 @@ JsonValueSuite::getType()
 	TEST_ASSERT(Json::JVNUMBER, p7.asArray()[2]->getType());
 	TEST_ASSERT(Json::JVNUMBER, p8.asObject()["a"]->getType());
 }
+
+void
+JsonValueSuite::getOperator()
+{
+	string json1 = readfile("data/validobject4.json");
+	Json::Value p1(json1);
+	TEST_ASSERT(123,      p1["key1"].asInt());
+	TEST_ASSERT(12e6,     p1["key2"].asNumber());
+	TEST_ASSERT(true,     p1["key3"].asBool());
+	TEST_ASSERT(false,    p1["key4"].asBool());
+	TEST_ASSERT("string", p1["key5"].asString());
+	TEST_ASSERT("false",  p1["key6"].asString());
+
+	string json2 = readfile("data/validarray2.json");
+	Json::Value p2(json2);
+	TEST_ASSERT("multivalue", p2[0].asString());
+	TEST_ASSERT(true,         p2[1].isNull());
+	TEST_ASSERT(12e9,         p2[2].asNumber());
+	TEST_ASSERT(false,        p2[3].asBool());
+	TEST_ASSERT("val1",       p2[4]["key1"].asString());
+	TEST_ASSERT(true,         p2[5].asBool());
+	TEST_ASSERT(22,           p2[6].asInt());
+}

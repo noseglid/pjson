@@ -12,15 +12,9 @@ int main(void)
 	Json::Value jv(strJSON);
 
 	/* We can now use 'jv' to retrieve the values. */
-	std::cout << "Action: " << jv.asObject()["action"]->asString() << std::endl;
-	std::cout << "  Item: " << jv.asObject()["itemid"]->asInt()    << std::endl;
-	std::cout << "  Cost: " << jv.asObject()["cost"]->asNumber()   << std::endl;
-
-	/*
-	 * We can fetch the object and store it in a local variable
-	 * For easier access if we need to use it multiple times.
-	 */
-	Json::Object obj = jv.asObject();
+	std::cout << "Action: " << jv["action"].asString() << std::endl;
+	std::cout << "  Item: " << jv["itemid"].asInt()    << std::endl;
+	std::cout << "  Cost: " << jv["cost"].asNumber()   << std::endl;
 
 	return 0;
 }

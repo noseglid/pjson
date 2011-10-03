@@ -15,18 +15,6 @@
  * @section structures Using the JSON structures (Array and Object)
  * JSON defines two structure types, Arrays and Objects.
  *
- * @subsection array Array
- * An Array is 0 or more consecutive values enclosed by the delmiters '[' and ']'.
- * @code
- * [ "value1", "value2", 12 ]
- * @endcode
- * These are represented in the pjson library by std::vector<Json::Value*>.
- * Take a look at Json::Array.
- *
- * These can be used just as you would us a normal array
- * @include doc-array.cpp
- * @include doc-array.out
- *
  * @subsection object Object
  * An object is 0 or more key, value pairs enclosed by the delimiters '{' and '}'.
  * @code
@@ -45,12 +33,24 @@
  * All normal STL functions for this structures apply
  * @include doc-object.cpp
  * @include doc-object.out
+ *
+ * @subsection array Array
+ * An Array is 0 or more consecutive values enclosed by the delmiters '[' and ']'.
+ * @code
+ * [ "value1", "value2", 12 ]
+ * @endcode
+ * These are represented in the pjson library by std::vector<Json::Value*>.
+ * Take a look at Json::Array.
+ *
+ * These can be used just as you would us a normal array
+ * @include doc-array.cpp
+ * @include doc-array.out
  */
 
 /**
- * @example basic.cpp
- * @example array.cpp
- * @example object.cpp
+ * @example doc-basic.cpp
+ * @example doc-array.cpp
+ * @example doc-object.cpp
  */
 
 #include "JsonValue.hpp"
