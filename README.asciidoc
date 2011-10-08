@@ -10,7 +10,17 @@ other administrative tasks is still at hand.
 Use with care so far.
 
 == Dependencies
-The boost library (headers only) is required to run libpjson
+* C++ compiler
+* libtool
+* The boost library (headers only; variant and lexical_cast)
+
+== Install
+PJSON uses autoconf. Installing should be as simple as 1-2-3:
+1. ./configure
+2. make
+3. make install
+
+Step 3 must be run as root, typically prefix with 'sudo' if you have that.
 
 == Why?
 There are several json interpreters out there, why would I go about
