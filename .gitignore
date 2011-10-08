@@ -1,0 +1,9 @@
+Makefile
+autom4te.cache
+doc/html/
+tests/test-pjson
+config.log
+config.status
+configure
+*.o
+tags

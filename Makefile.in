@@ -1,0 +1,49 @@
+CXX       = @CXX@
+CXXFLAGS  = @CXXFLAGS@
+CXXFLAGS +=-DVERSION=@PACKAGE_VERSION@ -DPACKAGE_NAME=@PACKAGE_NAME@
+
+LIBTOOL = @LIBTOOL@
+INSTALL = @INSTALL@
+RM      = @RM@
+PRINTF  = @@PRINTF@
+
+LIB     = libpjson.la
+SOURCES = JsonValue.cpp
+OBJECTS = $(SOURCES:.cpp=.lo)
+HEADERS = $(SOURCES:.cpp=.hpp) JsonException.hpp pjson.hpp
+
+PREFIX = @prefix@
+LIBDIR = $(PREFIX)/lib
+INCDIR = $(PREFIX)/include/pjson
+
+.PHONY: default all install doc test clean
+
+$(LIB): $(OBJECTS)
+	$(LIBTOOL) --mode=link $(CXX) $(CXXFLAGS) -o $(LIB) $(OBJECTS) -rpath $(LIBDIR)
+
+all: $(INSTALL)
+
+install: $(LIB)
+	$(INSTALL) -d $(LIBDIR)
+	$(INSTALL) -d $(INCDIR)
+	$(LIBTOOL) --mode=install $(INSTALL) $(LIB) $(LIBDIR)
+	$(LIBTOOL) --mode=install $(INSTALL) $(HEADERS) $(INCDIR)
+	$(LIBTOOL) --mode=finish -n $(LIBDIR)
+	$(PRINTF)  -- "Don't forget to run 'make test' to make sure library was installed and works properly.\n"
+
+uninstall:
+	$(LIBTOOL) --mode=uninstall $(RM) $(LIBDIR)/$(LIB)
+	$(LIBTOOL) --mode=uninstall $(RM) $(HEADERS:%=$(INCDIR)/%)
+
+doc:
+	$(MAKE) -C doc doc
+
+test:
+	$(MAKE) -C tests
+
+clean:
+	$(LIBTOOL) --mode=clean $(RM) -f $(OBJECTS)
+	$(LIBTOOL) --mode=clean $(RM) -f $(LIB)
+
+%.lo: %.cpp
+	$(LIBTOOL) --mode=compile $(CXX) $(CXXFLAGS) -c $< -o $@

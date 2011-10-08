@@ -1,7 +1,7 @@
 #ifndef _TESTJSONVALUESUITE_H_
 #define _TESTJSONVALUESUITE_H_
 
-#include <pjson.hpp>
+#include <pjson/pjson.hpp>
 #include <cpptest.h>
 
 class JsonValueSuite: public Test::Suite

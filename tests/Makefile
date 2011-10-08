@@ -1,7 +1,7 @@
 CC=g++
 AR=ar
-CFLAGS=-c -I.. -O0 -g3
-LDFLAGS=-L.. -lcpptest -lpjson
+CFLAGS=-c -O0 -g3
+LDFLAGS=-lcpptest -lpjson
 
 LIB      = pjson
 SOURCES  = main.cpp
@@ -14,7 +14,7 @@ BIN      = test-pjson
 all: test
 
 test: $(BIN)
-	DYLD_LIBRARY_PATH=.. ./$(BIN)
+	./$<
 
 clean:
 	rm -f $(OBJECTS) $(BIN)

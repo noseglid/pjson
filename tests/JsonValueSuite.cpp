@@ -1,7 +1,7 @@
 #include "JsonValueSuite.hpp"
 
 #include <cpptest.h>
-#include <pjson.hpp>
+#include <pjson/pjson.hpp>
 
 #include <fstream>
 #include <sstream>
