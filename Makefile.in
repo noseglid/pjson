@@ -26,8 +26,8 @@ all: $(INSTALL)
 install: $(LIB)
 	$(INSTALL) -d $(LIBDIR)
 	$(INSTALL) -d $(INCDIR)
-	$(LIBTOOL) --mode=install $(INSTALL) $(LIB) $(LIBDIR)
-	$(LIBTOOL) --mode=install $(INSTALL) $(HEADERS) $(INCDIR)
+	$(LIBTOOL) --quiet --mode=install $(INSTALL) $(LIB) $(LIBDIR)
+	$(LIBTOOL) --quiet --mode=install $(INSTALL) $(HEADERS) $(INCDIR)
 	$(LIBTOOL) --mode=finish -n $(LIBDIR)
 	$(PRINTF)  -- "Don't forget to run 'make test' to make sure library was installed and works properly.\n"
 
