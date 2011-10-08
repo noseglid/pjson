@@ -36,7 +36,7 @@ uninstall:
 	$(LIBTOOL) --mode=uninstall $(RM) $(HEADERS:%=$(INCDIR)/%)
 
 doc:
-	$(MAKE) -C doc doc
+	$(MAKE) -C doc
 
 test:
 	$(MAKE) -C tests

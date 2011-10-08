@@ -1,9 +1,9 @@
 .PHONY: all doc clean
 
-all:
-
 doc:
 	doxygen doxygen.cfg
+
+all: doc
 
 clean:
 	rm -rf html/
