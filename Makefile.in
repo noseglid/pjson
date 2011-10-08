@@ -29,7 +29,7 @@ install: $(LIB)
 	$(LIBTOOL) --quiet --mode=install $(INSTALL) $(LIB) $(LIBDIR)
 	$(LIBTOOL) --quiet --mode=install $(INSTALL) $(HEADERS) $(INCDIR)
 	$(LIBTOOL) --mode=finish -n $(LIBDIR)
-	$(PRINTF)  -- "Don't forget to run 'make test' to make sure library was installed and works properly.\n"
+	$(PRINTF)  -- "Don't forget to run 'make test' to make sure library was installed and works properly. (Requires cppunit)\n"
 
 uninstall:
 	$(LIBTOOL) --mode=uninstall $(RM) $(LIBDIR)/$(LIB)
