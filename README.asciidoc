@@ -1,30 +1,39 @@
 = PJSON Readme
 Alexander Olsson <noseglid@gmail.com>
-0.1, 2011-10-01
 
 == libpjson
-pjson is a slim, and easy to use json interpreter for use in the c++ language.
-The library and API is in place, but build process documentation and
-other administrative tasks is still at hand.
+PJSON is a slim, and easy to use JSON interpreter for use in the C++ language.
 
-Use with care so far.
+The API may still change. Only use this for testing purposes until a stable
+release is up for downloads. At which point the API will be almost guaranteed.
+There will be no changes to the API unless it is *required* for continued
+development, and even at this stage it will be thourougly weighed.
 
 == Dependencies
-* C++ compiler
-* libtool
-* The boost library (headers only; variant and lexical_cast)
+* http://www.gnu.org/software/libtool/[libtool]
+* http://www.boost.org/[boost] (only headers required; +variant+ and +lexical_cast+)
+
+If you're on a debian derivative (debian, ubuntu, ..) you can use the following to get
+the prerequisites (as root):
+----
+# apt-get install libtool libboost-all-dev
+----
 
 == Install
-PJSON uses autoconf. Installing should be as simple as 1-2-3:
-1. ./configure
-2. make
-3. make install
+Installation should be as easy as 1-2-3:
 
-Step 3 must be run as root, typically prefix with 'sudo' if you have that.
+----
+# ./configure
+# make
+# make install
+----
+
+Step 3 must be run as root, while step 1 and 2 do not require this.
 
 == Why?
-There are several json interpreters out there, why would I go about
+There are several JSON interpreters/parsers out there, why would I go about
 creating my own one? Several reasons:
 
-* As an initial project, I did it to learn the basics of c++ and the boost library.
-* The existing json interpreters had flaws I decided I could not accept. Among others where loads of valgrind warings, memory leaks and difficult to learn API.
+* As an initial project, I did it to learn the basics of +C+++ and the +boost+ library.
+* The existing JSON interpreters had flaws I decided I could not accept.
+  Among others were loads of valgrind warings, memory leaks and difficult to learn API.
