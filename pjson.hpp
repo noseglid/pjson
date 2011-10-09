@@ -9,8 +9,8 @@
  * @section quickuse Quick start
  *
  * Here is a quick example to get you started.
- * @include basic.cpp
- * @include basic.out
+ * @include doc-basic.cpp
+ * @include doc-basic.out
  *
  * @section structures Using the JSON structures (Array and Object)
  * JSON defines two structure types, Arrays and Objects.
@@ -24,8 +24,8 @@
  * Take a look at Json::Array.
  *
  * These can be used just as you would us a normal array
- * @include array.cpp
- * @include array.out
+ * @include doc-array.cpp
+ * @include doc-array.out
  *
  * @subsection object Object
  * An object is 0 or more key, value pairs enclosed by the delimiters '{' and '}'.
@@ -43,8 +43,8 @@
  * An object is represented in the pjson library by
  * std::map<Json::String, Json::Value*>. Take a look at Json::Object.
  * All normal STL functions for this structures apply
- * @include object.cpp
- * @include object.out
+ * @include doc-object.cpp
+ * @include doc-object.out
  */
 
 /**

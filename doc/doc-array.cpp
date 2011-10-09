@@ -1,4 +1,4 @@
-#include <pjson.hpp>
+#include <pjson/pjson.hpp>
 
 #include <string>
 #include <iostream>
@@ -7,6 +7,7 @@ int main(void)
 {
 	std::string strJSON = "[1, 2, 3, 4, 5]";
 
+	std::cout << "Intepreting json: '" << strJSON << "'" << std::endl;
 	Json::Value j(strJSON);
 
 	Json::Array arr = j.asArray();

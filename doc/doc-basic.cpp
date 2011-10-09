@@ -1,4 +1,4 @@
-#include <pjson.hpp>
+#include <pjson/pjson.hpp>
 
 #include <string>
 #include <iostream>
