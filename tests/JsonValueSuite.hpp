@@ -2,29 +2,22 @@
 #define _TESTJSONVALUESUITE_H_
 
 #include <pjson/pjson.hpp>
-#include <cpptest.h>
+#include <vector>
+#include <string>
 
-class JsonValueSuite: public Test::Suite
+class JsonValueSuite
 {
 	public:
 		JsonValueSuite()
 		{
-			TEST_ADD(JsonValueSuite::validString)
-			TEST_ADD(JsonValueSuite::invalidString)
-			TEST_ADD(JsonValueSuite::validNumber)
-			TEST_ADD(JsonValueSuite::invalidNumber)
-			TEST_ADD(JsonValueSuite::validObject)
-			TEST_ADD(JsonValueSuite::invalidObject)
-			TEST_ADD(JsonValueSuite::validBool)
-			TEST_ADD(JsonValueSuite::invalidBool)
-			TEST_ADD(JsonValueSuite::validNull)
-			TEST_ADD(JsonValueSuite::invalidNull)
-			TEST_ADD(JsonValueSuite::validArray)
-			TEST_ADD(JsonValueSuite::invalidArray)
-			TEST_ADD(JsonValueSuite::getType)
 		};
 
+		void run();
+		void report();
+
 	private:
+		std::vector<std::string> failed;
+
 		void validString();
 		void invalidString();
 		void validNumber();

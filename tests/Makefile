@@ -1,7 +1,6 @@
-CC=g++
-AR=ar
-CFLAGS=-c -O0 -g3
-LDFLAGS=-lcpptest -lpjson
+CC      = g++
+CFLAGS  = -c -O2 -g0
+LDFLAGS = -lpjson
 
 LIB      = pjson
 SOURCES  = main.cpp
