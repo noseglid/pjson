@@ -1,0 +1,31 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.61)
+AC_INIT(libpjson, v0.1, noseglid@gmail.com)
+AC_LANG(C++)
+
+AC_CONFIG_SRCDIR([JsonException.hpp])
+AC_CONFIG_SRCDIR([JsonValue.hpp])
+AC_CONFIG_SRCDIR([pjson.hpp])
+
+# Checks for programs.
+AC_DEFUN([AC_PROG_LIBTOOL], [AC_CHECK_TOOL(LIBTOOL, libtool, :)])
+AC_PROG_CXX
+AC_PROG_LIBTOOL
+AC_PROG_INSTALL
+
+AC_CHECK_TOOL(PRINTF, printf, :)
+AC_CHECK_TOOL(RM, rm, :)
+
+# Check for headers.
+AC_CHECK_HEADER([boost/lexical_cast.hpp],,[AC_MSG_ERROR([Cannot find boost header (boost/lexical_cast.hpp)])])
+AC_CHECK_HEADER([boost/variant.hpp],,[AC_MSG_ERROR([Cannot find boost header (boost/variant.hpp)])])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
