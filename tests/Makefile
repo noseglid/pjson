@@ -10,7 +10,7 @@ BIN      = test-pjson
 
 .PHONY: all test clean
 
-all: test
+all: $(BIN)
 
 test: $(BIN)
 	./$<

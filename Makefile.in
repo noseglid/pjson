@@ -39,7 +39,7 @@ doc:
 	$(MAKE) -C doc
 
 test:
-	$(MAKE) -C tests
+	$(MAKE) -C tests test
 
 clean:
 	$(LIBTOOL) --mode=clean $(RM) -f $(OBJECTS)
