@@ -1,3 +1,4 @@
+#include "framework.hpp"
 #include "JsonValueSuite.hpp"
 
 #include <pjson/pjson.hpp>
@@ -7,43 +8,6 @@
 #include <string>
 
 using namespace std;
-
-static int testn = 0;
-static int successn = 0;
-
-#define TEST_ASSERT(x, y) \
-	if ((testn + 1) % 40 == 0) std::cout << std::endl; \
-	if (!pjassert(x == y)) { \
-		std::cout << "F"; \
-		stringstream ss; \
-		ss << "Failed test (#" << testn + 1 << ") - "; \
-		ss << "[" << __FUNCTION__ << ":" << __LINE__ << "]" << std::endl; \
-		ss << ">    " << x << std::endl; \
-		ss << ":    " << y << std::endl; \
-		failed.push_back(ss.str()); \
-	} else { \
-		std::cout << "."; \
-	}
-
-#define TEST_THROWS(stmt, excp) \
-	do { \
-		bool caught = false; \
-		try { stmt; } \
-		catch (excp) { caught = true; } \
-		pjassert(caught); \
-	} while(0)
-
-static bool
-pjassert(bool expr)
-{
-	testn++;
-	if (expr)  {
-		successn++;
-		return true;
-	}
-
-	return false;
-}
 
 static string
 readfile(const char *file)
@@ -92,14 +56,7 @@ JsonValueSuite::run()
 
 void JsonValueSuite::report()
 {
-	std::cout.precision(2);
-	std::cout << std::endl
-		      << "Result: " << successn << "/" << testn << " asserts passed "
-			  << "[" << fixed << 100*successn/testn << "%]"
-	          << std::endl << std::endl;
-	for (vector<string>::const_iterator it = failed.begin(); it != failed.end(); it++) {
-		std::cout << *it << std::endl;
-	}
+	std::cout << pjreport();
 }
 
 void

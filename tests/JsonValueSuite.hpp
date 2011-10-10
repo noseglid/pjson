@@ -10,14 +10,13 @@ class JsonValueSuite
 	public:
 		JsonValueSuite()
 		{
+			std::cout << "Running suite 'JsonValue'." << std::endl;
 		};
 
 		void run();
 		void report();
 
 	private:
-		std::vector<std::string> failed;
-
 		void validString();
 		void invalidString();
 		void validNumber();
