@@ -1,7 +1,6 @@
-CC=g++
-AR=ar
-CFLAGS=-c -O0 -g3
-LDFLAGS=-lcpptest -lpjson
+CC      = g++
+CFLAGS  = -c -O2 -g0 -W -Wall -Werror
+LDFLAGS = -lpjson
 
 LIB      = pjson
 SOURCES  = main.cpp
@@ -11,7 +10,7 @@ BIN      = test-pjson
 
 .PHONY: all test clean
 
-all: test
+all: $(BIN)
 
 test: $(BIN)
 	./$<

@@ -29,7 +29,7 @@ install: $(LIB)
 	$(LIBTOOL) --quiet --mode=install $(INSTALL) $(LIB) $(LIBDIR)
 	$(LIBTOOL) --quiet --mode=install $(INSTALL) $(HEADERS) $(INCDIR)
 	$(LIBTOOL) --mode=finish -n $(LIBDIR)
-	$(PRINTF)  -- "Don't forget to run 'make test' to make sure library was installed and works properly. (Requires cppunit)\n"
+	$(PRINTF)  -- "Don't forget to run 'make test' to make sure library was installed and works properly.\n"
 
 uninstall:
 	$(LIBTOOL) --mode=uninstall $(RM) $(LIBDIR)/$(LIB)
@@ -39,11 +39,13 @@ doc:
 	$(MAKE) -C doc
 
 test:
-	$(MAKE) -C tests
+	$(MAKE) -C tests test
 
 clean:
 	$(LIBTOOL) --mode=clean $(RM) -f $(OBJECTS)
 	$(LIBTOOL) --mode=clean $(RM) -f $(LIB)
+	$(MAKE) -C doc clean
+	$(MAKE) -C tests clean
 
 %.lo: %.cpp
 	$(LIBTOOL) --mode=compile $(CXX) $(CXXFLAGS) -c $< -o $@
