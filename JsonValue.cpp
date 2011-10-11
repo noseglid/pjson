@@ -72,7 +72,7 @@ Json::Value::extract(std::string str,
 
 	size_t depth = 1;
 	size_t cpos  = pos + 1;
-	char current = NULL, previous = NULL;
+	char current = 0, previous = 0;
 	std::stringstream ss(str);
 	ss.seekg(cpos);
 	do {
