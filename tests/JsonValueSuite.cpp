@@ -1,4 +1,4 @@
-#include "framework.hpp"
+#include "pjtestframework.hpp"
 #include "JsonValueSuite.hpp"
 
 #include <pjson/pjson.hpp>

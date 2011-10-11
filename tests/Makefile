@@ -1,5 +1,5 @@
 CC      = g++
-CFLAGS  = -c -O2 -g0
+CFLAGS  = -c -O2 -g0 -W -Wall -Werror
 LDFLAGS = -lpjson
 
 LIB      = pjson

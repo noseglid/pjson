@@ -4,6 +4,7 @@
 #include <pjson/pjson.hpp>
 #include <vector>
 #include <string>
+#include <iostream>
 
 class JsonValueSuite
 {
