@@ -20,6 +20,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="examples.html"><span>Examples</span></a></li>
       <li id="searchli">
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -47,7 +48,7 @@ Introduction to pjson</h2>
 <h2><a class="anchor" id="quickuse"></a>
 Quick start</h2>
 <p>Here is a quick example to get you started. </p>
-<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;pjson.hpp&gt;</span>
+<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;pjson/pjson.hpp&gt;</span>
 
 <span class="preprocessor">#include &lt;string&gt;</span>
 <span class="preprocessor">#include &lt;iostream&gt;</span>
@@ -61,15 +62,9 @@ Quick start</h2>
         <a class="code" href="class_json_1_1_value.html" title="The main class representing a JSON value.">Json::Value</a> jv(strJSON);
 
         <span class="comment">/* We can now use &#39;jv&#39; to retrieve the values. */</span>
-        std::cout &lt;&lt; <span class="stringliteral">&quot;Action: &quot;</span> &lt;&lt; jv.asObject()[<span class="stringliteral">&quot;action&quot;</span>]-&gt;asString() &lt;&lt; std::endl;
-        std::cout &lt;&lt; <span class="stringliteral">&quot;  Item: &quot;</span> &lt;&lt; jv.asObject()[<span class="stringliteral">&quot;itemid&quot;</span>]-&gt;asInt()    &lt;&lt; std::endl;
-        std::cout &lt;&lt; <span class="stringliteral">&quot;  Cost: &quot;</span> &lt;&lt; jv.asObject()[<span class="stringliteral">&quot;cost&quot;</span>]-&gt;asNumber()   &lt;&lt; std::endl;
-
-        <span class="comment">/*</span>
-<span class="comment">         * We can fetch the object and store it in a local variable</span>
-<span class="comment">         * For easier access if we need to use it multiple times.</span>
-<span class="comment">         */</span>
-        <a class="code" href="namespace_json.html#a4b98ca7de454aca9246b5acef1593975">Json::JsonObject</a> obj = jv.asObject();
+        std::cout &lt;&lt; <span class="stringliteral">&quot;Action: &quot;</span> &lt;&lt; jv[<span class="stringliteral">&quot;action&quot;</span>].asString() &lt;&lt; std::endl;
+        std::cout &lt;&lt; <span class="stringliteral">&quot;  Item: &quot;</span> &lt;&lt; jv[<span class="stringliteral">&quot;itemid&quot;</span>].asInt()    &lt;&lt; std::endl;
+        std::cout &lt;&lt; <span class="stringliteral">&quot;  Cost: &quot;</span> &lt;&lt; jv[<span class="stringliteral">&quot;cost&quot;</span>].asNumber()   &lt;&lt; std::endl;
 
         <span class="keywordflow">return</span> 0;
 }
@@ -79,37 +74,7 @@ Quick start</h2>
 </pre></div><h2><a class="anchor" id="structures"></a>
 Using the JSON structures (Array and Object)</h2>
 <p>JSON defines two structure types, Arrays and Objects.</p>
-<h3><a class="anchor" id="array"></a>
-Array</h3>
-<p>An Array is 0 or more consecutive values enclosed by the delmiters '[' and ']'. </p>
-<div class="fragment"><pre class="fragment"> [ <span class="stringliteral">&quot;value1&quot;</span>, <span class="stringliteral">&quot;value2&quot;</span>, 12 ]
-</pre></div><p> These are represented in the pjson library by std::vector&lt;Json::Value*&gt;. Take a look at <a class="el" href="namespace_json.html#a2404b8aceff8122d77331c4b8f2caf51">Json::JsonArray</a>.</p>
-<p>These can be used just as you would us a normal array </p>
-<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;pjson.hpp&gt;</span>
-
-<span class="preprocessor">#include &lt;string&gt;</span>
-<span class="preprocessor">#include &lt;iostream&gt;</span>
-
-<span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)
-{
-        std::string strJSON = <span class="stringliteral">&quot;[1, 2, 3, 4, 5]&quot;</span>;
-
-        <a class="code" href="class_json_1_1_value.html" title="The main class representing a JSON value.">Json::Value</a> j(strJSON);
-
-        <a class="code" href="namespace_json.html#a2404b8aceff8122d77331c4b8f2caf51">Json::JsonArray</a> arr = j.asArray();
-
-        <span class="keywordflow">for</span> (Json::JsonArray::const_iterator it = arr.begin(); it != arr.end(); it++) {
-                std::cout &lt;&lt; (*it)-&gt;asInt() &lt;&lt; std::endl;
-        }
-
-        <span class="keywordflow">return</span> 0;
-}
-</pre></div> <div class="fragment"><pre class="fragment">1
-2
-3
-4
-5
-</pre></div><h3><a class="anchor" id="object"></a>
+<h3><a class="anchor" id="object"></a>
 Object</h3>
 <p>An object is 0 or more key, value pairs enclosed by the delimiters '{' and '}'. </p>
 <div class="fragment"><pre class="fragment"> {
@@ -118,8 +83,8 @@ Object</h3>
    <span class="stringliteral">&quot;key3&quot;</span>, <span class="keyword">false</span>
  }
 </pre></div><p>The keys must be a string, the value may be any JSON value (including numbers strings, literals, arrays etc. Even other objects)</p>
-<p>An object is represented in the pjson library by std::map&lt;Json::JsonString, Json::Value*&gt;. Take a look at <a class="el" href="namespace_json.html#a4b98ca7de454aca9246b5acef1593975">Json::JsonObject</a>. All normal STL functions for this structures apply </p>
-<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;pjson.hpp&gt;</span>
+<p>An object is represented in the pjson library by std::map&lt;Json::String, Json::Value*&gt;. Take a look at <a class="el" href="namespace_json.html#a327e35501c997797cc66f80bfe27398b">Json::Object</a>. All normal STL functions for this structures apply </p>
+<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;pjson/pjson.hpp&gt;</span>
 
 <span class="preprocessor">#include &lt;string&gt;</span>
 <span class="preprocessor">#include &lt;iostream&gt;</span>
@@ -129,10 +94,12 @@ Object</h3>
         std::string strJSON = <span class="stringliteral">&quot;{\&quot;action\&quot; : \&quot;update\&quot;, \&quot;itemid\&quot; : \&quot;a6fb4e\&quot;, \&quot;name\&quot; : \&quot;cdbabe\&quot;}&quot;</span>;
         <a class="code" href="class_json_1_1_value.html" title="The main class representing a JSON value.">Json::Value</a> j(strJSON);
 
-        <a class="code" href="namespace_json.html#a4b98ca7de454aca9246b5acef1593975">Json::JsonObject</a> obj = j.asObject();
+        <a class="code" href="namespace_json.html#a327e35501c997797cc66f80bfe27398b">Json::Object</a> obj = j.asObject();
 
-        <span class="keywordflow">for</span> (Json::JsonObject::const_iterator it = obj.begin(); it != obj.end(); it++) {
-                std::cout &lt;&lt; it-&gt;first &lt;&lt; <span class="stringliteral">&quot; : &quot;</span> &lt;&lt; it-&gt;second-&gt;asString() &lt;&lt; std::endl;
+        <span class="keywordflow">for</span> (Json::Object::const_iterator it = obj.begin(); it != obj.end(); it++) {
+                std::string key   = it-&gt;first; <span class="comment">/* Key is always a string in Json::Object. No need to cast. */</span>
+                std::string value = it-&gt;second-&gt;asString();
+                std::cout &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; : &quot;</span> &lt;&lt; value &lt;&lt; std::endl;
         }
 
         <span class="keywordflow">return</span> 0;
@@ -140,6 +107,49 @@ Object</h3>
 </pre></div> <div class="fragment"><pre class="fragment">action : update
 itemid : a6fb4e
 name : cdbabe
+</pre></div><h3><a class="anchor" id="array"></a>
+Array</h3>
+<p>An Array is 0 or more consecutive values enclosed by the delmiters '[' and ']'. </p>
+<div class="fragment"><pre class="fragment"> [ <span class="stringliteral">&quot;value1&quot;</span>, <span class="stringliteral">&quot;value2&quot;</span>, 12 ]
+</pre></div><p> These are represented in the pjson library by std::vector&lt;Json::Value*&gt;. Take a look at <a class="el" href="namespace_json.html#aae9194c7de4f281bbd8820da27eb698d">Json::Array</a>.</p>
+<p>These can be used just as you would us a normal array </p>
+<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;pjson/pjson.hpp&gt;</span>
+
+<span class="preprocessor">#include &lt;string&gt;</span>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+
+<span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)
+{
+        std::string strJSON = <span class="stringliteral">&quot;[1, 2, 3, 4, 5, \&quot;There are 6 elements, including me\&quot;]&quot;</span>;
+
+        std::cout &lt;&lt; <span class="stringliteral">&quot;Intepreting json: &#39;&quot;</span> &lt;&lt; strJSON &lt;&lt; <span class="stringliteral">&quot;&#39;&quot;</span> &lt;&lt; std::endl;
+        <a class="code" href="class_json_1_1_value.html" title="The main class representing a JSON value.">Json::Value</a> j(strJSON);
+
+        <a class="code" href="namespace_json.html#aae9194c7de4f281bbd8820da27eb698d">Json::Array</a> arr = j.asArray();
+
+        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 6; ++i) {
+                <a class="code" href="class_json_1_1_value.html" title="The main class representing a JSON value.">Json::Value</a> *v = arr[i];
+                <span class="keywordflow">switch</span> (v-&gt;<a class="code" href="class_json_1_1_value.html#a53f40f0583fc735de79849e19e94e7cc">getType</a>()) {
+                <span class="keywordflow">case</span> <a class="code" href="namespace_json.html#a2c813f7903daf0fe146fd13ae5eb5d1da204fc1943d2202e0c01d73c96461a633">Json::JVSTRING</a>:
+                        std::cout &lt;&lt; v-&gt;<a class="code" href="class_json_1_1_value.html#a0c072324192e0cc7941cd1ad770de396">asString</a>() &lt;&lt; std::endl;
+                        <span class="keywordflow">break</span>;
+                <span class="keywordflow">case</span> <a class="code" href="namespace_json.html#a2c813f7903daf0fe146fd13ae5eb5d1da136ddcb2445976dcca6810424b4973ed">Json::JVNUMBER</a>:
+                        std::cout &lt;&lt; v-&gt;<a class="code" href="class_json_1_1_value.html#a518d2416d47987d27570702b196a8989">asNumber</a>() &lt;&lt; std::endl;
+                        <span class="keywordflow">break</span>;
+                <span class="keywordflow">default</span>:
+                        std::cout &lt;&lt; <span class="stringliteral">&quot;Unknown type.&quot;</span> &lt;&lt; std::endl;
+                }
+        }
+
+        <span class="keywordflow">return</span> 0;
+}
+</pre></div> <div class="fragment"><pre class="fragment">Intepreting json: <span class="stringliteral">&#39;[1, 2, 3, 4, 5, &quot;There are 6 elements, including me&quot;]&#39;</span>
+1
+2
+3
+4
+5
+There are 6 elements, including me
 </pre></div> </div></div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -155,7 +165,7 @@ name : cdbabe
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Oct 2 2011 16:17:49 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 13 2011 21:13:07 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
