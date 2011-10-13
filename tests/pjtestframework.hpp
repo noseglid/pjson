@@ -62,14 +62,23 @@ void
 __pjtest()
 {
 	testn++;
+	if (testn % 40 == 0) std::cout << std::endl;
 }
 
 template <class T1, class T2> void
 pjassert(T1 x, T2 y, const char *fnc, unsigned int line)
 {
-	if (testn % 40 == 0) std::cout << std::endl;
-
 	if (x == y) pjassert_success();
+	else pjassert_fail(x, y, fnc, line);
+}
+
+template <> void
+pjassert(double x, double y, const char *fnc, unsigned int line)
+{
+	double delta = 0.001;
+	double low  = x - delta;
+	double high = y + delta;
+	if(y >= low && y <= high) pjassert_success();
 	else pjassert_fail(x, y, fnc, line);
 }
 
@@ -77,14 +86,14 @@ std::string
 pjreport()
 {
 	std::stringstream ss;
+	ss << std::endl << std::endl;
 
 	for (failiter it = failed.begin(); it != failed.end(); it++) {
 		ss << *it << std::endl;
 	}
 
 	ss.precision(2);
-	ss << std::endl
-	   << "Result: " << successn << "/" << testn << " asserts passed "
+	ss << "Result: " << successn << "/" << testn << " asserts passed "
 	   << "[" << std::fixed << 100*successn/testn << "%]."
 	   << std::endl << std::endl;
 

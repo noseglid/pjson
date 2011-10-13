@@ -34,7 +34,6 @@ namespace Json {
 		JVNULL
 	};
 
-
 	/**
 	 * A representation of a JSON string.
 	 */

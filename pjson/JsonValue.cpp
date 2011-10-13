@@ -127,11 +127,11 @@ void
 Json::Value::parseNumber(std::string json) throw (Json::Exception)
 {
 	try {
-		this->value = boost::lexical_cast<float>(json);
+		this->value = boost::lexical_cast<Json::Number>(json);
 	} catch (std::bad_cast) {
 		throw Json::Exception("Number value invalid.");
 	}
-	this->type  = JVNUMBER;
+	this->type = JVNUMBER;
 }
 
 void
