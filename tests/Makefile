@@ -1,6 +1,6 @@
 CC      = g++
-CFLAGS  = -c -O2 -g0 -W -Wall -Werror
-LDFLAGS = -lpjson
+CFLAGS  = -I.. -c -O2 -g0 -W -Wall -Werror
+LDFLAGS = -L../.libs -lpjson
 
 LIB      = pjson
 SOURCES  = main.cpp
@@ -13,7 +13,7 @@ BIN      = test-pjson
 all: $(BIN)
 
 test: $(BIN)
-	./$<
+	DYLD_LIBRARY_PATH=../.libs LD_LIBRARY_PATH=../.libs ./$<
 
 clean:
 	rm -f $(OBJECTS) $(BIN)

@@ -2,6 +2,7 @@
 #include "JsonValueSuite.hpp"
 
 #include <pjson/pjson.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <fstream>
 #include <sstream>
@@ -90,11 +91,16 @@ JsonValueSuite::validNumber()
 
 	string json2 = readfile("data/validnumber2.json");
 	Json::Value p2(json2);
-	TEST_ASSERT(float(85.5), p2.asNumber());
+	TEST_ASSERT(double(85.5), p2.asNumber());
 
 	string json3 = readfile("data/validnumber3.json");
 	Json::Value p3(json3);
-	TEST_ASSERT(float(-0.0674), p3.asNumber());
+	TEST_ASSERT(double(-0.0674), p3.asNumber());
+
+	int max = std::numeric_limits<int>::max();
+	string json4(boost::lexical_cast<string>(max));
+	Json::Value p4(json4);
+	TEST_ASSERT(max, p4.asInt());
 }
 
 void
