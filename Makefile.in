@@ -16,12 +16,15 @@ PREFIX = @prefix@
 LIBDIR = @prefix@/lib
 INCDIR = @prefix@/include/pjson
 
+VERSION = @PACKAGE_VERSION@
+
 .PHONY: all install uninstall doc test clean
 
 all: $(LIB)
 
 $(LIB): $(OBJECTS)
-	$(LIBTOOL) --mode=link $(CXX) $(CXXFLAGS) -o $(LIB) $(OBJECTS) -rpath $(LIBDIR)
+	$(LIBTOOL) --mode=link $(CXX) $(CXXFLAGS) -o $(LIB) $(OBJECTS) \
+	           -rpath $(LIBDIR) -release $(VERSION)
 
 install: $(LIB)
 	$(INSTALL) -d $(LIBDIR)
