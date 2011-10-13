@@ -11,7 +11,9 @@ int main(void)
 	Json::Object obj = j.asObject();
 
 	for (Json::Object::const_iterator it = obj.begin(); it != obj.end(); it++) {
-		std::cout << it->first << " : " << it->second->asString() << std::endl;
+		std::string key   = it->first; /* Key is always a string in Json::Object. No need to cast. */
+		std::string value = it->second->asString();
+		std::cout << key << " : " << value << std::endl;
 	}
 
 	return 0;

@@ -1,6 +1,8 @@
 .PHONY: all doc clean
 
 CXX     = g++
+CFLAGS  = -I.. -c
+LDFLAGS = -L../.libs -lpjson
 DOXYGEN = doxygen
 RM      = rm
 
@@ -17,8 +19,8 @@ clean:
 	$(RM) -rf $(OBJ) $(BIN) html $(BIN:%=%.out)
 
 doc-%: doc-%.o
-	$(CXX) -lpjson -o $@ $<
-	./$@ > $@.out
+	$(CXX) $(LDFLAGS) -o $@ $<
+	DYLD_LIBRARY_PATH=../.libs LD_LIBRARY_PATH=../.libs ./$@ > $@.out
 
 %.o: %.cpp
-	$(CXX) -c $< -o $@
+	$(CXX) $(CFLAGS) $< -o $@

@@ -5,9 +5,9 @@ AC_PREREQ(2.61)
 AC_INIT(libpjson, v0.1, noseglid@gmail.com)
 AC_LANG(C++)
 
-AC_CONFIG_SRCDIR([JsonException.hpp])
-AC_CONFIG_SRCDIR([JsonValue.hpp])
-AC_CONFIG_SRCDIR([pjson.hpp])
+AC_CONFIG_SRCDIR([pjson/JsonException.hpp])
+AC_CONFIG_SRCDIR([pjson/JsonValue.hpp])
+AC_CONFIG_SRCDIR([pjson/pjson.hpp])
 
 # Checks for programs.
 AC_DEFUN([AC_PROG_LIBTOOL], [AC_CHECK_TOOL(LIBTOOL, libtool, :)])
