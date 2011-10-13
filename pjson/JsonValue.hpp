@@ -34,7 +34,6 @@ namespace Json {
 		JVNULL
 	};
 
-
 	/**
 	 * A representation of a JSON string.
 	 */
@@ -162,6 +161,37 @@ namespace Json {
 			};
 
 			/**
+			 * Fetches the value defined by 'key' in the Object
+			 * this value represents.
+			 *
+			 * @note This Json::Value must represent an object.
+			 *
+			 * @param key The key to use to retrieve the value.
+			 * @returns The value identified by key.
+			 */
+			Value operator[](const char* key)
+			{
+				return *this->asObject()[key];
+			};
+
+			/**
+			 * Fetches the value defined by key in the Array
+			 * this value represents.
+			 *
+			 * @note This Json::Value must represent an array.
+			 *
+			 * The key is indexed from 0 to n-1, where n is the number of
+			 * elements in the array. (see std::vector).
+			 *
+			 * @param key The key to use to retrieve the value.
+			 * @returns The value identified by key.
+			 */
+			Value operator[](int key)
+			{
+				return *this->asArray()[key];
+			};
+
+			/**
 			 * Get the value as an Array.
 			 *
 			 * @return The value as an array.
@@ -188,7 +218,8 @@ namespace Json {
 			/**
 			 * Get the value as an integer.
 			 *
-			 * @note If the value was stored as a double, several significant digits may have been truncated.
+			 * @note If the value was stored as a double,
+			 *       several significant digits may have been truncated.
 			 *
 			 * @return The JSON number as an integer.
 			 * @see get()

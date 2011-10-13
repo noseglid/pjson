@@ -72,7 +72,7 @@ Json::Value::extract(std::string str,
 
 	size_t depth = 1;
 	size_t cpos  = pos + 1;
-	char current = NULL, previous = NULL;
+	char current = 0, previous = 0;
 	std::stringstream ss(str);
 	ss.seekg(cpos);
 	do {
@@ -127,11 +127,11 @@ void
 Json::Value::parseNumber(std::string json) throw (Json::Exception)
 {
 	try {
-		this->value = boost::lexical_cast<float>(json);
+		this->value = boost::lexical_cast<Json::Number>(json);
 	} catch (std::bad_cast) {
 		throw Json::Exception("Number value invalid.");
 	}
-	this->type  = JVNUMBER;
+	this->type = JVNUMBER;
 }
 
 void
