@@ -1,0 +1,27 @@
+[
+	{
+		"level1-1" : { "level2-1-1" : "l2key1" },
+		"level1-2" : { "level2-2-1" : "l2key2" }
+	},
+	{
+		"level1-1" : { "level2-1-2" : "l2key1" },
+		"level1-2" : { "level2-2-2" : "l2key2" }
+	},
+	{
+		"arr1" :
+		[
+			{"somekey"  : {"somekeyagain" : 12}},
+			{
+				"somekey2" : {"somekeyagain" : 14},
+				"another"  : 32
+			}
+		],
+
+		"arr2" :
+		[
+			{"somekey"  : {"somekeyagain" : 13}},
+			{"somekey2" : {"somekeyagain" : 15}}
+		]
+	}
+]
+

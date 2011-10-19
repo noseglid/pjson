@@ -1,11 +1,13 @@
-#ifndef _JSONVALUE_H_
-#define _JSONVALUE_H_
+#ifndef __JSONVALUE_H__
+#define __JSONVALUE_H__
 
 #include "JsonException.hpp"
+
 #include <boost/variant.hpp>
 #include <string>
 #include <map>
 #include <vector>
+#include <stdexcept>
 
 /// Default namespace for the <em>pjson</em> library.
 /**
@@ -167,11 +169,19 @@ namespace Json {
 			 * @note This Json::Value must represent an object.
 			 *
 			 * @param key The key to use to retrieve the value.
+			 * @throws Json::Exception If the string is not a key in the object.
 			 * @returns The value identified by key.
 			 */
-			Value operator[](const char* key)
+			Value& operator[](const char* key) throw (Json::Exception)
 			{
-				return *this->asObject()[key];
+				Object obj          = this->asObject();
+				Object::iterator it = obj.find(key);
+
+				if (it == obj.end()) {
+					throw Json::Exception("Key does not exist in object.");
+				}
+
+				return *it->second;
 			};
 
 			/**
@@ -184,11 +194,16 @@ namespace Json {
 			 * elements in the array. (see std::vector).
 			 *
 			 * @param key The key to use to retrieve the value.
+			 * @throws Json::Exception If the index is outside of the Array bounds.
 			 * @returns The value identified by key.
 			 */
-			Value operator[](int key)
+			Value& operator[](int key) throw (Json::Exception)
 			{
-				return *this->asArray()[key];
+				try {
+					return *this->asArray().at(key);
+				} catch (std::out_of_range) {
+					throw Json::Exception("Out of array bounds.");
+				}
 			};
 
 			/**
@@ -278,10 +293,10 @@ namespace Json {
 
 		private:
 			boost::variant<Json::String,
-	                       Json::Number,
-	                       Json::Bool,
-	                       Json::Object,
-	                       Json::Array> value;
+			               Json::Number,
+			               Json::Bool,
+			               Json::Object,
+			               Json::Array> value;
 			Json::Types type;
 
 			/**

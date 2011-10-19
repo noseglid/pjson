@@ -15,6 +15,9 @@ all: $(BIN)
 test: $(BIN)
 	DYLD_LIBRARY_PATH=../.libs LD_LIBRARY_PATH=../.libs ./$<
 
+debug: $(BIN)
+	DYLD_LIBRARY_PATH=../.libs LD_LIBRARY_PATH=../.libst gdb ./$<
+
 clean:
 	rm -f $(OBJECTS) $(BIN)
 

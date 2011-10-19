@@ -1,5 +1,5 @@
-#ifndef _TESTJSONVALUESUITE_H_
-#define _TESTJSONVALUESUITE_H_
+#ifndef __JSONVALUESUITE_H__
+#define __JSONVALUESUITE_H__
 
 #include <pjson/pjson.hpp>
 #include <vector>
@@ -32,6 +32,8 @@ class JsonValueSuite
 		void invalidArray();
 		void getType();
 		void getOperator();
+		void invalidGetOperator();
+		void validNested();
 };
 
 #endif
