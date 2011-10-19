@@ -53,6 +53,9 @@ JsonValueSuite::run()
 	this->validArray();
 	this->invalidArray();
 	this->getType();
+	this->getOperator();
+	this->invalidGetOperator();
+	this->validNested();
 }
 
 void JsonValueSuite::report()
@@ -304,4 +307,36 @@ JsonValueSuite::getOperator()
 	TEST_ASSERT("val1",       p2[4]["key1"].asString());
 	TEST_ASSERT(true,         p2[5].asBool());
 	TEST_ASSERT(22,           p2[6].asInt());
+}
+
+void
+JsonValueSuite::invalidGetOperator()
+{
+	string json1 = readfile("data/validobject4.json");
+	Json::Value p1(json1);
+	TEST_THROWS(p1["does_not_exist"], Json::Exception);
+
+	string json2 = readfile("data/validarray1.json");
+	Json::Value p2(json2);
+	TEST_THROWS(p2[99], Json::Exception);
+}
+
+void
+JsonValueSuite::validNested()
+{
+	string json1 = readfile("data/validnested1.json");
+	Json::Value p1(json1);
+
+	TEST_ASSERT("l2key1", p1[0]["level1-1"]["level2-1-1"].asString());
+	TEST_ASSERT("l2key2", p1[0]["level1-2"]["level2-2-1"].asString());
+
+	TEST_ASSERT("l2key1", p1[1]["level1-1"]["level2-1-2"].asString());
+	TEST_ASSERT("l2key2", p1[1]["level1-2"]["level2-2-2"].asString());
+
+	TEST_ASSERT(12, p1[2]["arr1"][0]["somekey"]["somekeyagain"].asInt());
+	TEST_ASSERT(14, p1[2]["arr1"][1]["somekey2"]["somekeyagain"].asInt());
+	TEST_ASSERT(32, p1[2]["arr1"][1]["another"].asInt());
+
+	TEST_ASSERT(13, p1[2]["arr2"][0]["somekey"]["somekeyagain"].asInt());
+	TEST_ASSERT(15, p1[2]["arr2"][1]["somekey2"]["somekeyagain"].asInt());
 }
