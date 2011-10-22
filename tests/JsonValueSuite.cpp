@@ -19,15 +19,12 @@ readfile(const char *file)
 		return std::string();
 	}
 
-	// get length of file:
 	is.seekg(0, std::ios::end);
 	int length = is.tellg();
 	is.seekg(0, std::ios::beg);
 
-	// allocate memory:
 	char buffer[length];
 
-	// read data as a block:
 	is.read(buffer, length);
 	is.close();
 	std::string ret(buffer, length);
@@ -54,6 +51,7 @@ JsonValueSuite::run()
 	this->getOperator();
 	this->invalidGetOperator();
 	this->validNested();
+	this->invalidNested();
 }
 
 void JsonValueSuite::report()
@@ -151,6 +149,10 @@ JsonValueSuite::validObject()
 	std::string j6 = readfile("data/validobject6.json");
 	Json::Value p6(j6);
 	TEST_ASSERT(p6.asObject()["enclosing in key }"]->asString(), "opening and enclosing in value { }");
+
+	std::string j7 = readfile("data/validobject7.json");
+	Json::Value p7(j7);
+	TEST_ASSERT(p7["key"].asNumber(), 6);
 }
 
 void
@@ -161,6 +163,15 @@ JsonValueSuite::invalidObject()
 
 	std::string json2 = readfile("data/invalidobject2.json");
 	TEST_THROWS(Json::Value p(json2), Json::Exception);
+
+	std::string json3 = readfile("data/invalidobject3.json");
+	TEST_THROWS(Json::Value p3(json3), Json::Exception);
+
+	std::string json4 = readfile("data/invalidobject4.json");
+	TEST_THROWS(Json::Value p4(json4), Json::Exception);
+
+	std::string json5 = readfile("data/invalidobject5.json");
+	TEST_THROWS(Json::Value p5(json5), Json::Exception);
 }
 
 void
@@ -243,6 +254,12 @@ JsonValueSuite::invalidArray()
 
 	std::string json3 = readfile("data/invalidarray3.json");
 	TEST_THROWS(Json::Value p3(json3), Json::Exception);
+
+	std::string json4 = readfile("data/invalidarray4.json");
+	TEST_THROWS(Json::Value p4(json4), Json::Exception);
+
+	std::string json5 = readfile("data/invalidarray5.json");
+	TEST_THROWS(Json::Value p5(json5), Json::Exception);
 }
 
 void
@@ -337,4 +354,11 @@ JsonValueSuite::validNested()
 
 	TEST_ASSERT(13, p1[2]["arr2"][0]["somekey"]["somekeyagain"].asInt());
 	TEST_ASSERT(15, p1[2]["arr2"][1]["somekey2"]["somekeyagain"].asInt());
+}
+
+void
+JsonValueSuite::invalidNested()
+{
+	std::string json1 = readfile("data/invalidnested1.json");
+	TEST_THROWS(Json::Value p1(json1), Json::Exception);
 }

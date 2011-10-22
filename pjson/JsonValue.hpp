@@ -113,8 +113,8 @@ namespace Json {
 			 */
 			Value(std::string json) throw (Json::Exception)
 			{
-				json = this->strip(json);
-				this->parse(json);
+				std::string stripped = this->strip(json);
+				this->parse(stripped);
 			};
 
 			/**

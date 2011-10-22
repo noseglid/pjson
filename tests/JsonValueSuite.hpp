@@ -30,10 +30,11 @@ class JsonValueSuite
 		void invalidNull();
 		void validArray();
 		void invalidArray();
+		void validNested();
+		void invalidNested();
 		void getType();
 		void getOperator();
 		void invalidGetOperator();
-		void validNested();
 };
 
 #endif
