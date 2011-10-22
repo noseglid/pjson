@@ -45,7 +45,9 @@ Json::Value::extractLiteral(std::string str, size_t pos = 0) throw (Json::Except
 {
 	size_t end = pos;
 	while(end < str.length()) {
-		if (!isalnum(str[end]) && '.' != str[end]) break;
+		if (!isalnum(str[end]) &&
+		    '.' != str[end] &&
+		    '-' != str[end]) break;
 		end++;
 	}
 

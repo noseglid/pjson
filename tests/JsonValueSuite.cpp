@@ -153,6 +153,12 @@ JsonValueSuite::validObject()
 	string j6 = readfile("data/validobject6.json");
 	Json::Value p6(j6);
 	TEST_ASSERT(p6.asObject()["enclosing in key }"]->asString(), "opening and enclosing in value { }");
+
+	string j7 = readfile("data/validobject7.json");
+	Json::Value p7(j7);
+	TEST_ASSERT(p7["key1"].asInt(), -15524);
+	TEST_ASSERT(p7["key2"].asInt(), -214);
+	TEST_ASSERT(p7["key3"].asInt(), -987);
 }
 
 void
@@ -232,6 +238,12 @@ JsonValueSuite::validArray()
 	TEST_ASSERT(p4.asArray()[4]->asInt(), 5);
 	TEST_ASSERT(p4.asArray()[5]->asInt(), 12e4);
 	TEST_ASSERT(p4.asArray()[6]->asString(), "string");
+
+	std::string json5 = readfile("data/validarray5.json");
+	Json::Value p5(json5);
+	TEST_ASSERT(-12, p5[0].asInt());
+	TEST_ASSERT(-13, p5[1].asInt());
+	TEST_ASSERT(-14, p5[2].asInt());
 }
 
 void
