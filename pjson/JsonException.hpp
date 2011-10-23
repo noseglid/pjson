@@ -1,5 +1,5 @@
-#ifndef _JSONEXCEPTION_H_
-#define _JSONEXCEPTION_H_
+#ifndef __JSONEXCEPTION_H__
+#define __JSONEXCEPTION_H__
 
 namespace Json {
 

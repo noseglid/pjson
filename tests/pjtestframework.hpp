@@ -61,8 +61,7 @@ pjassert_success()
 void
 __pjtest()
 {
-	testn++;
-	if (testn % 40 == 0) std::cout << std::endl;
+	if (testn++ % 40 == 0) std::cout << std::endl;
 }
 
 template <class T1, class T2> void
