@@ -48,6 +48,12 @@ namespace Json {
 	typedef double Number;
 
 	/**
+	 * An integer. This is not part of the JSON standard but
+	 * has its own type for increased precision in integers in C++.
+	 */
+	typedef int Int;
+
+	/**
 	 * A representation of a JSON boolean; true or false.
 	 */
 	typedef bool Bool;
@@ -61,6 +67,17 @@ namespace Json {
 	 * A representation of a JSON array; consecutive values.
 	 */
 	typedef std::vector<Value*> Array;
+
+	/**
+	 * Storage of a Json value. It can be either of the
+	 * types defined in the variant.
+	 */
+	typedef boost::variant<Json::String,
+	                       Json::Number,
+	                       Json::Int,
+	                       Json::Bool,
+	                       Json::Object,
+	                       Json::Array> value_t;
 
 	/// The main class representing a JSON value.
 	/**
@@ -164,6 +181,12 @@ namespace Json {
 			 */
 			template <class T>
 			T get() {
+				try {
+					return boost::get<T>(this->value);
+				} catch (boost::bad_get) {
+					throw Json::Exception("Invalid cast.");
+				}
+
 				return boost::get<T>(this->value);
 			};
 
@@ -238,15 +261,20 @@ namespace Json {
 			/**
 			 * Get the value as an integer.
 			 *
-			 * @note If the value was stored as a double,
-			 *       several significant digits may have been truncated.
-			 *
 			 * @return The JSON number as an integer.
 			 * @see get()
 			 */
-			int asInt()
+			Json::Int asInt()
 			{
-				return this->get<double>();
+				try {
+					return this->get<int>();
+				} catch (Json::Exception) {}
+
+				try {
+					return this->get<double>();
+				} catch (Json::Exception) {}
+
+				throw Json::Exception("Could not represent value as a number.");
 			};
 
 			/**
@@ -258,7 +286,15 @@ namespace Json {
 			 */
 			Json::Number asNumber()
 			{
-				return this->get<double>();
+				try {
+					return this->get<double>();
+				} catch (Json::Exception) {}
+
+				try {
+					return this->get<int>();
+				} catch (Json::Exception) {}
+
+				throw Json::Exception("Could not represent value as a number.");
 			};
 
 			/**
@@ -325,11 +361,7 @@ namespace Json {
 			}
 
 		private:
-			boost::variant<Json::String,
-			               Json::Number,
-			               Json::Bool,
-			               Json::Object,
-			               Json::Array> value;
+			Json::value_t value;
 			Json::Types type;
 
 			/**

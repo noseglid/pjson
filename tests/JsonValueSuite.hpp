@@ -1,5 +1,5 @@
-#ifndef __JSONVALUESUITE_H__
-#define __JSONVALUESUITE_H__
+#ifndef __JSONVALUESUITE_HPP__
+#define __JSONVALUESUITE_HPP__
 
 #include <pjson/pjson.hpp>
 #include <vector>
@@ -9,10 +9,7 @@
 class JsonValueSuite
 {
 	public:
-		JsonValueSuite()
-		{
-			std::cout << "Running suite 'JsonValue'." << std::endl;
-		};
+		JsonValueSuite() {};
 
 		void run();
 		void report();

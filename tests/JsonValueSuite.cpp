@@ -40,6 +40,8 @@ readfile(const char *file)
 void
 JsonValueSuite::run()
 {
+	std::cout << "Running suite 'JsonValue'.";
+
 	this->validString();
 	this->invalidString();
 	this->validNumber();
@@ -231,6 +233,7 @@ JsonValueSuite::validArray()
 	TEST_ASSERT(p4.asArray()[3]->asInt(), 4);
 	TEST_ASSERT(p4.asArray()[4]->asInt(), 5);
 	TEST_ASSERT(p4.asArray()[5]->asInt(), 12e4);
+	TEST_ASSERT(p4.asArray()[5]->asNumber(), 12e4);
 	TEST_ASSERT(p4.asArray()[6]->asString(), "string");
 }
 

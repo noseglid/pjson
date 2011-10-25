@@ -126,12 +126,19 @@ Json::Value::parseString(std::string json) throw (Json::Exception)
 void
 Json::Value::parseNumber(std::string json) throw (Json::Exception)
 {
+	this->type = JVNUMBER;
+
+	try {
+		this->value = boost::lexical_cast<Json::Int>(json);
+		return;
+	} catch (std::bad_cast) {}
+
 	try {
 		this->value = boost::lexical_cast<Json::Number>(json);
-	} catch (std::bad_cast) {
-		throw Json::Exception("Number value invalid.");
-	}
-	this->type = JVNUMBER;
+		return;
+	} catch (std::bad_cast) {}
+
+	throw Json::Exception("Number value invalid.");
 }
 
 void
