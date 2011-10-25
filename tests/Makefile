@@ -4,6 +4,7 @@ LDFLAGS = -L../.libs -lpjson
 
 LIB      = pjson
 SOURCES  = main.cpp
+SOURCES += pjtestframework.cpp
 SOURCES += JsonValueSuite.cpp
 OBJECTS  = $(SOURCES:.cpp=.o)
 BIN      = test-pjson
