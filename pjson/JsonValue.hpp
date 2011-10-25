@@ -17,6 +17,7 @@
 namespace Json {
 
 	class Value;
+	class Builder;
 
 	/**
 	 * The available JSON types.
@@ -98,9 +99,13 @@ namespace Json {
 	 *   }
 	 * }
 	 * @endcode
+	 *
+	 * @see value_t
 	 */
 	class Value
 	{
+		friend class Builder;
+
 		public:
 
 			/**
@@ -291,6 +296,34 @@ namespace Json {
 				return JVNULL == this->type;
 			};
 
+			/**
+			 * Returns a JSON string representation of this value.
+			 * The string is a valid JSON string according to RFC4627.
+			 * It can be used to transmit information to another JSON
+			 * compatible recipient.
+			 *
+			 * @return std::string The string representation of this JSON value.
+			 */
+			std::string str()
+			{
+				return std::string("say what");
+			}
+
+			static Json::Types typeByValue(Json::value_t v)
+			{
+				if (v.type() == typeid(Json::String)) {
+					return Json::JVSTRING;
+				} else if (v.type() == typeid(Json::Bool)) {
+					return Json::JVBOOL;
+				} else if (v.type() == typeid(Json::Object)) {
+					return Json::JVOBJECT;
+				} else if (v.type() == typeid(Json::Array)) {
+					return Json::JVARRAY;
+				}
+
+				return Json::JVNUMBER;
+			}
+
 		private:
 			boost::variant<Json::String,
 			               Json::Number,
@@ -298,6 +331,18 @@ namespace Json {
 			               Json::Object,
 			               Json::Array> value;
 			Json::Types type;
+
+			/**
+			 * Quick instance of value. In private section to not
+			 * expose unwanted usage. The caller must know what to
+			 * do with the instance as it will not give anything
+			 * interesting straight off.
+			 */
+			Value(Json::value_t v, Json::Types t)
+			{
+				this->value = v;
+				this->type  = t;
+			}
 
 			/**
 			 * Strips the string, removing any insignificant characters
