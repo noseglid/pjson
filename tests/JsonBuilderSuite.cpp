@@ -14,6 +14,7 @@ JsonBuilderSuite::run()
 	this->testnull();
 	this->testobject();
 	this->testarray();
+	this->testmixed();
 }
 
 void
@@ -30,9 +31,6 @@ JsonBuilderSuite::teststring()
 
 	Json::Value v2 = Json::Builder::create(std::string("some value \"escaped\" stuff, 123"));
 	TEST_ASSERT("some value \"escaped\" stuff, 123", v2.asString());
-
-	Json::Value v3 = Json::Builder::create("Hail to the king, baby");
-	TEST_ASSERT("Hail to the king, baby", v3.asString());
 }
 
 void
@@ -81,8 +79,8 @@ void
 JsonBuilderSuite::testobject()
 {
 	std::map<std::string, std::string> m1;
-	m1["life"]  = "The meaning of life is 42";
-	m1["death"] = "Is the meaning of death 84?";
+	m1["life"]  = std::string("The meaning of life is 42");
+	m1["death"] = std::string("Is the meaning of death 84?");
 	Json::Value v1 = Json::Builder::create(m1);
 	TEST_ASSERT("The meaning of life is 42",   v1["life"].asString());
 	TEST_ASSERT("Is the meaning of death 84?", v1["death"].asString());
@@ -116,4 +114,20 @@ JsonBuilderSuite::testarray()
 	Json::Value v2 = Json::Builder::create(a2);
 	TEST_ASSERT("Some people never learn", v2[0].asString());
 	TEST_ASSERT("or do they?", v2[1].asString());
+}
+
+void
+JsonBuilderSuite::testmixed()
+{
+	std::map<std::string, Json::value_t> m1;
+	m1["int"]    = 42;
+	m1["string"] = std::string("Where art thou?");
+	m1["bool"]   = false;
+	m1["double"] = 3.2e-1;
+
+	Json::Value v1 = Json::Builder::create(m1);
+	TEST_ASSERT(42, v1["int"].asInt());
+	TEST_ASSERT("Where art thou?", v1["string"].asString());
+	TEST_ASSERT(false, v1["bool"].asBool());
+	TEST_ASSERT(3.2e-1, v1["double"].asNumber());
 }

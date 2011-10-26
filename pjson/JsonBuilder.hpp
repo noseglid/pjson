@@ -20,14 +20,9 @@ namespace Json {
 			return Json::Value(v, Json::Value::typeByValue(v));
 		}
 
-		static Json::Value create(const char* v)
-		{
-			return Json::Builder::create(std::string(v));
-		}
-
 		static Json::Value create()
 		{
-			return Json::Value(42.0, JVNULL);
+			return Json::Value(0, JVNULL);
 		}
 
 		template <class T>

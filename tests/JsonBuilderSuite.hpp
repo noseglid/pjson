@@ -21,6 +21,7 @@ class JsonBuilderSuite
 		void testnull();
 		void testobject();
 		void testarray();
+		void testmixed();
 };
 
 #endif
