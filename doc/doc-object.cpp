@@ -6,7 +6,7 @@
 int main(void)
 {
 	std::string strJSON = "{\"action\" : \"update\", \"itemid\" : \"a6fb4e\", \"name\" : \"cdbabe\"}";
-	Json::Value j(strJSON);
+	Json::Value j = Json::Builder::parse(strJSON);
 
 	Json::Object obj = j.asObject();
 
