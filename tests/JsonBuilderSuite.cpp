@@ -1,6 +1,8 @@
 #include "pjtestframework.hpp"
 #include "JsonBuilderSuite.hpp"
+
 #include <iostream>
+#include <limits>
 #include <pjson/pjson.hpp>
 
 void
