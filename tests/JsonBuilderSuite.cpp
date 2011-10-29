@@ -29,9 +29,11 @@ void
 JsonBuilderSuite::teststring()
 {
 	Json::Value v1 = Json::Builder::create(std::string("somevalue"));
+	TEST_ASSERT(Json::JVSTRING, v1.getType());
 	TEST_ASSERT("somevalue", v1.asString());
 
 	Json::Value v2 = Json::Builder::create(std::string("some value \"escaped\" stuff, 123"));
+	TEST_ASSERT(Json::JVSTRING, v2.getType());
 	TEST_ASSERT("some value \"escaped\" stuff, 123", v2.asString());
 }
 
