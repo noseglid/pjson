@@ -21,6 +21,9 @@
 		if (!caught) pjassert_throw_fail(__FUNCTION__, __LINE__); \
 	} while(0)
 
+std::string
+readfile(const char *file);
+
 void
 pjassert_throw_fail(const char *fnc, const unsigned int line);
 

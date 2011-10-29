@@ -4,6 +4,7 @@
 #include "JsonException.hpp"
 
 #include <boost/variant.hpp>
+#include <boost/lexical_cast.hpp>
 #include <string>
 #include <map>
 #include <vector>
@@ -124,6 +125,23 @@ namespace Json {
 	class Value
 	{
 		friend class Builder;
+
+		/**
+		 * Formats which can be used when retrieving
+		 * a string representation of this instance.
+		 */
+		enum strformat {
+			/**
+			 * The string will be pretty formatted, suitable for printing.
+			 */
+			FORMAT_PRETTY,
+
+			/**
+			 * Minified format, all insignificant whitespaces will be removed,
+			 * suitable for transmitting.
+			 */
+			FORMAT_MINIFIED
+		};
 
 		public:
 
@@ -340,12 +358,10 @@ namespace Json {
 			 * It can be used to transmit information to another JSON
 			 * compatible recipient.
 			 *
+			 * @param t The format to return. See strformat for allowed values.
 			 * @returns std::string The string representation of this JSON value.
 			 */
-			std::string str()
-			{
-				return std::string("Not implemented");
-			}
+			std::string strjson(strformat t = FORMAT_PRETTY);
 
 			/**
 			 * Tells the type of a Json::value_t.
@@ -375,10 +391,9 @@ namespace Json {
 
 		private:
 			/**
-			 * The mode with which this class can
-			 * be instantiated.
+			 * The mode with which this class can be instantiated.
 			 *
-			 * @see Value(std::string, cmod)
+			 * @see Value(std::string, cmode)
 			 */
 			enum cmode {
 				MODE_PARSE
@@ -394,6 +409,7 @@ namespace Json {
 			 */
 			Json::Types type;
 
+
 			/**
 			 * Creates a Value using specified mode.
 			 *  - MODE_PARSE: Provided string is a JSON string.
@@ -405,8 +421,8 @@ namespace Json {
 			{
 				switch (m) {
 					case MODE_PARSE:
-					json = this->strip(json);
-					this->parse(json);
+						std::string minified = this->minify(json);
+					this->parse(minified);
 					break;
 				}
 			};
@@ -433,13 +449,13 @@ namespace Json {
 			}
 
 			/**
-			 * Strips the string, removing any insignificant characters
+			 * Minifies the JSON string, removing any insignificant characters
 			 * from a json point of view (insignificant white-spaces).
 			 *
-			 * @param json The json string to strip.
-			 * @returns The stripped string
+			 * @param json The JSON string to minify.
+			 * @returns The minified string.
 			 */
-			std::string strip(std::string);
+			std::string minify(std::string);
 
 			/**
 			 * Remove any escape characters (\) from the string.
@@ -447,7 +463,17 @@ namespace Json {
 			 * @param std::string The string to remove escape characters from.
 			 * @returns The unescaped string.
 			 */
-			std::string unescape(std::string);
+			void unescape(std::string&);
+
+			/**
+			 * Prepends any occurance of c with an escape character (\).
+			 *
+			 * @note This changes the input variable.
+			 *
+			 * @param strjson The string to escape.
+			 * @param c       The character which needs to be escaped.
+			 */
+			void escape(std::string&, const char);
 
 			/**
 			 * Extracts a literal from string str starting at position pos.
@@ -479,6 +505,7 @@ namespace Json {
 			 * @return The extracted string.
 			 */
 			std::string extract(std::string, size_t, bool) throw (Json::Exception);
+			void formatStringForOutput(std::string&);
 			void parse(std::string) throw (Json::Exception);
 			void parseString(std::string) throw (Json::Exception);
 			void parseNumber(std::string) throw (Json::Exception);
@@ -486,6 +513,13 @@ namespace Json {
 			void parseNull(std::string) throw (Json::Exception);
 			void parseObject(std::string) throw (Json::Exception);
 			void parseArray(std::string) throw (Json::Exception);
+
+			void strjsonObject(std::string&);
+			void strjsonArray(std::string&);
+			void strjsonNumber(std::string&);
+			void strjsonString(std::string&);
+			void strjsonBool(std::string&);
+			void strjsonNull(std::string&);
 
 			static void deleteObject(Json::Object obj)
 			{

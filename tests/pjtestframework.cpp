@@ -1,12 +1,40 @@
 #include "pjtestframework.hpp"
 
 #include <vector>
+#include <fstream>
+#include <sstream>
 
 static int testn    = 0;
 static int successn = 0;
 
 static std::vector<std::string> failed;
 typedef std::vector<std::string>::const_iterator failiter;
+
+std::string
+readfile(const char *file)
+{
+	std::ifstream is;
+	is.open(file, std::ios::binary);
+
+	if (!is.good()) {
+		std::cout << "Could not open file: " << file << std::endl;
+		return std::string();
+	}
+
+	// get length of file:
+	is.seekg(0, std::ios::end);
+	int length = is.tellg();
+	is.seekg(0, std::ios::beg);
+
+	// allocate memory:
+	char buffer[length];
+
+	// read data as a block:
+	is.read(buffer, length);
+	is.close();
+
+	return std::string(buffer, length);
+}
 
 void
 pjassert_throw_fail(const char *fnc, const unsigned int line)

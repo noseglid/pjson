@@ -4,38 +4,9 @@
 #include <pjson/pjson.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <fstream>
-#include <sstream>
 #include <string>
 
 using namespace std;
-
-static string
-readfile(const char *file)
-{
-	ifstream is;
-	is.open(file, ios::binary);
-
-	if (!is.good()) {
-		cout << "Could not open file: " << file << endl;
-		return string();
-	}
-
-	// get length of file:
-	is.seekg(0, ios::end);
-	int length = is.tellg();
-	is.seekg(0, ios::beg);
-
-	// allocate memory:
-	char buffer[length];
-
-	// read data as a block:
-	is.read(buffer, length);
-	is.close();
-	string ret = string(buffer, length);
-
-	return ret;
-}
 
 void
 JsonValueSuite::run()
