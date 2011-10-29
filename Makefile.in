@@ -7,10 +7,13 @@ INSTALL = @INSTALL@
 RM      = @RM@
 PRINTF  = @@PRINTF@
 
-LIB     = libpjson.la
-SOURCES = pjson/JsonValue.cpp
-OBJECTS = $(SOURCES:.cpp=.lo)
-HEADERS = $(SOURCES:.cpp=.hpp) pjson/JsonException.hpp pjson/pjson.hpp
+LIB      = libpjson.la
+SOURCES  = pjson/JsonValue.cpp
+OBJECTS  = $(SOURCES:.cpp=.lo)
+HEADERS  = $(SOURCES:.cpp=.hpp)
+HEADERS += pjson/pjson.hpp
+HEADERS += pjson/JsonBuilder.hpp
+HEADERS += pjson/JsonException.hpp
 
 PREFIX = @prefix@
 LIBDIR = @prefix@/lib

@@ -19,7 +19,7 @@ ValueType(char firstchar)
 }
 
 std::string
-Json::Value::strip(std::string json)
+Json::Value::minify(std::string json)
 {
 	std::string ret;
 	bool insignificant = true;
@@ -30,14 +30,24 @@ Json::Value::strip(std::string json)
 	return ret;
 }
 
-std::string
-Json::Value::unescape(std::string str)
+void
+Json::Value::unescape(std::string& str)
 {
-	std::string ret;
-	for (unsigned int i = 0; i < str.length(); ++i) {
-		if ('\\' != str[i]) ret += str[i];
+	size_t pos = 0;
+	while (std::string::npos != (pos = str.find('\\', pos))) {
+		str.erase(pos, 1);
+		pos += 2;
 	}
-	return ret;
+}
+
+void
+Json::Value::escape(std::string& str, const char c)
+{
+	size_t pos = 0;
+	while (std::string::npos != (pos = str.find(c, pos))) {
+		str.insert(pos, "\\");
+		pos += 2;
+	}
 }
 
 std::string
@@ -94,6 +104,101 @@ Json::Value::extract(std::string str,
 }
 
 void
+Json::Value::formatStringForOutput(std::string& str)
+{
+	this->escape(str, '\\');
+	this->escape(str, '"');
+	str.insert(0, "\"");
+	str.append("\"");
+}
+
+std::string
+Json::Value::strjson(strformat t)
+{
+	std::string strjson;
+	switch (this->type) {
+		case JVOBJECT: this->strjsonObject(strjson); break;
+		case JVARRAY:  this->strjsonArray(strjson);  break;
+		case JVNUMBER: this->strjsonNumber(strjson); break;
+		case JVSTRING: this->strjsonString(strjson); break;
+		case JVBOOL:   this->strjsonBool(strjson);   break;
+		case JVNULL:   this->strjsonNull(strjson);   break;
+		default: throw Json::Exception("Type is unknown.");
+	}
+
+	switch (t) {
+		case FORMAT_PRETTY:                                    break;
+		case FORMAT_MINIFIED: strjson = this->minify(strjson); break;
+	}
+
+	return strjson;
+}
+
+void
+Json::Value::strjsonObject(std::string& strjson)
+{
+	std::string sep = "{\n";
+	Json::Object obj = this->asObject();
+	typedef Json::Object::const_iterator objit;
+
+	for (objit it = obj.begin(); it != obj.end(); it++) {
+		strjson += sep;
+		std::string key = it->first;
+		this->formatStringForOutput(key);
+
+		std::string value = it->second->strjson();
+		strjson += "\t" + key + " : " + value;
+		sep = ",\n";
+	}
+
+	strjson += "\n}\n";
+}
+
+void
+Json::Value::strjsonArray(std::string& strjson)
+{
+	std::string sep = "[\n";
+	Json::Array arr = this->asArray();
+	typedef Json::Array::const_iterator arrit;
+
+	for (arrit it = arr.begin(); it != arr.end(); it++) {
+		strjson += sep + "\t" + (*it)->strjson();
+		sep = ",\n";
+	}
+
+	strjson += "\n]\n";
+}
+
+void
+Json::Value::strjsonNumber(std::string& strjson)
+{
+	if (this->value.type() == typeid(Json::Int)) {
+		strjson = boost::lexical_cast<std::string>(this->asInt());
+	} else {
+		strjson = boost::lexical_cast<std::string>(this->asNumber());
+	}
+}
+
+void
+Json::Value::strjsonString(std::string& strjson)
+{
+	strjson = this->asString();
+	this->formatStringForOutput(strjson);
+}
+
+void
+Json::Value::strjsonBool(std::string& strjson)
+{
+	strjson = (this->asBool() ? "true" : "false");
+}
+
+void
+Json::Value::strjsonNull(std::string& strjson)
+{
+	strjson = "null";
+}
+
+void
 Json::Value::parse(std::string json) throw (Json::Exception)
 {
 	this->type = ValueType(json[0]);
@@ -122,17 +227,29 @@ Json::Value::parse(std::string json) throw (Json::Exception)
 void
 Json::Value::parseString(std::string json) throw (Json::Exception)
 {
-	this->value = this->unescape(this->extract(json));
+	std::string str = this->extract(json);
+	this->unescape(str);
+
+	this->value = str;
+	this->type  = JVSTRING;
 }
 
 void
 Json::Value::parseNumber(std::string json) throw (Json::Exception)
 {
+	this->type = JVNUMBER;
+
+	try {
+		this->value = boost::lexical_cast<Json::Int>(json);
+		return;
+	} catch (std::bad_cast) {}
+
 	try {
 		this->value = boost::lexical_cast<Json::Number>(json);
-	} catch (std::bad_cast) {
-		throw Json::Exception("Number value invalid.");
-	}
+		return;
+	} catch (std::bad_cast) {}
+
+	throw Json::Exception("Number value invalid.");
 }
 
 void
@@ -164,29 +281,44 @@ Json::Value::parseObject(std::string json) throw (Json::Exception)
 	unsigned int keystart = 0;
 	while(keystart < object.length()) {
 		std::string key = this->extract(object, keystart);
+		size_t klength  = key.length();
+		this->unescape(key);
 
-		char keyvalsep = object[keystart + key.length() + 2];
+		char keyvalsep = object[keystart + klength + 2];
 		if (keyvalsep != ':') {
 			Json::Value::deleteObject(o);
 			throw Json::Exception("Invalid key-value separator.");
 		}
 
-		std::string value = this->extract(object, keystart + key.length() + 3, true);
+		std::string value = this->extract(object, keystart + klength + 3, true);
+		size_t vlength    = value.length();
 		try {
 			if (1 == o.count(key)) delete o[key];
-			o[this->unescape(key)] = new Value(value);
+			o[key] = new Value(value, Value::MODE_PARSE);
 		} catch (Json::Exception) {
 			Json::Value::deleteObject(o);
 			throw;
 		}
 
-		keystart += key.length() + value.length() + 4;
+		keystart += klength + vlength + 4;
 
 		char sep = object[keystart - 1];
 		if (sep != ',' && keystart < object.length()) {
 			Json::Value::deleteObject(o);
 			throw Json::Exception("Value separator in object invalid.");
 		}
+//=======
+//		/* Magic number haven... */
+//		std::string key = this->extract(object, keystart);
+//		size_t klength  = key.length();
+//
+//		std::string value = this->extract(object, keystart + key.length() + 3, true);
+//		size_t vlength    = value.length();
+//		this->unescape(key);
+//
+//		m[key] = new Value(value, Value::MODE_PARSE);
+//		keystart += klength + vlength + 4;
+//>>>>>>> change/json_builder
 	}
 
 	this->value = o;
@@ -202,7 +334,7 @@ Json::Value::parseArray(std::string json) throw (Json::Exception)
 	while (valstart < array.length()) {
 		std::string value = this->extract(array, valstart, true);
 		try {
-			a.push_back(new Value(value));
+			a.push_back(new Value(value, Value::MODE_PARSE));
 		} catch (Json::Exception) {
 			a.clear();
 			throw;

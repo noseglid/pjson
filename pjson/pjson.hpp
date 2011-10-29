@@ -54,4 +54,5 @@
  */
 
 #include "JsonValue.hpp"
+#include "JsonBuilder.hpp"
 #include "JsonException.hpp"
