@@ -18,6 +18,175 @@ ValueType(char firstchar)
 	}
 }
 
+Json::Types
+Json::Value::typeByValue(Json::value_t v) throw (Json::Exception)
+{
+	if (v.type() == typeid(Json::String)) {
+		return Json::JVSTRING;
+	} else if (v.type() == typeid(Json::Bool)) {
+		return Json::JVBOOL;
+	} else if (v.type() == typeid(Json::Object)) {
+		return Json::JVOBJECT;
+	} else if (v.type() == typeid(Json::Array)) {
+		return Json::JVARRAY;
+	} else if (v.type() == typeid(Json::Int) ||
+	           v.type() == typeid(Json::Number)) {
+		return Json::JVNUMBER;
+	}
+
+	throw Json::Exception("Invalid type.");
+}
+
+Json::Value::Value(std::string json, cmode m) throw (Json::Exception)
+{
+	switch (m) {
+		case MODE_PARSE:
+			std::string minified = this->minify(json);
+			this->parse(minified);
+			break;
+	}
+}
+
+Json::Value::Value(Json::value_t v)
+{
+	this->value = v;
+	this->type  = Json::Value::typeByValue(v);
+}
+
+Json::Value::Value()
+{
+	this->type = JVNULL;
+}
+
+Json::Value::~Value()
+{
+	switch (this->type) {
+	case JVOBJECT:
+		this->deleteObject(this->asObject());
+		break;
+	case JVARRAY:
+		this->deleteArray(this->asArray());
+		break;
+	default:
+		break;
+	}
+}
+
+void
+Json::Value::deleteObject(Json::Object obj)
+{
+	for (Json::Object::iterator it = obj.begin(); it != obj.end(); it++) {
+		delete it->second;
+	}
+}
+
+void
+Json::Value::deleteArray(Json::Array arr)
+{
+	for (Json::Array::iterator it = arr.begin(); it != arr.end(); it++) {
+		delete *it;
+	}
+}
+
+Json::Types
+Json::Value::getType()
+{
+	return this->type;
+}
+
+template<class T> T
+Json::Value::get() throw (Json::Exception)
+{
+	try {
+		return boost::get<T>(this->value);
+	} catch (boost::bad_get) {
+		throw Json::Exception("Invalid cast.");
+	}
+
+	return boost::get<T>(this->value);
+}
+
+Json::Value&
+Json::Value::operator[](const char* key) throw (Json::Exception)
+{
+	Json::Object obj          = this->asObject();
+	Json::Object::iterator it = obj.find(key);
+
+	if (it == obj.end()) {
+		throw Json::Exception("Key does not exist in object.");
+	}
+
+	return *it->second;
+}
+
+Json::Value&
+Json::Value::operator[](int key) throw (Json::Exception)
+{
+	try {
+		return *this->asArray().at(key);
+	} catch (std::out_of_range) {
+		throw Json::Exception("Out of array bounds.");
+	}
+}
+
+Json::Array
+Json::Value::asArray() throw (Json::Exception)
+{
+	return this->get<Json::Array>();
+}
+
+Json::Object
+Json::Value::asObject() throw (Json::Exception)
+{
+	return this->get<Json::Object>();
+}
+
+Json::Int
+Json::Value::asInt() throw (Json::Exception)
+{
+	try {
+		return this->get<int>();
+	} catch (Json::Exception) {}
+
+	try {
+		return this->get<double>();
+	} catch (Json::Exception) {}
+
+	throw Json::Exception("Could not represent value as an integer.");
+}
+
+Json::Number
+Json::Value::asNumber() throw (Json::Exception)
+{
+	try {
+		return this->get<double>();
+	} catch (Json::Exception) {}
+
+	try {
+		return this->get<int>();
+	} catch (Json::Exception) {}
+
+	throw Json::Exception("Could not represent value as a number.");
+}
+
+Json::Bool
+Json::Value::asBool() throw (Json::Exception)
+{
+	return this->get<bool>();
+}
+
+Json::String
+Json::Value::asString() throw (Json::Exception)
+{
+	return this->get<Json::String>();
+}
+
+bool
+Json::Value::isNull()
+{
+	return JVNULL == this->type;
+}
+
 std::string
 Json::Value::minify(std::string json)
 {

@@ -150,19 +150,7 @@ namespace Json {
 			 * If, for example, this is an array, it will loop
 			 * over all the values the array holds and delete them one by one.
 			 */
-			~Value()
-			{
-				switch (this->type) {
-				case JVOBJECT:
-					this->deleteObject(this->asObject());
-					break;
-				case JVARRAY:
-					this->deleteArray(this->asArray());
-					break;
-				default:
-					break;
-				}
-			};
+			~Value();
 
 			/**
 			 * Get the type of this value,(e.g. JVARRAY or JVNUMBER). This can
@@ -173,10 +161,7 @@ namespace Json {
 			 * @see Json::Types
 			 */
 			Json::Types
-			getType()
-			{
-				return this->type;
-			}
+			getType();
 
 			/**
 			 * Fetches the value, casted to class T. Unless needed for specific
@@ -187,16 +172,8 @@ namespace Json {
 			 * @throws Json::Exception If the value cant be casted to T.
 			 * @returns The current value in specified type.
 			 */
-			template <class T>
-			T get() throw (Json::Exception) {
-				try {
-					return boost::get<T>(this->value);
-				} catch (boost::bad_get) {
-					throw Json::Exception("Invalid cast.");
-				}
-
-				return boost::get<T>(this->value);
-			};
+			template <class T> T
+			get() throw (Json::Exception);
 
 			/**
 			 * Fetches the value defined by 'key' in the Object
@@ -208,17 +185,8 @@ namespace Json {
 			 * @throws Json::Exception If the string is not a key in the object.
 			 * @returns The value identified by key.
 			 */
-			Value& operator[](const char* key) throw (Json::Exception)
-			{
-				Object obj          = this->asObject();
-				Object::iterator it = obj.find(key);
-
-				if (it == obj.end()) {
-					throw Json::Exception("Key does not exist in object.");
-				}
-
-				return *it->second;
-			};
+			Value&
+			operator[](const char*) throw (Json::Exception);
 
 			/**
 			 * Fetches the value defined by key in the Array
@@ -233,14 +201,7 @@ namespace Json {
 			 * @throws Json::Exception If the index is outside of the Array bounds.
 			 * @returns The value identified by key.
 			 */
-			Value& operator[](int key) throw (Json::Exception)
-			{
-				try {
-					return *this->asArray().at(key);
-				} catch (std::out_of_range) {
-					throw Json::Exception("Out of array bounds.");
-				}
-			};
+			Value& operator[](int key) throw (Json::Exception);
 
 			/**
 			 * Get the value as an Array.
@@ -249,12 +210,11 @@ namespace Json {
 			 * @throws Json::Exception If current value cannot be
 			 *                         interpreted as an Array.
 			 * @see Json::Array
+			 * @throws Json::Exception If this does not represent an array.
+			 * @returns Json::Array The array this value represents
 			 * @see get()
 			 */
-			Json::Array asArray() throw (Json::Exception)
-			{
-				return this->get<Json::Array>();
-			};
+			Json::Array asArray() throw (Json::Exception);
 
 			/**
 			 * Get the value as a JsonObject.
@@ -265,10 +225,7 @@ namespace Json {
 			 * @see Json::Object
 			 * @see get()
 			 */
-			Json::Object asObject() throw (Json::Exception)
-			{
-				return this->get<Json::Object>();
-			};
+			Json::Object asObject() throw (Json::Exception);
 
 			/**
 			 * Get the value as an integer.
@@ -278,18 +235,7 @@ namespace Json {
 			 *                         interpreted as an integer.
 			 * @see get()
 			 */
-			Json::Int asInt() throw (Json::Exception)
-			{
-				try {
-					return this->get<int>();
-				} catch (Json::Exception) {}
-
-				try {
-					return this->get<double>();
-				} catch (Json::Exception) {}
-
-				throw Json::Exception("Could not represent value as a number.");
-			};
+			Json::Int asInt() throw (Json::Exception);
 
 			/**
 			 * Get the value as a number.
@@ -300,18 +246,7 @@ namespace Json {
 			 * @see Json::Number
 			 * @see get()
 			 */
-			Json::Number asNumber() throw (Json::Exception)
-			{
-				try {
-					return this->get<double>();
-				} catch (Json::Exception) {}
-
-				try {
-					return this->get<int>();
-				} catch (Json::Exception) {}
-
-				throw Json::Exception("Could not represent value as a number.");
-			};
+			Json::Number asNumber() throw (Json::Exception);
 
 			/**
 			 * Get the value as a boolean.
@@ -322,10 +257,7 @@ namespace Json {
 			 * @see Json::Bool
 			 * @see get()
 			 */
-			Json::Bool asBool() throw (Json::Exception)
-			{
-				return this->get<bool>();
-			};
+			Json::Bool asBool() throw (Json::Exception);
 
 			/**
 			 * Get the value as a string.
@@ -336,10 +268,7 @@ namespace Json {
 			 * @see Json::String
 			 * @see get()
 			 */
-			Json::String asString() throw (Json::Exception)
-			{
-				return this->get<Json::String>();
-			};
+			Json::String asString() throw (Json::Exception);
 
 			/**
 			 * Determines whether this JSON value is null or not.
@@ -347,10 +276,7 @@ namespace Json {
 			 *
 			 * @return True if JSON value is null, false otherwise.
 			 */
-			bool isNull()
-			{
-				return JVNULL == this->type;
-			};
+			bool isNull();
 
 			/**
 			 * Returns a JSON string representation of this value.
@@ -362,32 +288,6 @@ namespace Json {
 			 * @returns std::string The string representation of this JSON value.
 			 */
 			std::string strjson(strformat t = FORMAT_PRETTY);
-
-			/**
-			 * Tells the type of a Json::value_t.
-			 *
-			 * @param v The Json::value_t to check type for.
-			 * @returns The type of the provided Json::value_t
-			 * @see getType()
-			 * @see Json::Types
-			 */
-			static Json::Types typeByValue(Json::value_t v)
-			{
-				if (v.type() == typeid(Json::String)) {
-					return Json::JVSTRING;
-				} else if (v.type() == typeid(Json::Bool)) {
-					return Json::JVBOOL;
-				} else if (v.type() == typeid(Json::Object)) {
-					return Json::JVOBJECT;
-				} else if (v.type() == typeid(Json::Array)) {
-					return Json::JVARRAY;
-				} else if (v.type() == typeid(Json::Int) ||
-				           v.type() == typeid(Json::Number)) {
-					return Json::JVNUMBER;
-				}
-
-				throw Json::Exception("Invalid type.");
-			}
 
 		private:
 			/**
@@ -417,15 +317,7 @@ namespace Json {
 			 *  @param json The json string
 			 *  @param m    The mode of how to interpret the JSON string.
 			 */
-			Value(std::string json, cmode m) throw (Json::Exception)
-			{
-				switch (m) {
-					case MODE_PARSE:
-						std::string minified = this->minify(json);
-					this->parse(minified);
-					break;
-				}
-			};
+			Value(std::string json, cmode m) throw (Json::Exception);
 
 			/**
 			 * Creates a Value and sets it to the provided value.
@@ -433,20 +325,23 @@ namespace Json {
 			 *
 			 * @param v The value this instance should represent.
 			 */
-			Value(Json::value_t v)
-			{
-				this->value = v;
-				this->type  = Json::Value::typeByValue(v);
-			}
+			Value(Json::value_t v);
 
 			/**
 			 * Creates a NULL value. This sets the type to 'NULL',
 			 * and leaves the actual value undefined.
 			 */
-			Value()
-			{
-				this->type = JVNULL;
-			}
+			Value();
+
+			/**
+			 * Tells the type of a Json::value_t.
+			 *
+			 * @param v The Json::value_t to check type for.
+			 * @returns The type of the provided Json::value_t
+			 * @see getType()
+			 * @see Json::Types
+			 */
+			static Json::Types typeByValue(Json::value_t v) throw (Json::Exception);
 
 			/**
 			 * Minifies the JSON string, removing any insignificant characters
@@ -505,6 +400,7 @@ namespace Json {
 			 * @return The extracted string.
 			 */
 			std::string extract(std::string, size_t, bool) throw (Json::Exception);
+
 			void formatStringForOutput(std::string&);
 			void parse(std::string) throw (Json::Exception);
 			void parseString(std::string) throw (Json::Exception);
@@ -521,19 +417,8 @@ namespace Json {
 			void strjsonBool(std::string&);
 			void strjsonNull(std::string&);
 
-			static void deleteObject(Json::Object obj)
-			{
-				for (Json::Object::iterator it = obj.begin(); it != obj.end(); it++) {
-					delete it->second;
-				}
-			};
-
-			static void deleteArray(Json::Array arr)
-			{
-				for (Json::Array::iterator it = arr.begin(); it != arr.end(); it++) {
-					delete *it;
-				}
-			};
+			static void deleteObject(Json::Object obj);
+			static void deleteArray(Json::Array arr);
 	};
 }
 
