@@ -78,6 +78,7 @@ Json::Value::deleteObject(Json::Object obj)
 	for (Json::Object::iterator it = obj.begin(); it != obj.end(); it++) {
 		delete it->second;
 	}
+	obj.clear();
 }
 
 void
@@ -86,6 +87,7 @@ Json::Value::deleteArray(Json::Array arr)
 	for (Json::Array::iterator it = arr.begin(); it != arr.end(); it++) {
 		delete *it;
 	}
+	arr.clear();
 }
 
 Json::Types
@@ -476,18 +478,6 @@ Json::Value::parseObject(std::string json) throw (Json::Exception)
 			Json::Value::deleteObject(o);
 			throw Json::Exception("Value separator in object invalid.");
 		}
-//=======
-//		/* Magic number haven... */
-//		std::string key = this->extract(object, keystart);
-//		size_t klength  = key.length();
-//
-//		std::string value = this->extract(object, keystart + key.length() + 3, true);
-//		size_t vlength    = value.length();
-//		this->unescape(key);
-//
-//		m[key] = new Value(value, Value::MODE_PARSE);
-//		keystart += klength + vlength + 4;
-//>>>>>>> change/json_builder
 	}
 
 	this->value = o;
@@ -505,7 +495,7 @@ Json::Value::parseArray(std::string json) throw (Json::Exception)
 		try {
 			a.push_back(new Value(value, Value::MODE_PARSE));
 		} catch (Json::Exception) {
-			a.clear();
+			Json::Value::deleteArray(a);
 			throw;
 		}
 		valstart += value.length() + 1;
