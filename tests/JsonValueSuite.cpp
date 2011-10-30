@@ -28,6 +28,8 @@ JsonValueSuite::run()
 	this->invalidGetOperator();
 	this->validNested();
 	this->invalidNested();
+
+	this->invalidGet();
 }
 
 void JsonValueSuite::report()
@@ -350,4 +352,24 @@ JsonValueSuite::invalidNested()
 {
 	std::string json1 = readfile("data/invalidnested1.json");
 	TEST_THROWS(Json::Builder::parse(json1), Json::Exception);
+}
+
+void
+JsonValueSuite::invalidGet()
+{
+	std::string json1 = readfile("data/validarray1.json");
+	Json::Value v1 = Json::Builder::parse(json1);
+	TEST_THROWS(v1.asBool(), Json::Exception);
+	TEST_THROWS(v1.asString(), Json::Exception);
+	TEST_THROWS(v1.asObject(), Json::Exception);
+	TEST_THROWS(v1.asInt(), Json::Exception);
+	TEST_THROWS(v1.asNumber(), Json::Exception);
+
+	std::string json2 = readfile("data/validstring1.json");
+	Json::Value v2 = Json::Builder::parse(json2);
+	TEST_THROWS(v2.asBool(), Json::Exception);
+	TEST_THROWS(v2.asArray(), Json::Exception);
+	TEST_THROWS(v2.asObject(), Json::Exception);
+	TEST_THROWS(v2.asInt(), Json::Exception);
+	TEST_THROWS(v2.asNumber(), Json::Exception);
 }

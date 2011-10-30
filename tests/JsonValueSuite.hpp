@@ -32,6 +32,8 @@ class JsonValueSuite
 		void getType();
 		void getOperator();
 		void invalidGetOperator();
+
+		void invalidGet();
 };
 
 #endif
