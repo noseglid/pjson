@@ -22,6 +22,10 @@ class JsonBuilderSuite
 		void testobject();
 		void testarray();
 		void testmixed();
+
+		void testMultipleArray();
+		void testMultipleObject();
+		void testMultipleMixed();
 };
 
 #endif
