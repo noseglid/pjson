@@ -145,6 +145,8 @@ namespace Json {
 
 		public:
 
+			Value(const Value&);
+
 			/**
 			 * Deletes this Value, and all values this may hold.
 			 * If, for example, this is an array, it will loop

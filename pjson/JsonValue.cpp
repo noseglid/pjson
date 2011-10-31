@@ -37,6 +37,36 @@ Json::Value::typeByValue(Json::value_t v) throw (Json::Exception)
 	throw Json::Exception("Invalid type.");
 }
 
+Json::Value::Value(const Json::Value& v)
+{
+	this->type = v.type;
+	switch (v.type) {
+		case JVARRAY:
+		{
+			Json::Array t;
+			Json::Array s = v.asArray();
+			for (Json::Array::const_iterator it = s.begin(); it != s.end(); it++) {
+				t.push_back(new Json::Value(**it));
+			}
+			this->value = t;
+			break;
+		}
+		case JVOBJECT:
+		{
+			Json::Object t;
+			Json::Object s = v.asObject();
+			for(Json::Object::const_iterator it = s.begin(); it != s.end(); it++) {
+				t[it->first] = new Json::Value(*it->second);
+			}
+			this->value = t;
+			break;
+		}
+		default:
+			this->value = v.value;
+			break;
+	}
+}
+
 Json::Value::Value(std::string json, cmode m) throw (Json::Exception)
 {
 	switch (m) {

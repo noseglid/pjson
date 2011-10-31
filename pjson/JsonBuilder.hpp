@@ -115,9 +115,9 @@ namespace Json {
 		static Json::Value create(std::map<std::string, T> v) throw (Json::Exception) {
 			Json::Object target;
 
-			typedef typename std::map<std::string, T>::const_iterator objit;
-			for (objit it = v.begin(); it != v.end(); it++) {
-				target[it->first] = new Json::Value(it->second);
+			typename std::map<std::string, T>::const_iterator it;
+			for (it = v.begin(); it != v.end(); it++) {
+				target[it->first] = new Json::Value(Json::Builder::create(it->second));
 			}
 
 			return Json::Value(target);
@@ -145,9 +145,10 @@ namespace Json {
 		static Json::Value create(std::vector<T> v) throw (Json::Exception) {
 			Json::Array target;
 
-			typedef typename std::vector<T>::const_iterator arrit;
-			for(arrit it = v.begin(); it != v.end(); it++) {
-				target.push_back(new Json::Value(*it));
+			typename std::vector<T>::const_iterator it;
+			for(it = v.begin(); it != v.end(); it++) {
+				Json::Value *n = new Json::Value(Json::Builder::create(*it));
+				target.push_back(n);
 			}
 
 			return Json::Value(target);

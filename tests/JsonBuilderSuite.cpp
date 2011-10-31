@@ -17,6 +17,10 @@ JsonBuilderSuite::run()
 	this->testobject();
 	this->testarray();
 	this->testmixed();
+
+	this->testMultipleArray();
+	this->testMultipleObject();
+	this->testMultipleMixed();
 }
 
 void
@@ -134,4 +138,127 @@ JsonBuilderSuite::testmixed()
 	TEST_ASSERT("Where art thou?", v1["string"].asString());
 	TEST_ASSERT(false, v1["bool"].asBool());
 	TEST_ASSERT(3.2e-1, v1["double"].asNumber());
+}
+
+void
+JsonBuilderSuite::testMultipleArray()
+{
+	std::vector<std::vector<int> > top;
+
+	std::vector<int> v1;
+	v1.push_back(5);
+	v1.push_back(6);
+	v1.push_back(42);
+	top.push_back(v1);
+
+	std::vector<int> v2;
+	v2.push_back(-21);
+	v2.push_back(-22);
+	v2.push_back(-2183);
+	top.push_back(v2);
+
+	Json::Value jv1 = Json::Builder::create(top);
+	TEST_ASSERT(5, jv1[0][0].asInt());
+	TEST_ASSERT(6, jv1[0][1].asInt());
+	TEST_ASSERT(42, jv1[0][2].asInt());
+	TEST_ASSERT(-21, jv1[1][0].asInt());
+	TEST_ASSERT(-22, jv1[1][1].asInt());
+	TEST_ASSERT(-2183, jv1[1][2].asInt());
+
+	/* This is just stupid, but designed to work. Who knows? */
+	std::vector<std::vector<std::vector< std::string> > > l3;
+	std::vector<std::vector<std::string> > l2;
+	std::vector<std::string> l1;
+	l1.push_back("first");
+	l1.push_back("second");
+	l2.push_back(l1);
+	l3.push_back(l2);
+	Json::Value jv2 = Json::Builder::create(l3);
+	Json::Value jv3 = Json::Builder::create(l2);
+	Json::Value jv4 = Json::Builder::create(l1);
+
+	TEST_ASSERT("first", jv4[0].asString());
+	TEST_ASSERT("second", jv4[1].asString());
+	TEST_ASSERT("first", jv3[0][0].asString());
+	TEST_ASSERT("second", jv3[0][1].asString());
+	TEST_ASSERT("first", jv2[0][0][0].asString());
+	TEST_ASSERT("second", jv2[0][0][1].asString());
+}
+
+void
+JsonBuilderSuite::testMultipleObject()
+{
+	std::map<std::string, std::map<std::string, int> > top;
+	std::map<std::string, int> m1;
+	m1["a"] = 0;
+	m1["b"] = 1;
+	m1["c"] = 2;
+
+	std::map<std::string, int> m2;
+	m2["x"] = 911;
+	m2["y"] = 112;
+	m2["z"] = 323;
+	top["struct1"] = m1;
+	top["struct2"] = m2;
+	Json::Value jv1 = Json::Builder::create(top);
+	TEST_ASSERT(0, jv1["struct1"]["a"].asInt());
+	TEST_ASSERT(1, jv1["struct1"]["b"].asInt());
+	TEST_ASSERT(2, jv1["struct1"]["c"].asInt());
+	TEST_ASSERT(911, jv1["struct2"]["x"].asInt());
+	TEST_ASSERT(112, jv1["struct2"]["y"].asInt());
+	TEST_ASSERT(323, jv1["struct2"]["z"].asInt());
+}
+
+void
+JsonBuilderSuite::testMultipleMixed()
+{
+	std::map<std::string, std::vector<int> > m1;
+	std::vector<int> m1v1;
+	m1v1.push_back(1);
+	m1v1.push_back(2);
+	std::vector<int> m1v2;
+	m1v2.push_back(3);
+	m1v2.push_back(4);
+	m1["v1"] = m1v1;
+	m1["v2"] = m1v2;
+	Json::Value jv1 = Json::Builder::create(m1);
+	TEST_ASSERT(1, jv1["v1"][0].asInt());
+	TEST_ASSERT(2, jv1["v1"][1].asInt());
+	TEST_ASSERT(3, jv1["v2"][0].asInt());
+	TEST_ASSERT(4, jv1["v2"][1].asInt());
+
+	/* Now this is just ... */
+	std::vector<std::map<std::string, std::vector<int> > > v1;
+	std::map<std::string, std::vector<int> > v1m1;
+	std::map<std::string, std::vector<int> > v1m2;
+	std::vector<int> v1m1v1;
+	std::vector<int> v1m1v2;
+	std::vector<int> v1m2v1;
+	std::vector<int> v1m2v2;
+
+	v1m1v1.push_back(0);
+	v1m1v1.push_back(1);
+	v1m1v2.push_back(2);
+	v1m1v2.push_back(3);
+	v1m2v1.push_back(4);
+	v1m2v1.push_back(5);
+	v1m2v2.push_back(6);
+	v1m2v2.push_back(7);
+
+	v1m1["v1m1v1"] = v1m1v1;
+	v1m1["v1m1v2"] = v1m1v2;
+	v1m2["v1m2v1"] = v1m2v1;
+	v1m2["v1m2v2"] = v1m2v2;
+	v1.push_back(v1m1);
+	v1.push_back(v1m2);
+	Json::Value jv2 = Json::Builder::create(v1);
+
+	TEST_ASSERT(0, jv2[0]["v1m1v1"][0].asInt());
+	TEST_ASSERT(1, jv2[0]["v1m1v1"][1].asInt());
+	TEST_ASSERT(2, jv2[0]["v1m1v2"][0].asInt());
+	TEST_ASSERT(3, jv2[0]["v1m1v2"][1].asInt());
+	TEST_ASSERT(4, jv2[1]["v1m2v1"][0].asInt());
+	TEST_ASSERT(5, jv2[1]["v1m2v1"][1].asInt());
+	TEST_ASSERT(6, jv2[1]["v1m2v2"][0].asInt());
+	TEST_ASSERT(7, jv2[1]["v1m2v2"][1].asInt());
 }
