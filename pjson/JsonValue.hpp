@@ -161,7 +161,7 @@ namespace Json {
 			 * @see Json::Types
 			 */
 			Json::Types
-			getType();
+			getType() const;
 
 			/**
 			 * Fetches the value, casted to class T. Unless needed for specific
@@ -173,7 +173,7 @@ namespace Json {
 			 * @returns The current value in specified type.
 			 */
 			template <class T> T
-			get() throw (Json::Exception);
+			get() const throw (Json::Exception);
 
 			/**
 			 * Fetches the value defined by 'key' in the Object
@@ -186,7 +186,7 @@ namespace Json {
 			 * @returns The value identified by key.
 			 */
 			Value&
-			operator[](const char*) throw (Json::Exception);
+			operator[](const char*) const throw (Json::Exception);
 
 			/**
 			 * Fetches the value defined by key in the Array
@@ -201,7 +201,7 @@ namespace Json {
 			 * @throws Json::Exception If the index is outside of the Array bounds.
 			 * @returns The value identified by key.
 			 */
-			Value& operator[](int key) throw (Json::Exception);
+			Value& operator[](int key) const throw (Json::Exception);
 
 			/**
 			 * Get the value as an Array.
@@ -214,7 +214,7 @@ namespace Json {
 			 * @returns Json::Array The array this value represents
 			 * @see get()
 			 */
-			Json::Array asArray() throw (Json::Exception);
+			Json::Array asArray() const throw (Json::Exception);
 
 			/**
 			 * Get the value as a JsonObject.
@@ -225,7 +225,7 @@ namespace Json {
 			 * @see Json::Object
 			 * @see get()
 			 */
-			Json::Object asObject() throw (Json::Exception);
+			Json::Object asObject() const throw (Json::Exception);
 
 			/**
 			 * Get the value as an integer.
@@ -235,7 +235,7 @@ namespace Json {
 			 *                         interpreted as an integer.
 			 * @see get()
 			 */
-			Json::Int asInt() throw (Json::Exception);
+			Json::Int asInt() const throw (Json::Exception);
 
 			/**
 			 * Get the value as a number.
@@ -246,7 +246,7 @@ namespace Json {
 			 * @see Json::Number
 			 * @see get()
 			 */
-			Json::Number asNumber() throw (Json::Exception);
+			Json::Number asNumber() const throw (Json::Exception);
 
 			/**
 			 * Get the value as a boolean.
@@ -257,7 +257,7 @@ namespace Json {
 			 * @see Json::Bool
 			 * @see get()
 			 */
-			Json::Bool asBool() throw (Json::Exception);
+			Json::Bool asBool() const throw (Json::Exception);
 
 			/**
 			 * Get the value as a string.
@@ -268,7 +268,7 @@ namespace Json {
 			 * @see Json::String
 			 * @see get()
 			 */
-			Json::String asString() throw (Json::Exception);
+			Json::String asString() const throw (Json::Exception);
 
 			/**
 			 * Determines whether this JSON value is null or not.
@@ -276,7 +276,7 @@ namespace Json {
 			 *
 			 * @return True if JSON value is null, false otherwise.
 			 */
-			bool isNull();
+			bool isNull() const;
 
 			/**
 			 * Returns a JSON string representation of this value.
@@ -287,7 +287,7 @@ namespace Json {
 			 * @param t The format to return. See strformat for allowed values.
 			 * @returns std::string The string representation of this JSON value.
 			 */
-			std::string strjson(strformat t = FORMAT_PRETTY);
+			std::string strjson(strformat t = FORMAT_PRETTY) const;
 
 		private:
 			/**
@@ -350,7 +350,7 @@ namespace Json {
 			 * @param json The JSON string to minify.
 			 * @returns The minified string.
 			 */
-			std::string minify(std::string);
+			std::string minify(std::string) const;
 
 			/**
 			 * Remove any escape characters (\) from the string.
@@ -358,7 +358,7 @@ namespace Json {
 			 * @param std::string The string to remove escape characters from.
 			 * @returns The unescaped string.
 			 */
-			void unescape(std::string&);
+			void unescape(std::string&) const;
 
 			/**
 			 * Prepends any occurance of c with an escape character (\).
@@ -368,7 +368,9 @@ namespace Json {
 			 * @param strjson The string to escape.
 			 * @param c       The character which needs to be escaped.
 			 */
-			void escape(std::string&, const char);
+			void escape(std::string&, const char) const;
+
+			void formatStringForOutput(std::string&) const;
 
 			/**
 			 * Extracts a literal from string str starting at position pos.
@@ -401,7 +403,6 @@ namespace Json {
 			 */
 			std::string extract(std::string, size_t, bool) throw (Json::Exception);
 
-			void formatStringForOutput(std::string&);
 			void parse(std::string) throw (Json::Exception);
 			void parseString(std::string) throw (Json::Exception);
 			void parseNumber(std::string) throw (Json::Exception);
@@ -410,12 +411,12 @@ namespace Json {
 			void parseObject(std::string) throw (Json::Exception);
 			void parseArray(std::string) throw (Json::Exception);
 
-			void strjsonObject(std::string&);
-			void strjsonArray(std::string&);
-			void strjsonNumber(std::string&);
-			void strjsonString(std::string&);
-			void strjsonBool(std::string&);
-			void strjsonNull(std::string&);
+			void strjsonObject(std::string&) const;
+			void strjsonArray(std::string&) const;
+			void strjsonNumber(std::string&) const;
+			void strjsonString(std::string&) const;
+			void strjsonBool(std::string&) const;
+			void strjsonNull(std::string&) const;
 
 			static void deleteObject(Json::Object obj);
 			static void deleteArray(Json::Array arr);

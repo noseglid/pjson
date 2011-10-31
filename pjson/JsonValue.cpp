@@ -91,13 +91,13 @@ Json::Value::deleteArray(Json::Array arr)
 }
 
 Json::Types
-Json::Value::getType()
+Json::Value::getType() const
 {
 	return this->type;
 }
 
 template<class T> T
-Json::Value::get() throw (Json::Exception)
+Json::Value::get() const throw (Json::Exception)
 {
 	try {
 		return boost::get<T>(this->value);
@@ -109,7 +109,7 @@ Json::Value::get() throw (Json::Exception)
 }
 
 Json::Value&
-Json::Value::operator[](const char* key) throw (Json::Exception)
+Json::Value::operator[](const char* key) const throw (Json::Exception)
 {
 	Json::Object obj          = this->asObject();
 	Json::Object::iterator it = obj.find(key);
@@ -122,7 +122,7 @@ Json::Value::operator[](const char* key) throw (Json::Exception)
 }
 
 Json::Value&
-Json::Value::operator[](int key) throw (Json::Exception)
+Json::Value::operator[](int key) const throw (Json::Exception)
 {
 	try {
 		return *this->asArray().at(key);
@@ -132,19 +132,19 @@ Json::Value::operator[](int key) throw (Json::Exception)
 }
 
 Json::Array
-Json::Value::asArray() throw (Json::Exception)
+Json::Value::asArray() const throw (Json::Exception)
 {
 	return this->get<Json::Array>();
 }
 
 Json::Object
-Json::Value::asObject() throw (Json::Exception)
+Json::Value::asObject() const throw (Json::Exception)
 {
 	return this->get<Json::Object>();
 }
 
 Json::Int
-Json::Value::asInt() throw (Json::Exception)
+Json::Value::asInt() const throw (Json::Exception)
 {
 	try {
 		return this->get<int>();
@@ -158,7 +158,7 @@ Json::Value::asInt() throw (Json::Exception)
 }
 
 Json::Number
-Json::Value::asNumber() throw (Json::Exception)
+Json::Value::asNumber() const throw (Json::Exception)
 {
 	try {
 		return this->get<double>();
@@ -172,25 +172,25 @@ Json::Value::asNumber() throw (Json::Exception)
 }
 
 Json::Bool
-Json::Value::asBool() throw (Json::Exception)
+Json::Value::asBool() const throw (Json::Exception)
 {
 	return this->get<bool>();
 }
 
 Json::String
-Json::Value::asString() throw (Json::Exception)
+Json::Value::asString() const throw (Json::Exception)
 {
 	return this->get<Json::String>();
 }
 
 bool
-Json::Value::isNull()
+Json::Value::isNull() const
 {
 	return JVNULL == this->type;
 }
 
 std::string
-Json::Value::minify(std::string json)
+Json::Value::minify(std::string json) const
 {
 	std::string ret;
 	bool insignificant = true;
@@ -202,7 +202,7 @@ Json::Value::minify(std::string json)
 }
 
 void
-Json::Value::unescape(std::string& str)
+Json::Value::unescape(std::string& str) const
 {
 	size_t pos = 0;
 	while (std::string::npos != (pos = str.find('\\', pos))) {
@@ -212,7 +212,7 @@ Json::Value::unescape(std::string& str)
 }
 
 void
-Json::Value::escape(std::string& str, const char c)
+Json::Value::escape(std::string& str, const char c) const
 {
 	size_t pos = 0;
 	while (std::string::npos != (pos = str.find(c, pos))) {
@@ -275,7 +275,7 @@ Json::Value::extract(std::string str,
 }
 
 void
-Json::Value::formatStringForOutput(std::string& str)
+Json::Value::formatStringForOutput(std::string& str) const
 {
 	this->escape(str, '\\');
 	this->escape(str, '"');
@@ -284,7 +284,7 @@ Json::Value::formatStringForOutput(std::string& str)
 }
 
 std::string
-Json::Value::strjson(strformat t)
+Json::Value::strjson(strformat t) const
 {
 	std::string strjson;
 	switch (this->type) {
@@ -306,7 +306,7 @@ Json::Value::strjson(strformat t)
 }
 
 void
-Json::Value::strjsonObject(std::string& strjson)
+Json::Value::strjsonObject(std::string& strjson) const
 {
 	std::string sep = "{\n";
 	Json::Object obj = this->asObject();
@@ -326,7 +326,7 @@ Json::Value::strjsonObject(std::string& strjson)
 }
 
 void
-Json::Value::strjsonArray(std::string& strjson)
+Json::Value::strjsonArray(std::string& strjson) const
 {
 	std::string sep = "[\n";
 	Json::Array arr = this->asArray();
@@ -341,7 +341,7 @@ Json::Value::strjsonArray(std::string& strjson)
 }
 
 void
-Json::Value::strjsonNumber(std::string& strjson)
+Json::Value::strjsonNumber(std::string& strjson) const
 {
 	if (this->value.type() == typeid(Json::Int)) {
 		strjson = boost::lexical_cast<std::string>(this->asInt());
@@ -351,20 +351,20 @@ Json::Value::strjsonNumber(std::string& strjson)
 }
 
 void
-Json::Value::strjsonString(std::string& strjson)
+Json::Value::strjsonString(std::string& strjson) const
 {
 	strjson = this->asString();
 	this->formatStringForOutput(strjson);
 }
 
 void
-Json::Value::strjsonBool(std::string& strjson)
+Json::Value::strjsonBool(std::string& strjson) const
 {
 	strjson = (this->asBool() ? "true" : "false");
 }
 
 void
-Json::Value::strjsonNull(std::string& strjson)
+Json::Value::strjsonNull(std::string& strjson) const
 {
 	strjson = "null";
 }
