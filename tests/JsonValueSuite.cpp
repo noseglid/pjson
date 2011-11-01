@@ -11,6 +11,9 @@ JsonValueSuite::run()
 {
 	std::cout << "Running suite 'JsonValue'.";
 
+	this->copyConstructor();
+	this->assignment();
+
 	this->validString();
 	this->invalidString();
 	this->validNumber();
@@ -35,6 +38,71 @@ JsonValueSuite::run()
 void JsonValueSuite::report()
 {
 	std::cout << pjreport();
+}
+
+void
+JsonValueSuite::copyConstructor()
+{
+	Json::Value v1 = Json::Builder::create(std::string("Umgz"));
+	Json::Value *v2 = new Json::Value(v1);
+	TEST_ASSERT("Umgz", v1.asString());
+	TEST_ASSERT("Umgz", v2->asString());
+
+	Json::Value *v3 = new Json::Value(*v2);
+	delete v2;
+	TEST_ASSERT("Umgz", v3->asString());
+	delete v3;
+
+
+	std::vector<int> vct;
+	vct.push_back(0);
+	vct.push_back(1);
+	vct.push_back(2);
+	Json::Value v4 = Json::Builder::create(vct);
+	Json::Value v5(v4);
+	Json::Value *v6 = new Json::Value(v4);
+	TEST_ASSERT(0, v4[0].asInt());
+	TEST_ASSERT(1, v4[1].asInt());
+	TEST_ASSERT(2, v4[2].asInt());
+	TEST_ASSERT(0, v5[0].asInt());
+	TEST_ASSERT(1, v5[1].asInt());
+	TEST_ASSERT(2, v5[2].asInt());
+	TEST_ASSERT(0, (*v6)[0].asInt());
+	TEST_ASSERT(1, (*v6)[1].asInt());
+	TEST_ASSERT(2, (*v6)[2].asInt());
+
+	Json::Value *v7 = new Json::Value(*v6);
+	delete v6;
+	TEST_ASSERT(0, (*v7)[0].asInt());
+	TEST_ASSERT(1, (*v7)[1].asInt());
+	TEST_ASSERT(2, (*v7)[2].asInt());
+	delete v7;
+}
+
+void
+JsonValueSuite::assignment()
+{
+	std::vector<int> vct;
+	vct.push_back(0);
+	vct.push_back(1);
+	vct.push_back(2);
+	Json::Value jv1 = Json::Builder::create(vct);
+
+	Json::Value jv2 = jv1;
+	TEST_ASSERT(0, jv2[0].asInt());
+	TEST_ASSERT(1, jv2[1].asInt());
+	TEST_ASSERT(2, jv2[2].asInt());
+
+	Json::Value *jv3 = new Json::Value(jv2);
+	Json::Value jv4 = Json::Builder::create();
+    jv4 = *jv3;
+	delete jv3;
+	TEST_ASSERT(0, jv4[0].asInt());
+	TEST_ASSERT(1, jv4[1].asInt());
+	TEST_ASSERT(2, jv4[2].asInt());
+
+	Json::Value jv5 = Json::Builder::create();
+	jv5 = jv5;
 }
 
 void

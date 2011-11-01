@@ -37,7 +37,8 @@ Json::Value::typeByValue(Json::value_t v) throw (Json::Exception)
 	throw Json::Exception("Invalid type.");
 }
 
-Json::Value::Value(const Json::Value& v)
+void
+Json::Value::copy(const Json::Value& v)
 {
 	this->type = v.type;
 	switch (v.type) {
@@ -65,6 +66,21 @@ Json::Value::Value(const Json::Value& v)
 			this->value = v.value;
 			break;
 	}
+}
+
+Json::Value::Value(const Json::Value& v)
+{
+	this->copy(v);
+
+}
+
+Json::Value&
+Json::Value::operator=(const Json::Value& v)
+{
+	if (this == &v) return *this;
+
+	this->copy(v);
+	return *this;
 }
 
 Json::Value::Value(std::string json, cmode m) throw (Json::Exception)

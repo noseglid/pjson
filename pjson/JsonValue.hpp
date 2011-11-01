@@ -145,7 +145,12 @@ namespace Json {
 
 		public:
 
-			Value(const Value&);
+			/**
+			 * Copies any previously defined Value.
+			 *
+			 * @param v The Value to copy.
+			 */
+			Value(const Value& v);
 
 			/**
 			 * Deletes this Value, and all values this may hold.
@@ -164,6 +169,18 @@ namespace Json {
 			 */
 			Json::Types
 			getType() const;
+
+			/**
+			 * Handles assignment properly from one
+			 * Value to another. All values are copied, including
+			 * Arrays and Objects. The newly created Value needs to
+			 * be deallocated seperatly.
+			 *
+			 * @param v The Value this is assigned to.
+			 * @returns The newly assigned value.
+			 */
+			Json::Value& operator=(const Json::Value& v);
+
 
 			/**
 			 * Fetches the value, casted to class T. Unless needed for specific
@@ -212,9 +229,8 @@ namespace Json {
 			 * @throws Json::Exception If current value cannot be
 			 *                         interpreted as an Array.
 			 * @see Json::Array
-			 * @throws Json::Exception If this does not represent an array.
-			 * @returns Json::Array The array this value represents
 			 * @see get()
+			 * @returns Json::Array The array this value represents
 			 */
 			Json::Array asArray() const throw (Json::Exception);
 
@@ -419,6 +435,13 @@ namespace Json {
 			void strjsonString(std::string&) const;
 			void strjsonBool(std::string&) const;
 			void strjsonNull(std::string&) const;
+
+			/**
+			 * Copies a provided value into this.
+			 *
+			 * @param v The value to copy.
+			 */
+			void copy(const Value& v);
 
 			static void deleteObject(Json::Object obj);
 			static void deleteArray(Json::Array arr);
