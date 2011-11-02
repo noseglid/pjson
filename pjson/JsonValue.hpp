@@ -429,8 +429,8 @@ namespace Json {
 			void parseObject(std::string) throw (Json::Exception);
 			void parseArray(std::string) throw (Json::Exception);
 
-			void strjsonObject(std::string&) const;
-			void strjsonArray(std::string&) const;
+			void strjsonObject(std::string&, size_t) const;
+			void strjsonArray(std::string&, size_t) const;
 			void strjsonNumber(std::string&) const;
 			void strjsonString(std::string&) const;
 			void strjsonBool(std::string&) const;

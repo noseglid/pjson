@@ -14,6 +14,10 @@ JsonStringSuite::run()
 	this->stringnumber();
 	this->stringobject();
 	this->stringarray();
+
+	this->deepArray();
+	this->deepObject();
+	this->mixed();
 }
 
 void
@@ -115,4 +119,106 @@ JsonStringSuite::stringarray()
 	Json::Value v2 = Json::Builder::create(a2);
 	std::string exp2 = readfile("data/strjson/array2.json");
 	TEST_ASSERT(exp2, v2.strjson());
+}
+
+void
+JsonStringSuite::deepArray()
+{
+	std::vector<std::vector<int> > vct;
+	std::vector<int> value;
+	value.push_back(1);
+	value.push_back(2);
+	vct.push_back(value);
+	Json::Value jv1 = Json::Builder::create(vct);
+	std::string exp1 = readfile("data/strjson/array3.json");
+	TEST_ASSERT(exp1, jv1.strjson());
+
+	std::vector<std::vector<std::vector<int > > > l1;
+	std::vector<std::vector<int> > l2_1, l2_2, l2_3;
+	std::vector<int> l3_1, l3_2, l3_3;
+	l3_1.push_back(1);
+	l3_1.push_back(1);
+	l3_1.push_back(2);
+	l3_1.push_back(3);
+	l3_1.push_back(5);
+
+	l3_2.push_back(2);
+	l3_2.push_back(3);
+	l3_2.push_back(5);
+	l3_2.push_back(7);
+	l3_2.push_back(11);
+
+	l3_3.push_back(1);
+	l3_3.push_back(2);
+	l3_3.push_back(6);
+	l3_3.push_back(24);
+	l3_3.push_back(120);
+
+	l2_1.push_back(l3_1);
+	l2_1.push_back(l3_2);
+	l2_1.push_back(l3_3);
+
+	l2_2.push_back(l3_1);
+	l2_2.push_back(l3_2);
+	l2_2.push_back(l3_3);
+
+	l2_3.push_back(l3_1);
+	l2_3.push_back(l3_2);
+	l2_3.push_back(l3_3);
+
+	l1.push_back(l2_1);
+	l1.push_back(l2_2);
+	l1.push_back(l2_3);
+
+	Json::Value jv2 = Json::Builder::create(l1);
+	std::string exp2 = readfile("data/strjson/array4.json");
+	TEST_ASSERT(exp2, jv2.strjson());
+}
+
+void
+JsonStringSuite::deepObject()
+{
+	std::map<std::string, std::map<std::string, std::string> > m1;
+	std::map<std::string, std::string> values1, values2;
+	values1["fst"] = "first it is";
+	values1["snd"] = "second it is";
+	values1["thd"] = "third it is";
+
+	values2["A"] = "A is 23";
+	values2["B"] = "B is larger than C";
+	values2["C"] = "C is smaller than A";
+
+	m1["enumeration"] = values1;
+	m1["riddle"]      = values2;
+
+	Json::Value jv1 = Json::Builder::create(m1);
+	std::string exp1 = readfile("data/strjson/object3.json");
+	TEST_ASSERT(exp1, jv1.strjson());
+}
+
+void
+JsonStringSuite::mixed()
+{
+	std::vector<std::map<std::string, Json::value_t> > tv;
+	std::map<std::string, Json::value_t> wd, himym, futurama;
+
+	wd["name"]    = std::string("The walking dead");
+	wd["rating"]  = 5;
+	wd["zombies"] = true;
+
+	himym["name"]    = std::string("How I met your mother");
+	himym["rating"]  = 7;
+	himym["zombies"] = false;
+
+	futurama["name"]    = std::string("Futurama");
+	futurama["rating"]  = 10;
+	futurama["zombies"] = true; /* I count Bender. */
+
+	tv.push_back(wd);
+	tv.push_back(himym);
+	tv.push_back(futurama);
+
+	Json::Value jv2 = Json::Builder::create(tv);
+	std::string exp2 = readfile("data/strjson/mixed1.json");
+	TEST_ASSERT(exp2, jv2.strjson());
 }

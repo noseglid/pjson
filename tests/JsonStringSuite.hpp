@@ -21,6 +21,10 @@ class JsonStringSuite
 		void stringnumber();
 		void stringobject();
 		void stringarray();
+
+		void deepArray();
+		void deepObject();
+		void mixed();
 };
 
 #endif

@@ -332,16 +332,19 @@ Json::Value::formatStringForOutput(std::string& str) const
 std::string
 Json::Value::strjson(strformat t) const
 {
+	static size_t indent = -1;
+	indent++;
 	std::string strjson;
 	switch (this->type) {
-		case JVOBJECT: this->strjsonObject(strjson); break;
-		case JVARRAY:  this->strjsonArray(strjson);  break;
-		case JVNUMBER: this->strjsonNumber(strjson); break;
-		case JVSTRING: this->strjsonString(strjson); break;
-		case JVBOOL:   this->strjsonBool(strjson);   break;
-		case JVNULL:   this->strjsonNull(strjson);   break;
+		case JVOBJECT: this->strjsonObject(strjson, indent); break;
+		case JVARRAY:  this->strjsonArray(strjson, indent);  break;
+		case JVNUMBER: this->strjsonNumber(strjson);         break;
+		case JVSTRING: this->strjsonString(strjson);         break;
+		case JVBOOL:   this->strjsonBool(strjson);           break;
+		case JVNULL:   this->strjsonNull(strjson);           break;
 		default: throw Json::Exception("Type is unknown.");
 	}
+	indent--;
 
 	switch (t) {
 		case FORMAT_PRETTY:                                    break;
@@ -352,7 +355,7 @@ Json::Value::strjson(strformat t) const
 }
 
 void
-Json::Value::strjsonObject(std::string& strjson) const
+Json::Value::strjsonObject(std::string& strjson, size_t indent) const
 {
 	std::string sep = "{\n";
 	Json::Object obj = this->asObject();
@@ -362,28 +365,35 @@ Json::Value::strjsonObject(std::string& strjson) const
 		strjson += sep;
 		std::string key = it->first;
 		this->formatStringForOutput(key);
-
 		std::string value = it->second->strjson();
-		strjson += "\t" + key + " : " + value;
+
+		strjson.append(indent + 1, '\t');
+		strjson += key + " : " + value;
 		sep = ",\n";
 	}
 
-	strjson += "\n}\n";
+	strjson += "\n";
+	strjson.append(indent, '\t');
+	strjson += "}";
 }
 
 void
-Json::Value::strjsonArray(std::string& strjson) const
+Json::Value::strjsonArray(std::string& strjson, size_t indent) const
 {
 	std::string sep = "[\n";
 	Json::Array arr = this->asArray();
 	typedef Json::Array::const_iterator arrit;
 
 	for (arrit it = arr.begin(); it != arr.end(); it++) {
-		strjson += sep + "\t" + (*it)->strjson();
+		strjson += sep;
+		strjson.append(indent + 1, '\t');
+		strjson += (*it)->strjson();
 		sep = ",\n";
 	}
 
-	strjson += "\n]\n";
+	strjson += "\n";
+	strjson.append(indent, '\t');
+	strjson += "]";
 }
 
 void

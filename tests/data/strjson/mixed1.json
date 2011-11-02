@@ -1,0 +1,17 @@
+[
+	{
+		"name" : "The walking dead",
+		"rating" : 5,
+		"zombies" : true
+	},
+	{
+		"name" : "How I met your mother",
+		"rating" : 7,
+		"zombies" : false
+	},
+	{
+		"name" : "Futurama",
+		"rating" : 10,
+		"zombies" : true
+	}
+]
