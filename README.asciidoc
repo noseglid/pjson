@@ -4,9 +4,14 @@ Alexander Olsson <noseglid@gmail.com>
 == libpjson
 PJSON is a slim, and easy to use JSON interpreter for the C++ language.
 
+More information aswell as a complete documentation is located at the
+github pages.
+
+	* http://noseglid.github.com/pjson
+
 == Dependencies
-* http://www.gnu.org/software/libtool/[libtool]
-* http://www.boost.org/[boost] (only headers required; +variant+ and +lexical_cast+)
+	* http://www.gnu.org/software/libtool/[libtool]
+	* http://www.boost.org/[boost] (only headers required; +variant+ and +lexical_cast+)
 
 If you're on a debian derivative (debian, ubuntu, ..) you can use the following to get
 the prerequisites (as root):
