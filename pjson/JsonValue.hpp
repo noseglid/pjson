@@ -44,6 +44,11 @@ namespace Json {
 	typedef std::string String;
 
 	/**
+	 * Representation of a JSON string as common in C.
+	 */
+	typedef const char* CString;
+
+	/**
 	 * A representation of a JSON number.
 	 */
 	typedef double Number;
@@ -60,6 +65,12 @@ namespace Json {
 	typedef bool Bool;
 
 	/**
+	 * A representation of a NULL value
+	 */
+	struct NullValue {};
+	typedef NullValue Null;
+
+	/**
 	 * A representation of a JSON object; key, value pairs.
 	 */
 	typedef std::map<std::string, Json::Value*> Object;
@@ -74,9 +85,11 @@ namespace Json {
 	 * types defined in the variant.
 	 */
 	typedef boost::variant<Json::String,
+	                       Json::CString,
 	                       Json::Number,
 	                       Json::Int,
 	                       Json::Bool,
+	                       Json::NullValue,
 	                       Json::Object,
 	                       Json::Array> value_t;
 

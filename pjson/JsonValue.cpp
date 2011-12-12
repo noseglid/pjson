@@ -32,6 +32,8 @@ Json::Value::typeByValue(Json::value_t v) throw (Json::Exception)
 	} else if (v.type() == typeid(Json::Int) ||
 	           v.type() == typeid(Json::Number)) {
 		return Json::JVNUMBER;
+	} else if (v.type() == typeid(Json::NullValue)) {
+		return Json::JVNULL;
 	}
 
 	throw Json::Exception("Invalid type.");
@@ -96,7 +98,12 @@ Json::Value::Value(std::string json, cmode m) throw (Json::Exception)
 Json::Value::Value(Json::value_t v)
 {
 	this->value = v;
-	this->type  = Json::Value::typeByValue(v);
+
+	if (v.type() == typeid(const char*)) {
+		this->value = std::string(this->get<const char*>());
+	}
+
+	this->type = Json::Value::typeByValue(this->value);
 }
 
 Json::Value::Value()

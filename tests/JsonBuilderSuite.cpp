@@ -65,12 +65,11 @@ JsonBuilderSuite::testnumber()
 void
 JsonBuilderSuite::testbool()
 {
-	bool t = true, f = false;
-	Json::Value v1 = Json::Builder::create(t);
+	Json::Value v1 = Json::Builder::create(true);
 	TEST_ASSERT(Json::JVBOOL, v1.getType());
 	TEST_ASSERT(true, v1.asBool());
 
-	Json::Value v2 = Json::Builder::create(f);
+	Json::Value v2 = Json::Builder::create(false);
 	TEST_ASSERT(Json::JVBOOL, v2.getType());
 	TEST_ASSERT(false, v2.asBool());
 }
@@ -78,7 +77,7 @@ JsonBuilderSuite::testbool()
 void
 JsonBuilderSuite::testnull()
 {
-	Json::Value v1 = Json::Builder::create();
+	Json::Value v1 = Json::Builder::create(Json::Null());
 	TEST_ASSERT(Json::JVNULL, v1.getType());
 	TEST_ASSERT(true, v1.isNull());
 }
@@ -128,16 +127,20 @@ void
 JsonBuilderSuite::testmixed()
 {
 	std::map<std::string, Json::value_t> m1;
-	m1["int"]    = 42;
-	m1["string"] = std::string("Where art thou?");
-	m1["bool"]   = false;
-	m1["double"] = 3.2e-1;
+	m1["int"]      = 42;
+	m1["string"]   = std::string("Where art thou?");
+	m1["bool"]     = false;
+	m1["double"]   = 3.2e-1;
+	m1["charstar"] = "What is this?";
+	m1["null"]     = Json::Null();
 
 	Json::Value v1 = Json::Builder::create(m1);
 	TEST_ASSERT(42, v1["int"].asInt());
 	TEST_ASSERT("Where art thou?", v1["string"].asString());
 	TEST_ASSERT(false, v1["bool"].asBool());
 	TEST_ASSERT(3.2e-1, v1["double"].asNumber());
+	TEST_ASSERT("What is this?", v1["charstar"].asString());
+	TEST_ASSERT(true, v1["null"].isNull());
 }
 
 void
