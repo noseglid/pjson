@@ -53,6 +53,6 @@
  * @example doc-object.cpp
  */
 
-#include "JsonValue.hpp"
-#include "JsonBuilder.hpp"
-#include "JsonException.hpp"
+#include "pjson/JsonValue.hpp"
+#include "pjson/JsonBuilder.hpp"
+#include "pjson/JsonException.hpp"
