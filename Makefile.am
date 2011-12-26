@@ -18,7 +18,7 @@ ACLOCAL_AMFLAGS = -I m4
 #  * If any interfaces have been removed or changed, reset age to 0.
 #    Next versiom will be (c:r:0)
 #
-VERSION_INFO = 0:0:0
+VERSION_INFO = 1:0:0
 
 # Release versioning is (major:minor)
 # The Name of the final version will me (major:minor:interface)
