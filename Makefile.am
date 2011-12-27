@@ -29,7 +29,7 @@ GENERIC_LDFLAGS = -release $(RELEASE) -version-info $(VERSION_INFO)
 
 lib_LTLIBRARIES = libpjson.la
 
-libpjson_la_SOURCES = pjson/JsonValue.cpp
+libpjson_la_SOURCES = pjson/JsonValue.cpp pjson/pjson.cpp
 libpjson_la_LDFLAGS = $(GENERIC_LDFLAGS)
 
 include_HEADERS        = pjson/pjson.hpp
@@ -43,3 +43,7 @@ nobase_include_HEADERS = pjson/JsonBuilder.hpp \
 # that it exists.
 test:
 	$(MAKE) -C tests test
+
+# Clean test files
+testclean:
+	$(MAKE) -C tests clean

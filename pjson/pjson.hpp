@@ -1,3 +1,6 @@
+#ifndef __PJSON_HPP__
+#define __PJSON_HPP__
+
 /** @mainpage
  * @section intro Introduction to pjson
  * The pjson library is intended to be a fast and easy to use JSON
@@ -56,3 +59,48 @@
 #include "pjson/JsonValue.hpp"
 #include "pjson/JsonBuilder.hpp"
 #include "pjson/JsonException.hpp"
+
+namespace Json {
+
+	/**
+	 * Deserializes a JSON string and returns an instance of Json::Value.
+	 * Json::Value provides an easy to use interface to read data.
+	 *
+	 * A JSON string can be anything which is described in the RFC4627.
+	 * For example
+	 * @code
+	 * { "timestamp" : 1319745798, "mood" : "happy" }
+	 * @endcode
+	 *
+	 * @param json The json object as a string.
+	 * @throws Json::Exception If the string can not be interpreted as JSON.
+	 * @returns A representation of the JSON object.
+	 */
+	Json::Value
+	deserialize(std::string);
+
+	/**
+	 * Serializes an object. This will give the json string
+	 * representation of any object you give it.
+	 * You can give almost any type to this funtion - including
+	 * but not limited to:
+	 *   - int, float, double
+	 *   - std::string
+	 *   - map<std::string, T>
+	 *   - vector<T>
+	 *   - bool
+	 *   - const char*
+	 *
+	 * @param object The object to serialize
+	 * @throws Json::Exception if any error is encountered.
+	 * @return String representation of the object
+	 */
+	template <class T> std::string
+	serialize(T object) throw (Json::Exception)
+	{
+		Json::Value v = Json::Builder::create(object);
+		return v.strjson();
+	};
+}
+
+#endif

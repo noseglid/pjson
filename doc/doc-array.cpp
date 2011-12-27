@@ -8,7 +8,7 @@ int main(void)
 	std::string strJSON = "[1, 2, 3, 4, 5, \"There are 6 elements, including me\"]";
 
 	std::cout << "Intepreting json: '" << strJSON << "'" << std::endl;
-	Json::Value j = Json::Builder::parse(strJSON);
+	Json::Value j = Json::deserialize(strJSON);
 
 	Json::Array arr = j.asArray();
 

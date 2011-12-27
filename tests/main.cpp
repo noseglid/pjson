@@ -1,6 +1,7 @@
 #include "JsonValueSuite.hpp"
 #include "JsonBuilderSuite.hpp"
 #include "JsonStringSuite.hpp"
+#include "PjsonSuite.hpp"
 
 #include <iostream>
 
@@ -21,6 +22,11 @@ int main(void)
 		stringsuite->run();
 		stringsuite->report();
 		delete stringsuite;
+
+		PjsonSuite *pjsonsuite = new PjsonSuite();
+		pjsonsuite->run();
+		pjsonsuite->report();
+		delete pjsonsuite;
 
 	} catch (Json::Exception e) {
 		std::cout << "Uncaught JSON exception: " << e.what() << std::endl;
