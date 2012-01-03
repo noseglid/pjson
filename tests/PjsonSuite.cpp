@@ -24,7 +24,7 @@ PjsonSuite::testSerialize()
 	playersPerTeam["HoN"] = 5;
 	playersPerTeam["Soccer"] = 11;
 
-	std::string ser = Json::serialize(playersPerTeam);
+	std::string ser = Json::serialize(playersPerTeam, Json::FORMAT_PRETTY);
 	std::string exp = readfile("data/serialize.json");
 
 	TEST_ASSERT(exp, ser);

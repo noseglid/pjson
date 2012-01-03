@@ -152,7 +152,7 @@ namespace Json {
 		friend class Builder;
 		friend Json::Value deserialize(std::string);
 		friend Json::Value deserialize(const char*);
-		template <class T> friend std::string serialize(T) throw (Json::Exception);
+		template <class T> friend std::string serialize(T, strformat = FORMAT_MINIFIED) throw (Json::Exception);
 		friend std::string serialize(Json::Value);
 
 		/**

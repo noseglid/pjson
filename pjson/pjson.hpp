@@ -92,14 +92,15 @@ namespace Json {
 	 *   - const char*
 	 *
 	 * @param object The object to serialize
+	 * @param format How to format the string
 	 * @throws Json::Exception if any error is encountered.
 	 * @return String representation of the object
 	 */
 	template <class T> std::string
-	serialize(T object) throw (Json::Exception)
+	serialize(T object, strformat format) throw (Json::Exception)
 	{
 		Json::Value v = Json::Builder::create(object);
-		return v.strjson();
+		return v.strjson(format);
 	};
 }
 

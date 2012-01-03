@@ -29,10 +29,10 @@ JsonStringSuite::report()
 void
 JsonStringSuite::stringstring()
 {
-	std::string ser1 = Json::serialize(std::string("MyJsonString"));
+	std::string ser1 = Json::serialize(std::string("MyJsonString"), Json::FORMAT_PRETTY);
 	TEST_ASSERT("\"MyJsonString\"", ser1);
 
-	std::string ser2 = Json::serialize(std::string("[Stuff with \" say \\  \" \"{"));
+	std::string ser2 = Json::serialize(std::string("[Stuff with \" say \\  \" \"{"), Json::FORMAT_PRETTY);
 	TEST_ASSERT("\"[Stuff with \\\" say \\\\  \\\" \\\"{\"", ser2);
 }
 
@@ -40,29 +40,29 @@ void
 JsonStringSuite::stringnull()
 {
 	Json::Value v = Json::Builder::create();
-	TEST_ASSERT("null", Json::serialize(v));
+	TEST_ASSERT("null", Json::serialize(v, Json::FORMAT_PRETTY));
 }
 
 void
 JsonStringSuite::stringbool()
 {
-	std::string ser1 = Json::serialize(true);
+	std::string ser1 = Json::serialize(true, Json::FORMAT_PRETTY);
 	TEST_ASSERT("true", ser1);
 
-	std::string ser2 = Json::serialize(false);
+	std::string ser2 = Json::serialize(false, Json::FORMAT_PRETTY);
 	TEST_ASSERT("false", ser2);
 }
 
 void
 JsonStringSuite::stringnumber()
 {
-	std::string ser1 = Json::serialize(42);
+	std::string ser1 = Json::serialize(42, Json::FORMAT_PRETTY);
 	TEST_ASSERT("42", ser1);
 
-	std::string ser2 = Json::serialize(-1238);
+	std::string ser2 = Json::serialize(-1238, Json::FORMAT_PRETTY);
 	TEST_ASSERT("-1238", ser2);
 
-	std::string ser3 = Json::serialize(42e2);
+	std::string ser3 = Json::serialize(42e2, Json::FORMAT_PRETTY);
 	TEST_ASSERT("4200", ser3);
 }
 
@@ -74,7 +74,7 @@ JsonStringSuite::stringobject()
 	m1["B"] = 42;
 	m1["C"] = 27138;
 
-	std::string ser1 = Json::serialize(m1);
+	std::string ser1 = Json::serialize(m1, Json::FORMAT_PRETTY);
 	std::string exp1 = readfile("data/strjson/object1.json");
 	TEST_ASSERT(exp1, ser1);
 
@@ -84,7 +84,7 @@ JsonStringSuite::stringobject()
 	m2["3"] = "up, ";
 	m2["4"] = "dawg?";
 
-	std::string ser2 = Json::serialize(m2);
+	std::string ser2 = Json::serialize(m2, Json::FORMAT_PRETTY);
 	std::string exp2 = readfile("data/strjson/object2.json");
 	TEST_ASSERT(exp2, ser2);
 }
@@ -98,7 +98,7 @@ JsonStringSuite::stringarray()
 	a1.push_back("I am extravagant");
 	a1.push_back("I am drunk");
 
-	std::string ser1 = Json::serialize(a1);
+	std::string ser1 = Json::serialize(a1, Json::FORMAT_PRETTY);
 	std::string exp1 = readfile("data/strjson/array1.json");
 	TEST_ASSERT(exp1, ser1);
 
@@ -116,7 +116,7 @@ JsonStringSuite::stringarray()
 	a2.push_back(89);
 	a2.push_back(144);
 
-	std::string ser2 = Json::serialize(a2);
+	std::string ser2 = Json::serialize(a2, Json::FORMAT_PRETTY);
 	std::string exp2 = readfile("data/strjson/array2.json");
 	TEST_ASSERT(exp2, ser2);
 }
@@ -129,7 +129,7 @@ JsonStringSuite::deepArray()
 	value.push_back(1);
 	value.push_back(2);
 	vct.push_back(value);
-	std::string ser1 = Json::serialize(vct);
+	std::string ser1 = Json::serialize(vct, Json::FORMAT_PRETTY);
 	std::string exp1 = readfile("data/strjson/array3.json");
 	TEST_ASSERT(exp1, ser1);
 
@@ -170,7 +170,7 @@ JsonStringSuite::deepArray()
 	l1.push_back(l2_2);
 	l1.push_back(l2_3);
 
-	std::string ser2 = Json::serialize(l1);
+	std::string ser2 = Json::serialize(l1, Json::FORMAT_PRETTY);
 	std::string exp2 = readfile("data/strjson/array4.json");
 	TEST_ASSERT(exp2, ser2);
 }
@@ -191,7 +191,7 @@ JsonStringSuite::deepObject()
 	m1["enumeration"] = values1;
 	m1["riddle"]      = values2;
 
-	std::string ser = Json::serialize(m1);
+	std::string ser = Json::serialize(m1, Json::FORMAT_PRETTY);
 	std::string exp = readfile("data/strjson/object3.json");
 	TEST_ASSERT(exp, ser);
 }
@@ -218,7 +218,7 @@ JsonStringSuite::mixed()
 	tv.push_back(himym);
 	tv.push_back(futurama);
 
-	std::string ser = Json::serialize(tv);
+	std::string ser = Json::serialize(tv, Json::FORMAT_PRETTY);
 	std::string exp = readfile("data/strjson/mixed1.json");
 	TEST_ASSERT(exp, ser);
 }
