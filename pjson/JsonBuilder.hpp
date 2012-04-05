@@ -11,6 +11,7 @@ namespace Json {
 	/**
 	 * Builder is the primary interface for creating and
 	 * examining JSON structures.
+	 * Normally you don't need to use this directly. See Json::serialize and Json::deserialize.
 	 *
 	 * The most important functions here are:
 	 *  - parse(std::string) Takes any JSON formatted string and
@@ -25,33 +26,17 @@ namespace Json {
 	 */
 	class Builder
 	{
+		template <class T> friend std::string serialize(T) throw (Json::Exception);
+		friend std::string serialize();
 
 	private:
+
 		/**
 		 * Should never be instansiated.
 		 */
 		Builder();
 
 	public:
-
-		/**
-		 * Parses a JSON string and returns an instance of Json::Value.
-		 * Json::Value provides an easy to use interface to read data.
-		 *
-		 * A JSON string can be anything which is described in the RFC4627.
-		 * For example
-		 * @code
-		 * { "timestamp" : 1319745798, "mood" : "happy" }
-		 * @endcode
-		 *
-		 * @param json The json object as a string.
-		 * @throws Json::Exception If the string can not be interpreted as JSON.
-		 * @returns A representation of the JSON object.
-		 */
-		static Json::Value parse(std::string json) throw (Json::Exception)
-		{
-			return Json::Value(json, Json::Value::MODE_PARSE);
-		}
 
 		/**
 		 * Creates a single value JSON structure.
@@ -73,11 +58,26 @@ namespace Json {
 		 *  - Json::Builder::create(std::map<std::string, T>)
 		 *  - Json::Builder::create(std::vector<T>)
 		 *
+		 * @param v The value to build a Json::Value from.
+		 * @return The created Json::Value.
 		 * @see Json::value_t
 		 */
 		static Json::Value create(Json::value_t v) throw (Json::Exception)
 		{
 			return Json::Value(v);
+		}
+
+		/**
+		 * Creates a Json::Value which does not differ
+		 * from input parameter 'v' in any way. Kept here to
+		 * allow easy serialization through Json::serialize.
+		 *
+		 * @param v The Json::Value to create a user from v.
+		 * @return The created Json::Value.
+		 */
+		static Json::Value create(Json::Value v)
+		{
+			return v;
 		}
 
 		/**

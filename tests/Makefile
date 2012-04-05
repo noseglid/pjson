@@ -8,6 +8,7 @@ SOURCES += pjtestframework.cpp
 SOURCES += JsonValueSuite.cpp
 SOURCES += JsonBuilderSuite.cpp
 SOURCES += JsonStringSuite.cpp
+SOURCES += PjsonSuite.cpp
 OBJECTS  = $(SOURCES:.cpp=.o)
 BIN      = test-pjson
 

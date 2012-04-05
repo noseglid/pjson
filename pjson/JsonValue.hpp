@@ -1,8 +1,6 @@
 #ifndef __JSONVALUE_H__
 #define __JSONVALUE_H__
 
-#include "JsonException.hpp"
-
 #include <boost/variant.hpp>
 #include <boost/lexical_cast.hpp>
 #include <string>
@@ -10,15 +8,32 @@
 #include <vector>
 #include <stdexcept>
 
+#include "JsonException.hpp"
+
 /// Default namespace for the <em>pjson</em> library.
 /**
  * The namespace which any class of the pjson library
  * is a part of.
  * */
 namespace Json {
-
 	class Value;
 	class Builder;
+
+	/**
+	 * The format with which a json string can be printed
+	 */
+	enum strformat {
+		/**
+		 * The string will be pretty formatted, suitable for printing.
+		 */
+		FORMAT_PRETTY,
+
+		/**
+		 * Minified format, all insignificant whitespaces will be removed,
+		 * suitable for transmitting.
+		 */
+		FORMAT_MINIFIED
+	};
 
 	/**
 	 * The available JSON types.
@@ -64,10 +79,13 @@ namespace Json {
 	 */
 	typedef bool Bool;
 
+	/// @cond
+	struct NullValue {};
+	/// @endcond
+
 	/**
 	 * A representation of a NULL value
 	 */
-	struct NullValue {};
 	typedef NullValue Null;
 
 	/**
@@ -95,7 +113,7 @@ namespace Json {
 
 	/// The main class representing a JSON value.
 	/**
-	 * @note Instances of this class can be obtained using Json::Builder.
+	 * @note Instances of this class can be obtained using Json::Builder or Json::deserialize.
 	 *
 	 * Each value can be either a string, number, true, false, null
 	 * or one of the structure types object or array.
@@ -138,24 +156,15 @@ namespace Json {
 	class Value
 	{
 		friend class Builder;
+		friend Json::Value deserialize(std::string);
+		friend Json::Value deserialize(const char*);
+		template <class T> friend std::string serialize(T, strformat = FORMAT_MINIFIED) throw (Json::Exception);
+		friend std::string serialize(Json::Value);
 
 		/**
 		 * Formats which can be used when retrieving
 		 * a string representation of this instance.
 		 */
-		enum strformat {
-			/**
-			 * The string will be pretty formatted, suitable for printing.
-			 */
-			FORMAT_PRETTY,
-
-			/**
-			 * Minified format, all insignificant whitespaces will be removed,
-			 * suitable for transmitting.
-			 */
-			FORMAT_MINIFIED
-		};
-
 		public:
 
 			/**
@@ -309,17 +318,6 @@ namespace Json {
 			 */
 			bool isNull() const;
 
-			/**
-			 * Returns a JSON string representation of this value.
-			 * The string is a valid JSON string according to RFC4627.
-			 * It can be used to transmit information to another JSON
-			 * compatible recipient.
-			 *
-			 * @param t The format to return. See strformat for allowed values.
-			 * @returns std::string The string representation of this JSON value.
-			 */
-			std::string strjson(strformat t = FORMAT_PRETTY) const;
-
 		private:
 			/**
 			 * The mode with which this class can be instantiated.
@@ -400,6 +398,17 @@ namespace Json {
 			 * @param c       The character which needs to be escaped.
 			 */
 			void escape(std::string&, const char) const;
+
+			/**
+			 * Returns a JSON string representation of this value.
+			 * The string is a valid JSON string according to RFC4627.
+			 * It can be used to transmit information to another JSON
+			 * compatible recipient.
+			 *
+			 * @param t The format to return. See strformat for allowed values.
+			 * @returns std::string The string representation of this JSON value.
+			 */
+			std::string strjson(strformat t = FORMAT_PRETTY) const;
 
 			void formatStringForOutput(std::string&) const;
 

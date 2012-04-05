@@ -1,0 +1,12 @@
+[
+	{
+		"name" : "Rand al'Thor",
+		"title" : "The Dragon",
+		"ta'veren" : true
+	},
+	{
+		"name" : "Elayne Trakand",
+		"title" : "Queen of Andor",
+		"ta'veren" : false
+	}
+]
