@@ -6,9 +6,10 @@ LDFLAGS = -L../.libs -lpjson
 DOXYGEN = doxygen
 RM      = rm
 
-SRC = doc-array.cpp doc-basic.cpp doc-object.cpp
-OBJ = $(SRC:.cpp=.o)
-BIN = doc-array doc-basic doc-object
+SRC  = doc-array.cpp doc-basic.cpp doc-object.cpp doc-strjson-pretty.cpp
+SRC += doc-strjson-minified.cpp doc-deserialize.cpp
+OBJ  = $(SRC:.cpp=.o)
+BIN  = $(SRC:.cpp=)
 
 doc: $(BIN)
 	$(DOXYGEN) doxygen.cfg

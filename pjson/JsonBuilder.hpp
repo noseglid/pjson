@@ -11,6 +11,7 @@ namespace Json {
 	/**
 	 * Builder is the primary interface for creating and
 	 * examining JSON structures.
+	 * Normally you don't need to use this directly. See Json::serialize and Json::deserialize.
 	 *
 	 * The most important functions here are:
 	 *  - parse(std::string) Takes any JSON formatted string and

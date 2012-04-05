@@ -19,6 +19,9 @@ namespace Json {
 	class Value;
 	class Builder;
 
+	/**
+	 * The format with which a json string can be printed
+	 */
 	enum strformat {
 		/**
 		 * The string will be pretty formatted, suitable for printing.
@@ -76,10 +79,13 @@ namespace Json {
 	 */
 	typedef bool Bool;
 
+	/// @cond
+	struct NullValue {};
+	/// @endcond
+
 	/**
 	 * A representation of a NULL value
 	 */
-	struct NullValue {};
 	typedef NullValue Null;
 
 	/**
