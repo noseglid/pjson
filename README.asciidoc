@@ -21,11 +21,15 @@ the prerequisites (as root):
 
 == Install
 Installation should be as easy as 1-2-3:
-(if you grabbed the source, you need to run +autoconf+ to generate the +configure+ file.)
+(if you grabbed the source, you need to run +autogen.sh+ to generate the +configure+ file.)
 
 ----
 # ./configure
+----
+----
 # make
+----
+----
 # make install
 ----
 
