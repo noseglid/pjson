@@ -15,9 +15,6 @@ class JsonValueSuite
 		void report();
 
 	private:
-		void copyConstructor();
-		void assignment();
-
 		void validString();
 		void invalidString();
 		void validNumber();

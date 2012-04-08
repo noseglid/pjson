@@ -117,7 +117,7 @@ namespace Json {
 
 			typename std::map<std::string, T>::const_iterator it;
 			for (it = v.begin(); it != v.end(); it++) {
-				target[it->first] = new Json::Value(Json::Builder::create(it->second));
+				target[it->first] = Json::Value(Json::Builder::create(it->second));
 			}
 
 			return Json::Value(target);
@@ -147,8 +147,7 @@ namespace Json {
 
 			typename std::vector<T>::const_iterator it;
 			for(it = v.begin(); it != v.end(); it++) {
-				Json::Value *n = new Json::Value(Json::Builder::create(*it));
-				target.push_back(n);
+				target.push_back(Json::Builder::create(*it));
 			}
 
 			return Json::Value(target);

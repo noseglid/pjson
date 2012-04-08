@@ -39,52 +39,6 @@ Json::Value::typeByValue(Json::value_t v) throw (Json::Exception)
 	throw Json::Exception("Invalid type.");
 }
 
-void
-Json::Value::copy(const Json::Value& v)
-{
-	this->type = v.type;
-	switch (v.type) {
-		case JVARRAY:
-		{
-			Json::Array t;
-			Json::Array s = v.asArray();
-			for (Json::Array::const_iterator it = s.begin(); it != s.end(); it++) {
-				t.push_back(new Json::Value(**it));
-			}
-			this->value = t;
-			break;
-		}
-		case JVOBJECT:
-		{
-			Json::Object t;
-			Json::Object s = v.asObject();
-			for(Json::Object::const_iterator it = s.begin(); it != s.end(); it++) {
-				t[it->first] = new Json::Value(*it->second);
-			}
-			this->value = t;
-			break;
-		}
-		default:
-			this->value = v.value;
-			break;
-	}
-}
-
-Json::Value::Value(const Json::Value& v)
-{
-	this->copy(v);
-
-}
-
-Json::Value&
-Json::Value::operator=(const Json::Value& v)
-{
-	if (this == &v) return *this;
-
-	this->copy(v);
-	return *this;
-}
-
 Json::Value::Value(std::string json, cmode m) throw (Json::Exception)
 {
 	switch (m) {
@@ -111,38 +65,6 @@ Json::Value::Value()
 	this->type = JVNULL;
 }
 
-Json::Value::~Value()
-{
-	switch (this->type) {
-	case JVOBJECT:
-		this->deleteObject(this->asObject());
-		break;
-	case JVARRAY:
-		this->deleteArray(this->asArray());
-		break;
-	default:
-		break;
-	}
-}
-
-void
-Json::Value::deleteObject(Json::Object obj)
-{
-	for (Json::Object::iterator it = obj.begin(); it != obj.end(); it++) {
-		delete it->second;
-	}
-	obj.clear();
-}
-
-void
-Json::Value::deleteArray(Json::Array arr)
-{
-	for (Json::Array::iterator it = arr.begin(); it != arr.end(); it++) {
-		delete *it;
-	}
-	arr.clear();
-}
-
 Json::Types
 Json::Value::getType() const
 {
@@ -161,7 +83,7 @@ Json::Value::get() const throw (Json::Exception)
 	return boost::get<T>(this->value);
 }
 
-Json::Value&
+Json::Value
 Json::Value::operator[](const char* key) const throw (Json::Exception)
 {
 	Json::Object obj          = this->asObject();
@@ -171,14 +93,14 @@ Json::Value::operator[](const char* key) const throw (Json::Exception)
 		throw Json::Exception("Key does not exist in object.");
 	}
 
-	return *it->second;
+	return it->second;
 }
 
-Json::Value&
+Json::Value
 Json::Value::operator[](int key) const throw (Json::Exception)
 {
 	try {
-		return *this->asArray().at(key);
+		return this->asArray().at(key);
 	} catch (std::out_of_range) {
 		throw Json::Exception("Out of array bounds.");
 	}
@@ -368,11 +290,11 @@ Json::Value::strjsonObject(std::string& strjson, size_t indent) const
 	Json::Object obj = this->asObject();
 	typedef Json::Object::const_iterator objit;
 
-	for (objit it = obj.begin(); it != obj.end(); it++) {
+	for (objit it = obj.begin(); it != obj.end(); ++it) {
 		strjson += sep;
 		std::string key = it->first;
 		this->formatStringForOutput(key);
-		std::string value = it->second->strjson();
+		std::string value = it->second.strjson();
 
 		strjson.append(indent + 1, '\t');
 		strjson += key + " : " + value;
@@ -394,7 +316,7 @@ Json::Value::strjsonArray(std::string& strjson, size_t indent) const
 	for (arrit it = arr.begin(); it != arr.end(); it++) {
 		strjson += sep;
 		strjson.append(indent + 1, '\t');
-		strjson += (*it)->strjson();
+		strjson += it->strjson();
 		sep = ",\n";
 	}
 
@@ -520,25 +442,18 @@ Json::Value::parseObject(std::string json) throw (Json::Exception)
 
 		char keyvalsep = object[keystart + klength + 2];
 		if (keyvalsep != ':') {
-			Json::Value::deleteObject(o);
 			throw Json::Exception("Invalid key-value separator.");
 		}
 
 		std::string value = this->extract(object, keystart + klength + 3, true);
 		size_t vlength    = value.length();
-		try {
-			if (1 == o.count(key)) delete o[key];
-			o[key] = new Value(value, Value::MODE_PARSE);
-		} catch (Json::Exception) {
-			Json::Value::deleteObject(o);
-			throw;
-		}
+
+		o[key] = Value(value, Value::MODE_PARSE);
 
 		keystart += klength + vlength + 4;
 
 		char sep = object[keystart - 1];
 		if (sep != ',' && keystart < object.length()) {
-			Json::Value::deleteObject(o);
 			throw Json::Exception("Value separator in object invalid.");
 		}
 	}
@@ -555,17 +470,12 @@ Json::Value::parseArray(std::string json) throw (Json::Exception)
 	unsigned int valstart = 0;
 	while (valstart < array.length()) {
 		std::string value = this->extract(array, valstart, true);
-		try {
-			a.push_back(new Value(value, Value::MODE_PARSE));
-		} catch (Json::Exception) {
-			Json::Value::deleteArray(a);
-			throw;
-		}
+		a.push_back(Value(value, Value::MODE_PARSE));
+
 		valstart += value.length() + 1;
 
 		char sep = array[valstart - 1];
 		if (sep != ',' && valstart < array.length()) {
-			Json::Value::deleteArray(a);
 			throw Json::Exception("Value separator in array invalid.");
 		}
 	}

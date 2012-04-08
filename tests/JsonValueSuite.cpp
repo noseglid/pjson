@@ -11,9 +11,6 @@ JsonValueSuite::run()
 {
 	std::cout << "Running suite 'JsonValue'.";
 
-	this->copyConstructor();
-	this->assignment();
-
 	this->validString();
 	this->invalidString();
 	this->validNumber();
@@ -38,71 +35,6 @@ JsonValueSuite::run()
 void JsonValueSuite::report()
 {
 	std::cout << pjreport();
-}
-
-void
-JsonValueSuite::copyConstructor()
-{
-	Json::Value v1 = Json::Builder::create(std::string("Umgz"));
-	Json::Value *v2 = new Json::Value(v1);
-	TEST_ASSERT("Umgz", v1.asString());
-	TEST_ASSERT("Umgz", v2->asString());
-
-	Json::Value *v3 = new Json::Value(*v2);
-	delete v2;
-	TEST_ASSERT("Umgz", v3->asString());
-	delete v3;
-
-
-	std::vector<int> vct;
-	vct.push_back(0);
-	vct.push_back(1);
-	vct.push_back(2);
-	Json::Value v4 = Json::Builder::create(vct);
-	Json::Value v5(v4);
-	Json::Value *v6 = new Json::Value(v4);
-	TEST_ASSERT(0, v4[0].asInt());
-	TEST_ASSERT(1, v4[1].asInt());
-	TEST_ASSERT(2, v4[2].asInt());
-	TEST_ASSERT(0, v5[0].asInt());
-	TEST_ASSERT(1, v5[1].asInt());
-	TEST_ASSERT(2, v5[2].asInt());
-	TEST_ASSERT(0, (*v6)[0].asInt());
-	TEST_ASSERT(1, (*v6)[1].asInt());
-	TEST_ASSERT(2, (*v6)[2].asInt());
-
-	Json::Value *v7 = new Json::Value(*v6);
-	delete v6;
-	TEST_ASSERT(0, (*v7)[0].asInt());
-	TEST_ASSERT(1, (*v7)[1].asInt());
-	TEST_ASSERT(2, (*v7)[2].asInt());
-	delete v7;
-}
-
-void
-JsonValueSuite::assignment()
-{
-	std::vector<int> vct;
-	vct.push_back(0);
-	vct.push_back(1);
-	vct.push_back(2);
-	Json::Value jv1 = Json::Builder::create(vct);
-
-	Json::Value jv2 = jv1;
-	TEST_ASSERT(0, jv2[0].asInt());
-	TEST_ASSERT(1, jv2[1].asInt());
-	TEST_ASSERT(2, jv2[2].asInt());
-
-	Json::Value *jv3 = new Json::Value(jv2);
-	Json::Value jv4 = Json::Builder::create();
-    jv4 = *jv3;
-	delete jv3;
-	TEST_ASSERT(0, jv4[0].asInt());
-	TEST_ASSERT(1, jv4[1].asInt());
-	TEST_ASSERT(2, jv4[2].asInt());
-
-	Json::Value jv5 = Json::Builder::create();
-	jv5 = jv5;
 }
 
 void
@@ -163,38 +95,38 @@ JsonValueSuite::validObject()
 {
 	std::string j1 = readfile("data/validobject1.json");
 	Json::Value p1 = Json::deserialize(j1);
-	TEST_ASSERT(p1.asObject()["key1"]->asString(), "val1");
+	TEST_ASSERT(p1.asObject()["key1"].asString(), "val1");
 
 	std::string j2 = readfile("data/validobject2.json");
 	Json::Value p2 = Json::deserialize(j2);
-	TEST_ASSERT(p2.asObject()["key with \"quotes\""]->asString(),
+	TEST_ASSERT(p2.asObject()["key with \"quotes\""].asString(),
 	            "value 2 with ws and \"quotes\"");
 
 	std::string j3 = readfile("data/validobject3.json");
 	Json::Value p3 = Json::deserialize(j3);
-	TEST_ASSERT(p3.asObject()["key1"]->asString(), "val1");
-	TEST_ASSERT(p3.asObject()["key2"]->asString(), "val2");
-	TEST_ASSERT(p3.asObject()["key3"]->asString(), "val3");
+	TEST_ASSERT(p3.asObject()["key1"].asString(), "val1");
+	TEST_ASSERT(p3.asObject()["key2"].asString(), "val2");
+	TEST_ASSERT(p3.asObject()["key3"].asString(), "val3");
 
 	std::string j4 = readfile("data/validobject4.json");
 	Json::Value p4 = Json::deserialize(j4);
-	TEST_ASSERT(p4.asObject()["key1"]->asInt(),    123);
-	TEST_ASSERT(p4.asObject()["key2"]->asNumber(), 12e6);
-	TEST_ASSERT(p4.asObject()["key3"]->asBool(),   true);
-	TEST_ASSERT(p4.asObject()["key4"]->asBool(),   false);
-	TEST_ASSERT(p4.asObject()["key5"]->asString(), "string");
-	TEST_ASSERT(p4.asObject()["key6"]->asString(), "false");
+	TEST_ASSERT(p4.asObject()["key1"].asInt(),    123);
+	TEST_ASSERT(p4.asObject()["key2"].asNumber(), 12e6);
+	TEST_ASSERT(p4.asObject()["key3"].asBool(),   true);
+	TEST_ASSERT(p4.asObject()["key4"].asBool(),   false);
+	TEST_ASSERT(p4.asObject()["key5"].asString(), "string");
+	TEST_ASSERT(p4.asObject()["key6"].asString(), "false");
 
 	std::string j5 = readfile("data/validobject5.json");
 	Json::Value p5 = Json::deserialize(j5);
-	TEST_ASSERT(p5.asObject()["d1key1"]->asObject()["d2key1"]->asString(), "d2val1");
-	TEST_ASSERT(p5.asObject()["d1key1"]->asObject()["d2key2"]->asInt(),    23);
-	TEST_ASSERT(p5.asObject()["d1key2"]->asString(), "d1val2");
-	TEST_ASSERT(p5.asObject()["d1key3"]->asNumber(), 52.4e6);
+	TEST_ASSERT(p5.asObject()["d1key1"].asObject()["d2key1"].asString(), "d2val1");
+	TEST_ASSERT(p5.asObject()["d1key1"].asObject()["d2key2"].asInt(),    23);
+	TEST_ASSERT(p5.asObject()["d1key2"].asString(), "d1val2");
+	TEST_ASSERT(p5.asObject()["d1key3"].asNumber(), 52.4e6);
 
 	std::string j6 = readfile("data/validobject6.json");
 	Json::Value p6 = Json::deserialize(j6);
-	TEST_ASSERT(p6.asObject()["enclosing in key }"]->asString(), "opening and enclosing in value { }");
+	TEST_ASSERT(p6.asObject()["enclosing in key }"].asString(), "opening and enclosing in value { }");
 
 	std::string j7 = readfile("data/validobject7.json");
 	Json::Value p7 = Json::deserialize(j7);
@@ -268,32 +200,32 @@ JsonValueSuite::validArray()
 {
 	std::string json1 = readfile("data/validarray1.json");
 	Json::Value p1 = Json::deserialize(json1);
-	TEST_ASSERT(p1.asArray()[0]->asString(), "singlevalue");
+	TEST_ASSERT(p1.asArray()[0].asString(), "singlevalue");
 
 	std::string json2 = readfile("data/validarray2.json");
 	Json::Value p2 = Json::deserialize(json2);
-	TEST_ASSERT(p2.asArray()[0]->asString(), "multivalue");
-	TEST_ASSERT(p2.asArray()[1]->isNull(),   true);
-	TEST_ASSERT(p2.asArray()[2]->asNumber(), 12e9);
-	TEST_ASSERT(p2.asArray()[3]->asBool(),   false);
-	TEST_ASSERT(p2.asArray()[4]->asObject()["key1"]->asString(), "val1");
-	TEST_ASSERT(p2.asArray()[5]->asBool() ,  true);
-	TEST_ASSERT(p2.asArray()[6]->asInt(),    22);
+	TEST_ASSERT(p2.asArray()[0].asString(), "multivalue");
+	TEST_ASSERT(p2.asArray()[1].isNull(),   true);
+	TEST_ASSERT(p2.asArray()[2].asNumber(), 12e9);
+	TEST_ASSERT(p2.asArray()[3].asBool(),   false);
+	TEST_ASSERT(p2.asArray()[4].asObject()["key1"].asString(), "val1");
+	TEST_ASSERT(p2.asArray()[5].asBool() ,  true);
+	TEST_ASSERT(p2.asArray()[6].asInt(),    22);
 
 	std::string json3 = readfile("data/validarray3.json");
 	Json::Value p3 = Json::deserialize(json3);
-	TEST_ASSERT(p3.asArray()[0]->asString(), "enclosing ] in value");
+	TEST_ASSERT(p3.asArray()[0].asString(), "enclosing ] in value");
 
 	std::string json4 = readfile("data/validarray4.json");
 	Json::Value p4 = Json::deserialize(json4);
-	TEST_ASSERT(p4.asArray()[0]->asInt(), 1);
-	TEST_ASSERT(p4.asArray()[1]->asInt(), 2);
-	TEST_ASSERT(p4.asArray()[2]->asInt(), 3);
-	TEST_ASSERT(p4.asArray()[3]->asInt(), 4);
-	TEST_ASSERT(p4.asArray()[4]->asInt(), 5);
-	TEST_ASSERT(p4.asArray()[5]->asInt(), 12e4);
-	TEST_ASSERT(p4.asArray()[5]->asNumber(), 12e4);
-	TEST_ASSERT(p4.asArray()[6]->asString(), "string");
+	TEST_ASSERT(p4.asArray()[0].asInt(), 1);
+	TEST_ASSERT(p4.asArray()[1].asInt(), 2);
+	TEST_ASSERT(p4.asArray()[2].asInt(), 3);
+	TEST_ASSERT(p4.asArray()[3].asInt(), 4);
+	TEST_ASSERT(p4.asArray()[4].asInt(), 5);
+	TEST_ASSERT(p4.asArray()[5].asInt(), 12e4);
+	TEST_ASSERT(p4.asArray()[5].asNumber(), 12e4);
+	TEST_ASSERT(p4.asArray()[6].asString(), "string");
 
 	std::string json5 = readfile("data/validarray5.json");
 	Json::Value p5 = Json::deserialize(json5);
@@ -356,8 +288,8 @@ JsonValueSuite::getType()
 	Json::Value p8 = Json::deserialize(json8);
 	TEST_ASSERT(Json::JVOBJECT, p8.getType());
 
-	TEST_ASSERT(Json::JVNUMBER, p7.asArray()[2]->getType());
-	TEST_ASSERT(Json::JVNUMBER, p8.asObject()["a"]->getType());
+	TEST_ASSERT(Json::JVNUMBER, p7.asArray()[2].getType());
+	TEST_ASSERT(Json::JVNUMBER, p8.asObject()["a"].getType());
 }
 
 void
