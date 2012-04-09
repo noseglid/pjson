@@ -16,9 +16,9 @@ ACLOCAL_AMFLAGS = -I m4
 #    Next version will be (c:r:a+1)
 #
 #  * If any interfaces have been removed or changed, reset age to 0.
-#    Next versiom will be (c:r:0)
+#    Next version will be (c:r:0)
 #
-VERSION_INFO = 2:1:0
+VERSION_INFO = 1:1:0
 
 # Release versioning is (major:minor)
 # The Name of the final version will me (major:minor:interface)
@@ -47,3 +47,10 @@ test:
 # Clean test files
 testclean:
 	$(MAKE) -C tests clean
+
+# Creates a target for documentation generation.
+doc:
+	$(MAKE) -c doc
+
+docclean:
+	$(MAKE) -C doc clean
