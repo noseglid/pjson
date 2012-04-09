@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 
-<title>Namespace Members</title>
+<title>Using Json Object</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 
@@ -26,8 +26,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -49,33 +49,47 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-  <div id="navrow2" class="tabs2">
-    <ul class="tablist">
-      <li><a href="namespaces.html"><span>Namespace&#160;List</span></a></li>
-      <li class="current"><a href="namespacemembers.html"><span>Namespace&#160;Members</span></a></li>
-    </ul>
-  </div>
-  <div id="navrow3" class="tabs2">
-    <ul class="tablist">
-      <li><a href="namespacemembers.html"><span>All</span></a></li>
-      <li><a href="namespacemembers_func.html"><span>Functions</span></a></li>
-      <li><a href="namespacemembers_vars.html"><span>Variables</span></a></li>
-      <li><a href="namespacemembers_type.html"><span>Typedefs</span></a></li>
-      <li class="current"><a href="namespacemembers_enum.html"><span>Enumerations</span></a></li>
-      <li><a href="namespacemembers_eval.html"><span>Enumerator</span></a></li>
-    </ul>
-  </div>
+</div>
+<div class="header">
+  <div class="headertitle">
+<div class="title">Using <a class="el" href="namespace_json.html" title="Default namespace for the pjson library.">Json</a> Object </div>  </div>
 </div>
 <div class="contents">
-&#160;<ul>
-<li>strformat
-: <a class="el" href="namespace_json.html#a20420387994c621e23e74cd3a33aad4c">Json</a>
-</li>
-<li>Types
-: <a class="el" href="namespace_json.html#a2c813f7903daf0fe146fd13ae5eb5d1d">Json</a>
-</li>
-</ul>
-</div>
+<div class="textblock"><p>A json object is a key-value paired container. The key is always a string and the value can be any <a class="el" href="namespace_json.html" title="Default namespace for the pjson library.">Json</a> value (including other objects and arrays).</p>
+<p>An object is 0 or more key, value pairs enclosed by the delimiters '{' and '}'. </p>
+<div class="fragment"><pre class="fragment"> {
+   <span class="stringliteral">&quot;key1&quot;</span>, <span class="stringliteral">&quot;value1&quot;</span>,
+   <span class="stringliteral">&quot;key2&quot;</span>, 12
+   <span class="stringliteral">&quot;key3&quot;</span>, <span class="keyword">false</span>
+ }
+</pre></div><p>The keys must be a string, the value may be any JSON value (including numbers strings, literals, arrays etc. Even other objects)</p>
+<p>An object is represented in the pjson library by std::map&lt;Json::String, Json::Value&gt;. Take a look at <a class="el" href="namespace_json.html#a8a1edc9d8f2f4a1a563633117bbf4e11">Json::Object</a>. All normal STL functions for this structures apply</p>
+<h2><a class="anchor" id="Example"></a>
+Example</h2>
+<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;pjson/pjson.hpp&gt;</span>
+
+<span class="preprocessor">#include &lt;string&gt;</span>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+
+<span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)
+{
+        std::string strJSON = <span class="stringliteral">&quot;{\&quot;action\&quot; : \&quot;update\&quot;, \&quot;itemid\&quot; : \&quot;a6fb4e\&quot;, \&quot;name\&quot; : \&quot;cdbabe\&quot;}&quot;</span>;
+        <a class="code" href="class_json_1_1_value.html" title="The main class representing a JSON value.">Json::Value</a> j = <a class="code" href="namespace_json.html#aa6c4b4ff138896e3c7b5c05f419b94a3">Json::deserialize</a>(strJSON);
+
+        <a class="code" href="namespace_json.html#a8a1edc9d8f2f4a1a563633117bbf4e11">Json::Object</a> obj = j.<a class="code" href="class_json_1_1_value.html#a28d1ce93bd3e4d5c4721c58afc288e73">asObject</a>();
+
+        <span class="keywordflow">for</span> (Json::Object::const_iterator it = obj.begin(); it != obj.end(); it++) {
+                std::string key   = it-&gt;first; <span class="comment">/* Key is always a string in Json::Object. No need to cast. */</span>
+                std::string value = it-&gt;second.asString();
+                std::cout &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; : &quot;</span> &lt;&lt; value &lt;&lt; std::endl;
+        }
+
+        <span class="keywordflow">return</span> 0;
+}
+</pre></div> <div class="fragment"><pre class="fragment">action : update
+itemid : a6fb4e
+name : cdbabe
+</pre></div> </div></div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"

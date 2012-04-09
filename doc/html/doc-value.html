@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 
-<title>Namespace Members</title>
+<title>Deserializing: Converting JSON strings to built-in types</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 
@@ -26,8 +26,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -49,33 +49,49 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-  <div id="navrow2" class="tabs2">
-    <ul class="tablist">
-      <li><a href="namespaces.html"><span>Namespace&#160;List</span></a></li>
-      <li class="current"><a href="namespacemembers.html"><span>Namespace&#160;Members</span></a></li>
-    </ul>
-  </div>
-  <div id="navrow3" class="tabs2">
-    <ul class="tablist">
-      <li><a href="namespacemembers.html"><span>All</span></a></li>
-      <li><a href="namespacemembers_func.html"><span>Functions</span></a></li>
-      <li><a href="namespacemembers_vars.html"><span>Variables</span></a></li>
-      <li><a href="namespacemembers_type.html"><span>Typedefs</span></a></li>
-      <li class="current"><a href="namespacemembers_enum.html"><span>Enumerations</span></a></li>
-      <li><a href="namespacemembers_eval.html"><span>Enumerator</span></a></li>
-    </ul>
-  </div>
+</div>
+<div class="header">
+  <div class="headertitle">
+<div class="title">Deserializing: Converting JSON strings to built-in types </div>  </div>
 </div>
 <div class="contents">
-&#160;<ul>
-<li>strformat
-: <a class="el" href="namespace_json.html#a20420387994c621e23e74cd3a33aad4c">Json</a>
-</li>
-<li>Types
-: <a class="el" href="namespace_json.html#a2c813f7903daf0fe146fd13ae5eb5d1d">Json</a>
-</li>
+<div class="textblock"><p>Deserializing (also inflating, unserialize or unmarshalling) JSON strings is done using the <a class="el" href="namespace_json.html#aa6c4b4ff138896e3c7b5c05f419b94a3">Json::deserialize</a> function.</p>
+<p><a class="el" href="namespace_json.html#aa6c4b4ff138896e3c7b5c05f419b94a3">Json::deserialize</a> takes only one argument; the JSON string which should be parsed into a built-in type.</p>
+<ul>
+<li><b>JSON</b> <b>string</b> A string which follows RFC4627.</li>
 </ul>
-</div>
+<p>Using deserialize is really straight forward. We will start with a simple example.</p>
+<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;pjson/pjson.hpp&gt;</span>
+
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;vector&gt;</span>
+
+<span class="keyword">static</span> <span class="keywordtype">void</span> print(<span class="keyword">const</span> <a class="code" href="class_json_1_1_value.html" title="The main class representing a JSON value.">Json::Value</a>&amp; v)
+{
+        std::cout &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; v.<a class="code" href="class_json_1_1_value.html#a5bf9044fc68353629c07359c710d8c99">asInt</a>();
+}
+
+<span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)
+{
+        std::string strjson = <span class="stringliteral">&quot;[ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89 ]&quot;</span>;
+        <a class="code" href="class_json_1_1_value.html" title="The main class representing a JSON value.">Json::Value</a> v = <a class="code" href="namespace_json.html#aa6c4b4ff138896e3c7b5c05f419b94a3">Json::deserialize</a>(strjson);
+
+        std::vector&lt;Json::Value&gt; fib = v.<a class="code" href="class_json_1_1_value.html#a998e1cec969026d459f36c0b77d5a2bb">asArray</a>();
+
+        std::cout &lt;&lt; fib[0].asInt();
+        std::for_each(fib.begin() + 1, fib.end(), print);
+
+        std::cout &lt;&lt; std::endl;
+        <span class="keywordflow">return</span> 0;
+}
+</pre></div> <div class="fragment"><pre class="fragment">1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89
+</pre></div><ul>
+<li>Here, we are creating a simple JSON string, which actually is the famous <a href="http://en.wikipedia.org/wiki/Fibonacci_number">fibonacci sequence</a>.</li>
+<li>Next we utilize the deserialize function which gives us a <a class="el" href="class_json_1_1_value.html" title="The main class representing a JSON value.">Json::Value</a> to work with.</li>
+<li>Next we're using the std::for_each algorithm to print all the values.</li>
+<li>Easy, no? </li>
+</ul>
+</div></div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
