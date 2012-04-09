@@ -22,14 +22,11 @@
  * @section Tutorial
  * Several short tutorial of how to work with pjson is listed below.
  *
- * @subsection tut-basic Basic tutorial
+ * @subsection tut-basic Basic tutorials
  *
  *   - @ref doc-strjson
  *   - @ref doc-value
  *
- * @subsection tut-advances In-depth tutorial
- *
- *   - To be written...
  */
 
 /** @page doc-array Using Json Array
@@ -37,7 +34,7 @@
  * @code
  * [ "value1", "value2", 12 ]
  * @endcode
- * These are represented in the pjson library by std::vector<Json::Value*>.
+ * These are represented in the pjson library by std::vector<Json::Value>.
  * Take a look at Json::Array.
  *
  * These can be used just as you would use any normal vector in C++.
@@ -63,7 +60,7 @@
  * strings, literals, arrays etc. Even other objects)
  *
  * An object is represented in the pjson library by
- * std::map<Json::String, Json::Value*>. Take a look at Json::Object.
+ * std::map<Json::String, Json::Value>. Take a look at Json::Object.
  * All normal STL functions for this structures apply
  *
  * @section Example

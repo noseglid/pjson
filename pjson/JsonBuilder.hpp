@@ -46,15 +46,15 @@ namespace Json {
 		 *  - int
 		 *  - double
 		 *  - bool
-		 *  - std::vector<Json::Value*>
-		 *  - std::map<std::string, Json::Value*>
+		 *  - std::vector<Json::Value>
+		 *  - std::map<std::string, Json::Value>
 		 *
 		 * @note These correspond perfectly to what Json::value_t can hold.
 		 *
 		 * For creating a NULL value, see Json::Builder::create().
 		 *
 		 * For shorthands to creating structures (avoid having to create all
-		 * Json::Value*), see the shorthand functions:
+		 * Json::Value), see the shorthand functions:
 		 *  - Json::Builder::create(std::map<std::string, T>)
 		 *  - Json::Builder::create(std::vector<T>)
 		 *

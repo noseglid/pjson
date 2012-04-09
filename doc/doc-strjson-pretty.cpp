@@ -14,7 +14,7 @@ int main(void)
 	words["The Shadow Rising"]    = 393823;
 
 	/* Parse the JSON string */
-	std::string json= Json::serialize(words, Json::FORMAT_PRETTY);
+	std::string json = Json::serialize(words, Json::FORMAT_PRETTY);
 
 	/* ... and print it */
 	std::cout << json << std::endl;
