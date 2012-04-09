@@ -1,0 +1,12 @@
+{
+	"enumeration" : {
+		"fst" : "first it is",
+		"snd" : "second it is",
+		"thd" : "third it is"
+	},
+	"riddle" : {
+		"A" : "A is 23",
+		"B" : "B is larger than C",
+		"C" : "C is smaller than A"
+	}
+}

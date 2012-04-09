@@ -1,13 +1,14 @@
 #ifndef __JSONVALUE_H__
 #define __JSONVALUE_H__
 
-#include "JsonException.hpp"
-
 #include <boost/variant.hpp>
+#include <boost/lexical_cast.hpp>
 #include <string>
 #include <map>
 #include <vector>
 #include <stdexcept>
+
+#include "JsonException.hpp"
 
 /// Default namespace for the <em>pjson</em> library.
 /**
@@ -15,8 +16,24 @@
  * is a part of.
  * */
 namespace Json {
-
 	class Value;
+	class Builder;
+
+	/**
+	 * The format with which a json string can be printed
+	 */
+	enum strformat {
+		/**
+		 * The string will be pretty formatted, suitable for printing.
+		 */
+		FORMAT_PRETTY,
+
+		/**
+		 * Minified format, all insignificant whitespaces will be removed,
+		 * suitable for transmitting.
+		 */
+		FORMAT_MINIFIED
+	};
 
 	/**
 	 * The available JSON types.
@@ -42,27 +59,62 @@ namespace Json {
 	typedef std::string String;
 
 	/**
+	 * Representation of a JSON string as common in C.
+	 */
+	typedef const char* CString;
+
+	/**
 	 * A representation of a JSON number.
 	 */
 	typedef double Number;
+
+	/**
+	 * An integer. This is not part of the JSON standard but
+	 * has its own type for increased precision in integers in C++.
+	 */
+	typedef int Int;
 
 	/**
 	 * A representation of a JSON boolean; true or false.
 	 */
 	typedef bool Bool;
 
+	/// @cond
+	struct NullValue {};
+	/// @endcond
+
+	/**
+	 * A representation of a NULL value
+	 */
+	typedef NullValue Null;
+
 	/**
 	 * A representation of a JSON object; key, value pairs.
 	 */
-	typedef std::map<std::string, Value*> Object;
+	typedef std::map<std::string, Json::Value> Object;
 
 	/**
 	 * A representation of a JSON array; consecutive values.
 	 */
-	typedef std::vector<Value*> Array;
+	typedef std::vector<Json::Value> Array;
+
+	/**
+	 * Storage of a JSON value. It can be either of the
+	 * types defined in the variant.
+	 */
+	typedef boost::variant<Json::String,
+	                       Json::CString,
+	                       Json::Number,
+	                       Json::Int,
+	                       Json::Bool,
+	                       Json::NullValue,
+	                       boost::recursive_wrapper<Json::Object>,
+	                       boost::recursive_wrapper<Json::Array> > value_t;
 
 	/// The main class representing a JSON value.
 	/**
+	 * @note Instances of this class can be obtained using Json::Builder or Json::deserialize.
+	 *
 	 * Each value can be either a string, number, true, false, null
 	 * or one of the structure types object or array.
 	 *
@@ -98,43 +150,23 @@ namespace Json {
 	 *   }
 	 * }
 	 * @endcode
+	 *
+	 * @see value_t
 	 */
 	class Value
 	{
+		friend class Builder;
+		friend Json::Value deserialize(std::string);
+		friend Json::Value deserialize(const char*);
+		template <class T> friend std::string serialize(T, strformat = FORMAT_MINIFIED) throw (Json::Exception);
+		friend std::string serialize(Json::Value);
+		friend class std::map<std::string, Value>;
+
+		/**
+		 * Formats which can be used when retrieving
+		 * a string representation of this instance.
+		 */
 		public:
-
-			/**
-			 * Parse a json string. This provides an easy to use interface
-			 * to fetch values and structures.
-			 *
-			 * @param json The json object as a string.
-			 * @throws Json::Exception If the string can not be interpreted as json.
-			 * @returns A representation of the json object.
-			 */
-			Value(std::string json) throw (Json::Exception)
-			{
-				std::string stripped = this->strip(json);
-				this->parse(stripped);
-			};
-
-			/**
-			 * Deletes this Value, and all values this may hold.
-			 * If this, for example, is an array, it will loop
-			 * over all the values the array holds and delete them one by one.
-			 */
-			~Value()
-			{
-				switch (this->type) {
-				case JVOBJECT:
-					this->deleteObject(this->asObject());
-					break;
-				case JVARRAY:
-					this->deleteArray(this->asArray());
-					break;
-				default:
-					break;
-				}
-			};
 
 			/**
 			 * Get the type of this value,(e.g. JVARRAY or JVNUMBER). This can
@@ -145,22 +177,19 @@ namespace Json {
 			 * @see Json::Types
 			 */
 			Json::Types
-			getType()
-			{
-				return this->type;
-			}
+			getType() const;
 
 			/**
 			 * Fetches the value, casted to class T. Unless needed for specific
 			 * reasons (such as dynamic types), use the 'asT()' functions instead.
 			 *
-			 * @throws std::bad_cast If the value cant be casted to T.
-			 * @returns The current value.
+			 * @tparam T The type this value should be casted to. Must be
+			 *           one of Json::value_t or and exception will be thrown.
+			 * @throws Json::Exception If the value cant be casted to T.
+			 * @returns The current value in specified type.
 			 */
-			template <class T>
-			T get() {
-				return boost::get<T>(this->value);
-			};
+			template <class T> T
+			get() const throw (Json::Exception);
 
 			/**
 			 * Fetches the value defined by 'key' in the Object
@@ -172,17 +201,8 @@ namespace Json {
 			 * @throws Json::Exception If the string is not a key in the object.
 			 * @returns The value identified by key.
 			 */
-			Value& operator[](const char* key) throw (Json::Exception)
-			{
-				Object obj          = this->asObject();
-				Object::iterator it = obj.find(key);
-
-				if (it == obj.end()) {
-					throw Json::Exception("Key does not exist in object.");
-				}
-
-				return *it->second;
-			};
+			Value
+			operator[](const char*) const throw (Json::Exception);
 
 			/**
 			 * Fetches the value defined by key in the Array
@@ -197,88 +217,74 @@ namespace Json {
 			 * @throws Json::Exception If the index is outside of the Array bounds.
 			 * @returns The value identified by key.
 			 */
-			Value& operator[](int key) throw (Json::Exception)
-			{
-				try {
-					return *this->asArray().at(key);
-				} catch (std::out_of_range) {
-					throw Json::Exception("Out of array bounds.");
-				}
-			};
+			Value
+			operator[](int key) const throw (Json::Exception);
 
 			/**
 			 * Get the value as an Array.
 			 *
-			 * @return The value as an array.
+			 * @returns The value as an array.
+			 * @throws Json::Exception If current value cannot be
+			 *                         interpreted as an Array.
 			 * @see Json::Array
 			 * @see get()
+			 * @returns Json::Array The array this value represents
 			 */
-			Json::Array asArray()
-			{
-				return this->get<Json::Array>();
-			};
+			Json::Array asArray() const throw (Json::Exception);
 
 			/**
 			 * Get the value as a JsonObject.
 			 *
-			 * @return The value as an object.
+			 * @returns The value as an object.
+			 * @throws Json::Exception If current value cannot be
+			 *                         interpreted as an Object
 			 * @see Json::Object
 			 * @see get()
 			 */
-			Json::Object asObject()
-			{
-				return this->get<Json::Object>();
-			};
+			Json::Object asObject() const throw (Json::Exception);
 
 			/**
 			 * Get the value as an integer.
 			 *
-			 * @note If the value was stored as a double,
-			 *       several significant digits may have been truncated.
-			 *
-			 * @return The JSON number as an integer.
+			 * @returns The JSON number as an integer.
+			 * @throws Json::Exception If current value cannot be
+			 *                         interpreted as an integer.
 			 * @see get()
 			 */
-			int asInt()
-			{
-				return this->get<double>();
-			};
+			Json::Int asInt() const throw (Json::Exception);
 
 			/**
 			 * Get the value as a number.
 			 *
-			 * @return The value as a number.
+			 * @returns The value as a number.
+			 * @throws Json::Exception If current value cannot be
+			 *                        interpreted as a number.
 			 * @see Json::Number
 			 * @see get()
 			 */
-			Json::Number asNumber()
-			{
-				return this->get<double>();
-			};
+			Json::Number asNumber() const throw (Json::Exception);
 
 			/**
 			 * Get the value as a boolean.
 			 *
-			 * @return The value as a boolean.
+			 * @returns The value as a boolean.
+			 * @throws Json::Exception If current value cannot be
+			 *                         interpreted as a boolean.
 			 * @see Json::Bool
 			 * @see get()
 			 */
-			Json::Bool asBool()
-			{
-				return this->get<bool>();
-			};
+			Json::Bool asBool() const throw (Json::Exception);
 
 			/**
 			 * Get the value as a string.
 			 *
-			 * @return The value as a string.
+			 * @returns The value as a string.
+			 * @throws Json::Exception If current value cannot be
+			 *                         interpreted as a string
 			 * @see Json::String
 			 * @see get()
 			 */
-			Json::String asString()
-			{
-				return this->get<Json::String>();
-			};
+			Json::String asString() const throw (Json::Exception);
 
 			/**
 			 * Determines whether this JSON value is null or not.
@@ -286,27 +292,70 @@ namespace Json {
 			 *
 			 * @return True if JSON value is null, false otherwise.
 			 */
-			bool isNull()
-			{
-				return JVNULL == this->type;
-			};
+			bool isNull() const;
 
 		private:
-			boost::variant<Json::String,
-			               Json::Number,
-			               Json::Bool,
-			               Json::Object,
-			               Json::Array> value;
-			Json::Types type;
+			/**
+			 * The mode with which this class can be instantiated.
+			 *
+			 * @see Value(std::string, cmode)
+			 */
+			enum cmode {
+				MODE_PARSE
+			};
 
 			/**
-			 * Strips the string, removing any insignificant characters
+			 * The value held by this instance.
+			 */
+			Json::value_t value;
+
+			/**
+			 * The type of the value held by this instance.
+			 */
+			Json::Types type;
+
+
+			/**
+			 * Creates a Value using specified mode.
+			 *  - MODE_PARSE: Provided string is a JSON string.
+			 *
+			 *  @param json The json string
+			 *  @param m    The mode of how to interpret the JSON string.
+			 */
+			Value(std::string json, cmode m) throw (Json::Exception);
+
+			/**
+			 * Creates a Value and sets it to the provided value.
+			 * The type is derived from the input value.
+			 *
+			 * @param v The value this instance should represent.
+			 */
+			Value(Json::value_t v);
+
+			/**
+			 * Creates a NULL value. This sets the type to 'NULL',
+			 * and leaves the actual value undefined.
+			 */
+			Value();
+
+			/**
+			 * Tells the type of a Json::value_t.
+			 *
+			 * @param v The Json::value_t to check type for.
+			 * @returns The type of the provided Json::value_t
+			 * @see getType()
+			 * @see Json::Types
+			 */
+			static Json::Types typeByValue(Json::value_t v) throw (Json::Exception);
+
+			/**
+			 * Minifies the JSON string, removing any insignificant characters
 			 * from a json point of view (insignificant white-spaces).
 			 *
-			 * @param json The json string to strip.
-			 * @returns The stripped string
+			 * @param json The JSON string to minify.
+			 * @returns The minified string.
 			 */
-			std::string strip(std::string);
+			std::string minify(std::string) const;
 
 			/**
 			 * Remove any escape characters (\) from the string.
@@ -314,7 +363,30 @@ namespace Json {
 			 * @param std::string The string to remove escape characters from.
 			 * @returns The unescaped string.
 			 */
-			std::string unescape(std::string);
+			void unescape(std::string&) const;
+
+			/**
+			 * Prepends any occurance of c with an escape character (\).
+			 *
+			 * @note This changes the input variable.
+			 *
+			 * @param strjson The string to escape.
+			 * @param c       The character which needs to be escaped.
+			 */
+			void escape(std::string&, const char) const;
+
+			/**
+			 * Returns a JSON string representation of this value.
+			 * The string is a valid JSON string according to RFC4627.
+			 * It can be used to transmit information to another JSON
+			 * compatible recipient.
+			 *
+			 * @param t The format to return. See strformat for allowed values.
+			 * @returns std::string The string representation of this JSON value.
+			 */
+			std::string strjson(strformat t = FORMAT_PRETTY) const;
+
+			void formatStringForOutput(std::string&) const;
 
 			/**
 			 * Extracts a literal from string str starting at position pos.
@@ -346,6 +418,7 @@ namespace Json {
 			 * @return The extracted string.
 			 */
 			std::string extract(std::string, size_t, bool) throw (Json::Exception);
+
 			void parse(std::string) throw (Json::Exception);
 			void parseString(std::string) throw (Json::Exception);
 			void parseNumber(std::string) throw (Json::Exception);
@@ -354,19 +427,22 @@ namespace Json {
 			void parseObject(std::string) throw (Json::Exception);
 			void parseArray(std::string) throw (Json::Exception);
 
-			static void deleteObject(Json::Object obj)
-			{
-				for (Json::Object::iterator it = obj.begin(); it != obj.end(); it++) {
-					delete it->second;
-				}
-			};
+			void strjsonObject(std::string&, size_t) const;
+			void strjsonArray(std::string&, size_t) const;
+			void strjsonNumber(std::string&) const;
+			void strjsonString(std::string&) const;
+			void strjsonBool(std::string&) const;
+			void strjsonNull(std::string&) const;
 
-			static void deleteArray(Json::Array arr)
-			{
-				for (Json::Array::iterator it = arr.begin(); it != arr.end(); it++) {
-					delete *it;
-				}
-			};
+			/**
+			 * Copies a provided value into this.
+			 *
+			 * @param v The value to copy.
+			 */
+			void copy(const Value& v);
+
+			static void deleteObject(Json::Object obj);
+			static void deleteArray(Json::Array arr);
 	};
 }
 

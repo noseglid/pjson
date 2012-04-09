@@ -1,19 +1,25 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
+# Additionally m4 scripts
+AC_CONFIG_MACRO_DIR([m4])
+
 AC_PREREQ(2.61)
-AC_INIT(libpjson, 0.1.1, noseglid@gmail.com)
+AC_INIT(libpjson, 0.2, noseglid@gmail.com)
 AC_LANG(C++)
 
+AM_INIT_AUTOMAKE([1.7 foreign])
+
+# Required headers
 AC_CONFIG_SRCDIR([pjson/JsonException.hpp])
 AC_CONFIG_SRCDIR([pjson/JsonValue.hpp])
+AC_CONFIG_SRCDIR([pjson/JsonBuilder.hpp])
 AC_CONFIG_SRCDIR([pjson/pjson.hpp])
 
 # Checks for programs.
-AC_DEFUN([AC_PROG_LIBTOOL], [AC_CHECK_TOOL(LIBTOOL, libtool, :)])
 AC_PROG_CXX
-AC_PROG_LIBTOOL
 AC_PROG_INSTALL
+AC_PROG_LIBTOOL
 
 AC_CHECK_TOOL(PRINTF, printf, :)
 AC_CHECK_TOOL(RM, rm, :)
