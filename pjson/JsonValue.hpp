@@ -91,12 +91,12 @@ namespace Json {
 	/**
 	 * A representation of a JSON object; key, value pairs.
 	 */
-	typedef std::map<std::string, Json::Value*> Object;
+	typedef std::map<std::string, Json::Value> Object;
 
 	/**
 	 * A representation of a JSON array; consecutive values.
 	 */
-	typedef std::vector<Json::Value*> Array;
+	typedef std::vector<Json::Value> Array;
 
 	/**
 	 * Storage of a JSON value. It can be either of the
@@ -108,8 +108,8 @@ namespace Json {
 	                       Json::Int,
 	                       Json::Bool,
 	                       Json::NullValue,
-	                       Json::Object,
-	                       Json::Array> value_t;
+	                       boost::recursive_wrapper<Json::Object>,
+	                       boost::recursive_wrapper<Json::Array> > value_t;
 
 	/// The main class representing a JSON value.
 	/**
@@ -160,26 +160,13 @@ namespace Json {
 		friend Json::Value deserialize(const char*);
 		template <class T> friend std::string serialize(T, strformat = FORMAT_MINIFIED) throw (Json::Exception);
 		friend std::string serialize(Json::Value);
+		friend class std::map<std::string, Value>;
 
 		/**
 		 * Formats which can be used when retrieving
 		 * a string representation of this instance.
 		 */
 		public:
-
-			/**
-			 * Copies any previously defined Value.
-			 *
-			 * @param v The Value to copy.
-			 */
-			Value(const Value& v);
-
-			/**
-			 * Deletes this Value, and all values this may hold.
-			 * If, for example, this is an array, it will loop
-			 * over all the values the array holds and delete them one by one.
-			 */
-			~Value();
 
 			/**
 			 * Get the type of this value,(e.g. JVARRAY or JVNUMBER). This can
@@ -191,18 +178,6 @@ namespace Json {
 			 */
 			Json::Types
 			getType() const;
-
-			/**
-			 * Handles assignment properly from one
-			 * Value to another. All values are copied, including
-			 * Arrays and Objects. The newly created Value needs to
-			 * be deallocated seperatly.
-			 *
-			 * @param v The Value this is assigned to.
-			 * @returns The newly assigned value.
-			 */
-			Json::Value& operator=(const Json::Value& v);
-
 
 			/**
 			 * Fetches the value, casted to class T. Unless needed for specific
@@ -226,7 +201,7 @@ namespace Json {
 			 * @throws Json::Exception If the string is not a key in the object.
 			 * @returns The value identified by key.
 			 */
-			Value&
+			Value
 			operator[](const char*) const throw (Json::Exception);
 
 			/**
@@ -242,7 +217,8 @@ namespace Json {
 			 * @throws Json::Exception If the index is outside of the Array bounds.
 			 * @returns The value identified by key.
 			 */
-			Value& operator[](int key) const throw (Json::Exception);
+			Value
+			operator[](int key) const throw (Json::Exception);
 
 			/**
 			 * Get the value as an Array.
