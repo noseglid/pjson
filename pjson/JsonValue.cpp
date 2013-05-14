@@ -398,12 +398,12 @@ Json::Value::parseNumber(std::string json) throw (Json::Exception)
 	try {
 		this->value = boost::lexical_cast<Json::Int>(json);
 		return;
-	} catch (std::bad_cast) {}
+	} catch (boost::bad_lexical_cast) {}
 
 	try {
 		this->value = boost::lexical_cast<Json::Number>(json);
 		return;
-	} catch (std::bad_cast) {}
+	} catch (boost::bad_lexical_cast) {}
 
 	throw Json::Exception("Number value invalid.");
 }
