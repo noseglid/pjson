@@ -1,6 +1,6 @@
-CC      = g++
-CFLAGS  = -I.. -c -O0 -g3 -W -Wall -Werror
-LDFLAGS = -L../.libs -lpjson
+CC      = clang++
+CFLAGS  = -I.. -c -O0 -g3 -W -Wall -Werror -stdlib=libc++
+LDFLAGS = -L../.libs -lpjson -stdlib=libc++
 
 LIB      = pjson
 SOURCES  = main.cpp

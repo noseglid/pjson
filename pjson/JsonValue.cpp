@@ -286,10 +286,12 @@ Json::Value::strjson(strformat t) const
 void
 Json::Value::strjsonObject(std::string& strjson, size_t indent) const
 {
-	std::string sep = "{\n";
 	Json::Object obj = this->asObject();
 	typedef Json::Object::const_iterator objit;
 
+	strjson += "{\n";
+
+	std::string sep;
 	for (objit it = obj.begin(); it != obj.end(); ++it) {
 		strjson += sep;
 		std::string key = it->first;
@@ -309,10 +311,12 @@ Json::Value::strjsonObject(std::string& strjson, size_t indent) const
 void
 Json::Value::strjsonArray(std::string& strjson, size_t indent) const
 {
-	std::string sep = "[\n";
 	Json::Array arr = this->asArray();
 	typedef Json::Array::const_iterator arrit;
 
+	strjson += "[\n";
+
+	std::string sep;
 	for (arrit it = arr.begin(); it != arr.end(); it++) {
 		strjson += sep;
 		strjson.append(indent + 1, '\t');

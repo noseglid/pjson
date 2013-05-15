@@ -162,11 +162,13 @@ namespace Json {
 		friend std::string serialize(Json::Value);
 		friend class std::map<std::string, Value>;
 
-		/**
-		 * Formats which can be used when retrieving
-		 * a string representation of this instance.
-		 */
 		public:
+
+			/**
+			 * Creates a NULL value. This sets the type to 'NULL',
+			 * and leaves the actual value undefined.
+			 */
+			Value();
 
 			/**
 			 * Get the type of this value,(e.g. JVARRAY or JVNUMBER). This can
@@ -183,7 +185,7 @@ namespace Json {
 			 * Fetches the value, casted to class T. Unless needed for specific
 			 * reasons (such as dynamic types), use the 'asT()' functions instead.
 			 *
-			 * @tparam T The type this value should be casted to. Must be
+			 * @param T The type this value should be casted to. Must be
 			 *           one of Json::value_t or and exception will be thrown.
 			 * @throws Json::Exception If the value cant be casted to T.
 			 * @returns The current value in specified type.
@@ -202,7 +204,7 @@ namespace Json {
 			 * @returns The value identified by key.
 			 */
 			Value
-			operator[](const char*) const throw (Json::Exception);
+			operator[](const char* key) const throw (Json::Exception);
 
 			/**
 			 * Fetches the value defined by key in the Array
@@ -331,12 +333,6 @@ namespace Json {
 			 * @param v The value this instance should represent.
 			 */
 			Value(Json::value_t v);
-
-			/**
-			 * Creates a NULL value. This sets the type to 'NULL',
-			 * and leaves the actual value undefined.
-			 */
-			Value();
 
 			/**
 			 * Tells the type of a Json::value_t.
