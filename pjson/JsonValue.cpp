@@ -71,6 +71,31 @@ Json::Value::getType() const
 	return this->type;
 }
 
+bool
+Json::Value::objectHasKey(const char *key) const
+{
+	try {
+		Object obj = this->asObject();
+		return (obj.find(key) != obj.end());
+	} catch (Json::Exception& e) {
+		return false;
+	}
+}
+
+bool
+Json::Value::arrayHasKey(int key) const
+{
+	try {
+		Array arr = this->asArray();
+		Json::Value v = arr.at(key);
+		return true;
+	} catch (Json::Exception) {
+		return false;
+	} catch (std::out_of_range) {
+		return false;
+	}
+}
+
 template<class T> T
 Json::Value::get() const throw (Json::Exception)
 {
