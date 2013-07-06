@@ -26,9 +26,6 @@ namespace Json {
 	 */
 	class Builder
 	{
-		template <class T> friend std::string serialize(T) throw (Json::Exception);
-		friend std::string serialize();
-
 	private:
 
 		/**

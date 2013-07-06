@@ -34,6 +34,8 @@ class JsonValueSuite
 		void invalidGetOperator();
 
 		void invalidGet();
+		void objectHasKey();
+		void arrayHasKey();
 };
 
 #endif

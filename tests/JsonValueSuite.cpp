@@ -30,6 +30,8 @@ JsonValueSuite::run()
 	this->invalidNested();
 
 	this->invalidGet();
+	this->objectHasKey();
+	this->arrayHasKey();
 }
 
 void JsonValueSuite::report()
@@ -372,4 +374,34 @@ JsonValueSuite::invalidGet()
 	TEST_THROWS(v2.asObject(), Json::Exception);
 	TEST_THROWS(v2.asInt(), Json::Exception);
 	TEST_THROWS(v2.asNumber(), Json::Exception);
+}
+
+void
+JsonValueSuite::objectHasKey()
+{
+	std::string json1 = "{ \"mykey\" : 5 }";
+	Json::Value v1 = Json::deserialize(json1);
+
+	TEST_ASSERT(true, v1.objectHasKey("mykey"));
+	TEST_ASSERT(false, v1.objectHasKey("nokey"));
+
+	std::string jsonstr = "\"mystring\"";
+	Json::Value v2 = Json::deserialize(jsonstr);
+	TEST_ASSERT(false, v2.objectHasKey("mykey"));
+}
+
+void
+JsonValueSuite::arrayHasKey()
+{
+	std::string json1 = "[1, 2, 3, 4]";
+	Json::Value v1 = Json::deserialize(json1);
+
+	TEST_ASSERT(true, v1.arrayHasKey(0));
+	TEST_ASSERT(true, v1.arrayHasKey(3));
+	TEST_ASSERT(false, v1.arrayHasKey(4));
+	TEST_ASSERT(false, v1.arrayHasKey(52));
+
+	std::string jsonstr = "\"mystring\"";
+	Json::Value v2 = Json::deserialize(jsonstr);
+	TEST_ASSERT(false, v2.arrayHasKey(0));
 }

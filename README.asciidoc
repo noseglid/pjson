@@ -9,8 +9,14 @@ github pages.
 
 	* http://noseglid.github.com/pjson
 
+== Documentation
+
+The full documentation along with tutorials and examples can be found here:
+
+	* http://noseglid.github.com/pjson/doc/html/
+
 == Dependencies
-	* http://www.gnu.org/software/libtool/[libtool]
+
 	* http://www.boost.org/[boost] (only headers required; +variant+ and +lexical_cast+)
 
 If you're on a debian derivative (debian, ubuntu, ..) you can use the following to get
@@ -40,6 +46,6 @@ Step 3 must be run as root (unless your user have write permissions in $prefix),
 There are several JSON interpreters/parsers out there, why would I go about
 creating my own one? Several reasons:
 
-* As an initial project, I did it to learn the basics of +C+++ and the +boost+ library.
+* As an initial project, I did it to learn the basics of C++ and the boost library.
 * The existing JSON interpreters had flaws I decided I could not accept.
   Among others were loads of valgrind warings, memory leaks and difficult to learn API.
