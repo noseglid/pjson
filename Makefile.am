@@ -28,9 +28,13 @@ RELEASE = 0.2
 GENERIC_LDFLAGS = -release $(RELEASE) -version-info $(VERSION_INFO)
 
 lib_LTLIBRARIES = libpjson.la
+bin_PROGRAMS = jsonminifier
 
 libpjson_la_SOURCES = pjson/JsonValue.cpp pjson/pjson.cpp
 libpjson_la_LDFLAGS = $(GENERIC_LDFLAGS)
+
+jsonminifier_SOURCES = pjson/minifier.cpp
+jsonminifier_LDADD = libpjson.la
 
 include_HEADERS        = pjson/pjson.hpp
 nobase_include_HEADERS = pjson/JsonBuilder.hpp \
