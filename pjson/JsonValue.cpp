@@ -190,7 +190,7 @@ Json::Value::isNull() const
 }
 
 std::string
-Json::Value::minify(std::string json) const
+Json::Value::minify(std::string json)
 {
 	std::string ret;
 	bool insignificant = true;
