@@ -318,6 +318,15 @@ namespace Json {
 			 */
 			bool isNull() const;
 
+			/**
+			 * Minifies the JSON string, removing any insignificant characters
+			 * from a json point of view (insignificant white-spaces).
+			 *
+			 * @param json The JSON string to minify.
+			 * @returns The minified string.
+			 */
+			static std::string minify(std::string);
+
 		private:
 			/**
 			 * The mode with which this class can be instantiated.
@@ -365,15 +374,6 @@ namespace Json {
 			 * @see Json::Types
 			 */
 			static Json::Types typeByValue(Json::value_t v) throw (Json::Exception);
-
-			/**
-			 * Minifies the JSON string, removing any insignificant characters
-			 * from a json point of view (insignificant white-spaces).
-			 *
-			 * @param json The JSON string to minify.
-			 * @returns The minified string.
-			 */
-			std::string minify(std::string) const;
 
 			/**
 			 * Remove any escape characters (\) from the string.
